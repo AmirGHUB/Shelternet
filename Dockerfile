@@ -4,8 +4,8 @@
 FROM openjdk:11.0-jdk-slim as builder
 VOLUME /tmp
 COPY . .
-#RUN apt-get update && apt-get install -y dos2unix
-#RUN dos2unix gradlew
+RUN apt-get update && apt-get install -y dos2unix
+RUN dos2unix gradlew
 RUN ./gradlew build
 
   # Phase 2 - Build container with runtime only to use .jar file within
