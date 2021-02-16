@@ -9,6 +9,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.List;
 
@@ -69,6 +70,25 @@ public class ShelterControllerTest {
                 .andExpect(jsonPath("[0].capacity").value(10))
                 .andExpect(jsonPath("[1].name").value("SHELTER2"))
                 .andExpect(jsonPath("[1].capacity").value(20));
+
+    }
+    @Test
+    public void getShelterDetails() throws Exception {
+        Shelter shelter = new Shelter("SHELTER1", 10);
+        MvcResult result = mockMvc.perform(post("/shelter")
+                .content(objectMapper.writeValueAsString(shelter))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated())
+                .andReturn();
+        String jsonResult = result.getResponse().getContentAsString();
+        Shelter shelterResult = objectMapper.readValue(jsonResult, Shelter.class);
+
+        mockMvc
+                .perform(get("/shelter" + "/" + shelterResult.getId()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value("SHELTER1"))
+                .andExpect(jsonPath("$.capacity").value(10));
+
 
     }
 }
