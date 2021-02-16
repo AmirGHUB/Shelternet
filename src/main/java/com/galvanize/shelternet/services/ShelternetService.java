@@ -5,6 +5,7 @@ import com.galvanize.shelternet.repository.ShelterRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ShelternetService {
@@ -21,5 +22,9 @@ public class ShelternetService {
 
     public List<Shelter> getAllShelters() {
         return shelterRepository.findAll();
+    }
+
+    public Optional<Shelter>  getShelterDetails(Long id) {
+        return shelterRepository.findById(id);
     }
 }

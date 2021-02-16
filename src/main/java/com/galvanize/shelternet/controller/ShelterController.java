@@ -33,4 +33,9 @@ public class ShelterController {
     public List<Shelter> getAllShelters(){
         return shelternetService.getAllShelters();
     }
+
+    @GetMapping("/shelter/{id}")
+    public Shelter getShelterDetails(@PathVariable Long id) {
+        return shelternetService.getShelterDetails(id);
+    }
 }
