@@ -1,15 +1,18 @@
-Shelternet API
-
-Home page of the ShelterAPI
-
+== Shelternet API
+=== Register Shelter
 .request
-include::{snippets}/ShelternetHome/http-request.adoc[]
+include::{snippets}/register-shelter/http-request.adoc[]
 
+.request-fields
+include::{snippets}/register-shelter/request-fields.adoc[]
 
 .response
-include::{snippets}/ShelternetHome/http-response.adoc[]
+include::{snippets}/register-shelter/http-response.adoc[]
 
-Get All Shelters
+.response-fields
+include::{snippets}/register-shelter/response-fields.adoc[]
+
+=== Get All Shelters
 
 .request
 include::{snippets}/GetAllShelters/http-request.adoc[]

@@ -1,5 +1,6 @@
 package com.galvanize.shelternet.model;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,6 +12,7 @@ import javax.persistence.Id;
 @Entity
 @Getter
 @Setter
+@EqualsAndHashCode(exclude = "id")
 public class Shelter {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
