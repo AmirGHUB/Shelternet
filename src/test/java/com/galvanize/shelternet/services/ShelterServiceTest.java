@@ -8,6 +8,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -32,5 +34,22 @@ public class ShelterServiceTest {
         verify(shelterRepository, times(1)).save(shelter);
 
         assertEquals(shelter, shelterAdded);
+    }
+
+    @Test
+    public void getAllShelters(){
+
+        Shelter shelter = new Shelter("SHELTER1", 10);
+        Shelter shelter2 = new Shelter("SHELTER2", 20);
+
+        List<Shelter> shelters = List.of(shelter,shelter2);
+
+        when(shelterRepository.findAll()).thenReturn(shelters);
+
+        List<Shelter> actualList = shelternetService.getAllShelters();
+
+        assertEquals(shelters.size(), actualList.size());
+
+        verify(shelterRepository, times(1)).findAll();
     }
 }
