@@ -2,8 +2,6 @@ package com.galvanize.shelternet.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.galvanize.shelternet.model.Shelter;
-import com.galvanize.shelternet.model.Shelternet;
-import com.galvanize.shelternet.repository.ShelternetRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -16,16 +14,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class ShelternetControllerTest {
+public class ShelterControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
     @Autowired
     private ObjectMapper objectMapper;
-
-    @Autowired
-    private ShelternetRepository shelternetRepository;
 
     @Test
     public void homeTest() throws Exception {
@@ -36,10 +31,8 @@ public class ShelternetControllerTest {
     @Test
     public void registerShelterTest() throws Exception {
         Shelter shelter = new Shelter("SHELTER1", 10);
-        Shelternet shelternet = new Shelternet();
-        Shelternet shelternetExisted = shelternetRepository.save(shelternet);
-        shelternet.addShelter(shelter);
-        mockMvc.perform(post("/shelter" + "/" + shelternetExisted.getId())
+
+        mockMvc.perform(post("/shelter")
                 .content(objectMapper.writeValueAsString(shelter))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())

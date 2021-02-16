@@ -1,8 +1,7 @@
 package com.galvanize.shelternet.services;
 
 import com.galvanize.shelternet.model.Shelter;
-import com.galvanize.shelternet.model.Shelternet;
-import com.galvanize.shelternet.repository.ShelternetRepository;
+import com.galvanize.shelternet.repository.ShelterRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -14,10 +13,10 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class ShelternetServiceTest {
+public class ShelterServiceTest {
 
     @Mock
-    private ShelternetRepository shelternetRepository;
+    private ShelterRepository shelterRepository;
 
     @InjectMocks
     private ShelternetService shelternetService;
@@ -25,15 +24,12 @@ public class ShelternetServiceTest {
     @Test
     public void registerShelterTest() {
         Shelter shelter = new Shelter("SHELTER1", 10);
-        Shelternet shelternet = new Shelternet();
-        shelternet.setId(1L);
 
-        when(shelternetRepository.getOne(any())).thenReturn(shelternet);
-        when(shelternetRepository.save(any())).thenReturn(shelternet);
+        when(shelterRepository.save(any())).thenReturn(shelter);
 
-        Shelter shelterAdded = shelternetService.registerShelter(shelter, shelternet.getId());
+        Shelter shelterAdded = shelternetService.registerShelter(shelter);
 
-        verify(shelternetRepository, times(1)).save(any());
+        verify(shelterRepository, times(1)).save(shelter);
 
         assertEquals(shelter, shelterAdded);
     }

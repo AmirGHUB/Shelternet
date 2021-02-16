@@ -6,11 +6,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-public class ShelternetController {
+public class ShelterController {
 
     private ShelternetService shelternetService;
 
-    public ShelternetController(ShelternetService shelternetService) {
+    public ShelterController(ShelternetService shelternetService) {
         this.shelternetService = shelternetService;
     }
 
@@ -19,9 +19,9 @@ public class ShelternetController {
         return "Welcome to Shelternet";
     }
 
-    @PostMapping("/shelter/{id}")
+    @PostMapping("/shelter")
     @ResponseStatus(HttpStatus.CREATED)
-    public Shelter registerShelter(@RequestBody Shelter shelter, @PathVariable Long id) {
-        return shelternetService.registerShelter(shelter, id);
+    public Shelter registerShelter(@RequestBody Shelter shelter) {
+        return shelternetService.registerShelter(shelter);
     }
 }
