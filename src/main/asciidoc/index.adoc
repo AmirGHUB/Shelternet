@@ -1,0 +1,9 @@
+Shelternet API
+
+.request
+include::{snippets}/ShelternetHome/http-request.adoc[]
+
+
+.response
+include::{snippets}/ShelternetHome/http-response.adoc[]
+
