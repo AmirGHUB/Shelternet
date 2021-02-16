@@ -1,9 +1,24 @@
 Shelternet API
 
+Home page of the ShelterAPI
+
 .request
 include::{snippets}/ShelternetHome/http-request.adoc[]
 
 
 .response
 include::{snippets}/ShelternetHome/http-response.adoc[]
+
+Get All Shelters
+
+.request
+include::{snippets}/GetAllShelters/http-request.adoc[]
+
+
+.response
+include::{snippets}/GetAllShelters/http-response.adoc[]
+
+
+.response-fields
+include::{snippets}/GetAllShelters/response-fields.adoc[]
 
