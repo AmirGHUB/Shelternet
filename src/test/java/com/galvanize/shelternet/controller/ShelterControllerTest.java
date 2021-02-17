@@ -75,11 +75,13 @@ public class ShelterControllerTest {
     @Test
     public void getShelterDetails() throws Exception {
         Shelter shelter = new Shelter("SHELTER1", 10);
+
         MvcResult result = mockMvc.perform(post("/shelter")
                 .content(objectMapper.writeValueAsString(shelter))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
                 .andReturn();
+
         String jsonResult = result.getResponse().getContentAsString();
         Shelter shelterResult = objectMapper.readValue(jsonResult, Shelter.class);
 
@@ -88,7 +90,6 @@ public class ShelterControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("SHELTER1"))
                 .andExpect(jsonPath("$.capacity").value(10));
-
 
     }
 }

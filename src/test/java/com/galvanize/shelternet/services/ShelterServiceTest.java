@@ -9,6 +9,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -51,5 +52,21 @@ public class ShelterServiceTest {
         assertEquals(shelters.size(), actualList.size());
 
         verify(shelterRepository, times(1)).findAll();
+    }
+
+    @Test
+    public void getShelterDetails(){
+        Shelter shelter = new Shelter("SHELTER1", 10);
+
+        shelter.setId(1L);
+
+        when(shelterRepository.findById(shelter.getId())).thenReturn(Optional.of(shelter));
+
+        Shelter actualShelter = shelternetService.getShelterDetails(shelter.getId()).get();
+
+        assertEquals(shelter,actualShelter);
+
+        verify(shelterRepository,times(1)).findById(shelter.getId());
+
     }
 }

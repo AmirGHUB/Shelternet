@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class ShelterController {
@@ -35,7 +36,7 @@ public class ShelterController {
     }
 
     @GetMapping("/shelter/{id}")
-    public Shelter getShelterDetails(@PathVariable Long id) {
+    public Optional<Shelter> getShelterDetails(@PathVariable Long id) {
         return shelternetService.getShelterDetails(id);
     }
 }
