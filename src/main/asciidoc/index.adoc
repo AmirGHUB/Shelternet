@@ -42,8 +42,8 @@ include::{snippets}/GetShelterDetailsById/response-fields.adoc[]
 .request
 include::{snippets}/update-shelter/http-request.adoc[]
 
-.request-fields
-include::{snippets}/update-shelter/request-fields.adoc[]
+.path-parameters
+include::{snippets}/update-shelter/path-parameters.adoc[]
 
 .request-body
 include::{snippets}/update-shelter/request-body.adoc[]
