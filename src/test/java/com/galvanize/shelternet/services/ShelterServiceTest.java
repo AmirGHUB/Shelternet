@@ -40,12 +40,12 @@ public class ShelterServiceTest {
     }
 
     @Test
-    public void getAllShelters(){
+    public void getAllShelters() {
 
         Shelter shelter = new Shelter("SHELTER1", 10);
         Shelter shelter2 = new Shelter("SHELTER2", 20);
 
-        List<Shelter> shelters = List.of(shelter,shelter2);
+        List<Shelter> shelters = List.of(shelter, shelter2);
 
         when(shelterRepository.findAll()).thenReturn(shelters);
 
@@ -57,7 +57,7 @@ public class ShelterServiceTest {
     }
 
     @Test
-    public void getShelterDetails(){
+    public void getShelterDetails() {
         Shelter shelter = new Shelter("SHELTER1", 10);
 
         shelter.setId(1L);
@@ -66,9 +66,9 @@ public class ShelterServiceTest {
 
         Shelter actualShelter = shelternetService.getShelterDetails(shelter.getId()).get();
 
-        assertEquals(shelter,actualShelter);
+        assertEquals(shelter, actualShelter);
 
-        verify(shelterRepository,times(1)).findById(shelter.getId());
+        verify(shelterRepository, times(1)).findById(shelter.getId());
 
     }
 
@@ -111,7 +111,7 @@ public class ShelterServiceTest {
 
     @Test
     public void deleteShelterById() {
-       shelternetService.delete(1L);
-       verify(shelterRepository).deleteById(1L);
+        shelternetService.delete(1L);
+        verify(shelterRepository).deleteById(1L);
     }
 }

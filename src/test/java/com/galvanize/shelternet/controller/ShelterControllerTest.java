@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.galvanize.shelternet.model.Animal;
 import com.galvanize.shelternet.model.Shelter;
 import com.galvanize.shelternet.repository.ShelterRepository;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -15,7 +14,6 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
-import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -59,8 +57,6 @@ public class ShelterControllerTest {
         Shelter shelter = new Shelter("SHELTER1", 10);
         Shelter shelter2 = new Shelter("SHELTER2", 20);
 
-        List<Shelter> shelters = List.of(shelter,shelter2);
-
         mockMvc.perform(post("/shelter")
                 .content(objectMapper.writeValueAsString(shelter))
                 .contentType(MediaType.APPLICATION_JSON))
@@ -74,13 +70,14 @@ public class ShelterControllerTest {
         mockMvc
                 .perform(get("/shelter"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.*",hasSize(2)))
+                .andExpect(jsonPath("$.*", hasSize(2)))
                 .andExpect(jsonPath("[0].name").value("SHELTER1"))
                 .andExpect(jsonPath("[0].capacity").value(10))
                 .andExpect(jsonPath("[1].name").value("SHELTER2"))
                 .andExpect(jsonPath("[1].capacity").value(20));
 
     }
+
     @Test
     public void getShelterDetails() throws Exception {
         Shelter shelter = new Shelter("SHELTER1", 10);
@@ -150,12 +147,12 @@ public class ShelterControllerTest {
                 .andExpect(jsonPath("$.name").value("Updated Shelter"))
                 .andExpect(jsonPath("$.capacity").value(10));
     }
+
     @Test
     public void deleteShelterById() throws Exception {
         Shelter existingShelter = shelterRepository.save(new Shelter("Original Shelter", 20));
         mockMvc.perform(delete("/shelter/" + existingShelter.getId()))
                 .andExpect(status().isOk());
-        assertEquals(0,shelterRepository.findAll().size());
+        assertEquals(0, shelterRepository.findAll().size());
     }
-
 }

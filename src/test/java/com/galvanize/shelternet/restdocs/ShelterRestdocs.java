@@ -1,6 +1,7 @@
 package com.galvanize.shelternet.restdocs;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.galvanize.shelternet.controller.ShelterController;
 import com.galvanize.shelternet.model.Animal;
 import com.galvanize.shelternet.model.Shelter;
 import com.galvanize.shelternet.services.ShelternetService;
@@ -27,7 +28,7 @@ import static org.springframework.restdocs.request.RequestDocumentation.pathPara
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest
+@WebMvcTest(controllers = ShelterController.class)
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs
 public class ShelterRestdocs {
