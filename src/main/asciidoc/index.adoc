@@ -64,3 +64,19 @@ include::{snippets}/delete-shelter/path-parameters.adoc[]
 .response
 include::{snippets}/delete-shelter/http-response.adoc[]
 
+
+=== Surrender Animal
+
+.request
+include::{snippets}/SurrenderAnimal/http-request.adoc[]
+
+.request-fields
+include::{snippets}/SurrenderAnimal/request-fields.adoc[]
+
+.response
+include::{snippets}/SurrenderAnimal/http-response.adoc[]
+
+.response-fields
+include::{snippets}/SurrenderAnimal/response-fields.adoc[]
+
+

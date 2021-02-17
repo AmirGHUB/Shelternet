@@ -1,8 +1,8 @@
 package com.galvanize.shelternet.controller;
 
+import com.galvanize.shelternet.model.Animal;
 import com.galvanize.shelternet.model.Shelter;
 import com.galvanize.shelternet.services.ShelternetService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,6 +38,11 @@ public class ShelterController {
     @GetMapping("/shelter/{id}")
     public Optional<Shelter> getShelterDetails(@PathVariable Long id) {
         return shelternetService.getShelterDetails(id);
+    }
+
+    @PostMapping("/shelter/{id}/animal")
+    public Animal surrenderAnimal(@PathVariable Long id, @RequestBody Animal animal) {
+        return  shelternetService.surrenderAnimal(id, animal);
     }
 
     @PutMapping("/shelter/{id}")

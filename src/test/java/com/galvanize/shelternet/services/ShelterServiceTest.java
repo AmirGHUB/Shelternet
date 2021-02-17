@@ -1,5 +1,6 @@
 package com.galvanize.shelternet.services;
 
+import com.galvanize.shelternet.model.Animal;
 import com.galvanize.shelternet.model.Shelter;
 import com.galvanize.shelternet.repository.ShelterRepository;
 import org.junit.jupiter.api.Test;
@@ -8,6 +9,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -68,6 +70,25 @@ public class ShelterServiceTest {
 
         verify(shelterRepository,times(1)).findById(shelter.getId());
 
+    }
+
+    @Test
+    public void acceptSurrenderedAnimals() {
+        Shelter shelter = new Shelter("SHELTER1", 10);
+        Animal animal = new Animal("Dog","Dalmention", LocalDate.of(2009,04,1),"M", "black");
+        shelter.setId(1L);
+        shelter.addAnimal(animal);
+        when(shelterRepository.getOne(shelter.getId())).thenReturn(shelter);
+        when(shelterRepository.save(shelter)).thenReturn(shelter);
+
+        Animal actualAnimal = shelternetService.surrenderAnimal(shelter.getId(),animal);
+
+        assertEquals(animal,actualAnimal);
+
+        verify(shelterRepository,times(1)).getOne(shelter.getId());
+        verify(shelterRepository,times(1)).save(shelter);
+
+        assertEquals(9,shelter.getCapacity());
     }
 
     @Test

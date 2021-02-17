@@ -1,7 +1,7 @@
 package com.galvanize.shelternet.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.galvanize.shelternet.model.Animal;
 import com.galvanize.shelternet.model.Shelter;
 import com.galvanize.shelternet.repository.ShelterRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,6 +14,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
@@ -98,6 +99,40 @@ public class ShelterControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("SHELTER1"))
                 .andExpect(jsonPath("$.capacity").value(10));
+
+    }
+
+
+    @Test
+    public void acceptSurrenderedAnimals() throws Exception {
+        Shelter shelter = new Shelter("SHELTER1", 10);
+
+        MvcResult result = mockMvc.perform(post("/shelter")
+                .content(objectMapper.writeValueAsString(shelter))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated())
+                .andReturn();
+
+        String jsonResult = result.getResponse().getContentAsString();
+        Shelter shelterResult = objectMapper.readValue(jsonResult, Shelter.class);
+
+        Animal animal = new Animal("Dog","Dalmention", LocalDate.of(2009,04,1),"M", "black");
+
+        mockMvc.perform(post("/shelter/"+shelterResult.getId()+"/animal/")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(animal)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").exists())
+                .andExpect(jsonPath("$.name").value("Dog"))
+                .andExpect(jsonPath("$.species").value("Dalmention"))
+                .andExpect(jsonPath("$.birthDate").value("2009-04-01"))
+                .andExpect(jsonPath("$.sex").value("M"))
+                .andExpect(jsonPath("$.color").value("black"));
+
+        mockMvc
+                .perform(get("/shelter/" + shelterResult.getId()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.capacity").value(9));
 
     }
 

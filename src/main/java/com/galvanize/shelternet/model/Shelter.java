@@ -4,10 +4,9 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -20,13 +19,20 @@ public class Shelter {
 
     private String name;
     private Integer capacity;
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<Animal> animals;
 
     public Shelter(String name, Integer capacity) {
         this.name = name;
         this.capacity = capacity;
+        animals = new ArrayList<>();
     }
 
     public Shelter() {
         //empty constructor
+    }
+
+    public void addAnimal(Animal animal) {
+        animals.add(animal);
     }
 }
