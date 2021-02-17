@@ -38,18 +38,6 @@ include::{snippets}/GetShelterDetailsById/http-response.adoc[]
 .response-fields
 include::{snippets}/GetShelterDetailsById/response-fields.adoc[]
 
-=== Delete Shelter
-.request
-include::{snippets}/delete-shelter/http-request.adoc[]
-
-.path-parameters
-include::{snippets}/delete-shelter/path-parameters.adoc[]
-
-.response
-include::{snippets}/delete-shelter/http-response.adoc[]
-
-
-
 === Update Shelter
 .request
 include::{snippets}/update-shelter/http-request.adoc[]
@@ -65,3 +53,14 @@ include::{snippets}/update-shelter/http-response.adoc[]
 
 .response-fields
 include::{snippets}/update-shelter/response-fields.adoc[]
+
+=== Delete Shelter
+.request
+include::{snippets}/delete-shelter/http-request.adoc[]
+
+.path-parameters
+include::{snippets}/delete-shelter/path-parameters.adoc[]
+
+.response
+include::{snippets}/delete-shelter/http-response.adoc[]
+
