@@ -25,3 +25,16 @@ include::{snippets}/GetAllShelters/http-response.adoc[]
 .response-fields
 include::{snippets}/GetAllShelters/response-fields.adoc[]
 
+=== Get Shelter Details By Id
+
+.request
+include::{snippets}/GetShelterDetailsById/http-request.adoc[]
+
+
+.response
+include::{snippets}/GetShelterDetailsById/http-response.adoc[]
+
+
+.response-fields
+include::{snippets}/GetShelterDetailsById/response-fields.adoc[]
+

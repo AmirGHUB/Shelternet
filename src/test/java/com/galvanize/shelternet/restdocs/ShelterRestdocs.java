@@ -11,14 +11,17 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest
@@ -71,6 +74,25 @@ public class ShelterRestdocs {
                         fieldWithPath("[*].id").description("The ID of the shelter."),
                         fieldWithPath("[*].name").description("The name of the shelter."),
                         fieldWithPath("[*].capacity").description("The capacity of the shelter.")
+                )));
+    }
+
+    @Test
+    public void getShelterDetails() throws Exception {
+
+        Shelter shelter = new Shelter("SHELTER1", 10);
+
+        shelter.setId(1L);
+
+        when(shelternetService.getShelterDetails(shelter.getId())).thenReturn(Optional.of(shelter));
+
+        mockMvc
+                .perform(get("/shelter" + "/" + shelter.getId()))
+                .andExpect(status().isOk())
+                .andDo(document("GetShelterDetailsById", responseFields(
+                        fieldWithPath("id").description("The ID of the shelter."),
+                        fieldWithPath("name").description("The name of the shelter."),
+                        fieldWithPath("capacity").description("The capacity of the shelter.")
                 )));
     }
 }
