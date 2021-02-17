@@ -69,4 +69,22 @@ public class ShelterServiceTest {
         verify(shelterRepository,times(1)).findById(shelter.getId());
 
     }
+
+    @Test
+    public void updateShelter_looksForExistingShelterAndCallsSaveOnShelterRepo() {
+        Shelter shelterToUpdate = new Shelter("SHELTER1", 10);
+        Shelter updatedShelter = new Shelter("SHELTER1", 10);
+        Shelter existingShelter = new Shelter("SHELTER0", 20);
+        updatedShelter.setId(1L);
+
+        when(shelterRepository.findById(1L)).thenReturn(Optional.of(existingShelter));
+        when(shelterRepository.save(updatedShelter)).thenReturn(updatedShelter);
+
+        Shelter result = shelternetService.updateShelter(1L, shelterToUpdate);
+
+        assertEquals(updatedShelter, result);
+        verify(shelterRepository, times(1)).findById(1L);
+        verify(shelterRepository, times(1)).save(updatedShelter);
+        verifyNoMoreInteractions(shelterRepository);
+    }
 }

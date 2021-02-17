@@ -27,4 +27,10 @@ public class ShelternetService {
     public Optional<Shelter>  getShelterDetails(Long id) {
         return shelterRepository.findById(id);
     }
+
+    public Shelter updateShelter(Long shelterId, Shelter shelterToUpdate) {
+        shelterRepository.findById(shelterId).get();
+        shelterToUpdate.setId(shelterId);
+        return shelterRepository.save(shelterToUpdate);
+    }
 }

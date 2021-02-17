@@ -3,6 +3,8 @@ package com.galvanize.shelternet.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.galvanize.shelternet.model.Shelter;
+import com.galvanize.shelternet.repository.ShelterRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -11,6 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
@@ -19,6 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@Transactional
 public class ShelterControllerTest {
 
     @Autowired
@@ -26,6 +30,9 @@ public class ShelterControllerTest {
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @Autowired
+    private ShelterRepository shelterRepository;
 
     @Test
     public void homeTest() throws Exception {
@@ -92,4 +99,20 @@ public class ShelterControllerTest {
                 .andExpect(jsonPath("$.capacity").value(10));
 
     }
+
+    @Test
+    public void updateShelter() throws Exception {
+        Shelter existingShelter = shelterRepository.save(new Shelter("Original Shelter", 20));
+        Shelter shelterToUpdate = new Shelter("Updated Shelter", 10);
+        String shelterString = objectMapper.writeValueAsString(shelterToUpdate);
+
+        mockMvc.perform(put("/shelter/" + existingShelter.getId())
+                .content(shelterString)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(existingShelter.getId()))
+                .andExpect(jsonPath("$.name").value("Updated Shelter"))
+                .andExpect(jsonPath("$.capacity").value(10));
+    }
+
 }

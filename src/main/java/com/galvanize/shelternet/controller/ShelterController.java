@@ -39,4 +39,9 @@ public class ShelterController {
     public Optional<Shelter> getShelterDetails(@PathVariable Long id) {
         return shelternetService.getShelterDetails(id);
     }
+
+    @PutMapping("/shelter/{id}")
+    public Shelter updateShelter(@PathVariable Long id, @RequestBody Shelter shelterToUpdate) {
+        return shelternetService.updateShelter(id, shelterToUpdate);
+    }
 }
