@@ -18,7 +18,10 @@ import java.util.Optional;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -94,5 +97,27 @@ public class ShelterRestdocs {
                         fieldWithPath("name").description("The name of the shelter."),
                         fieldWithPath("capacity").description("The capacity of the shelter.")
                 )));
+    }
+
+    @Test
+    public void updateShelterRestDocTest() throws Exception {
+        Shelter shelter = new Shelter("SHELTER1", 10);
+        shelter.setId(1L);
+        when(shelternetService.updateShelter(1L, shelter)).thenReturn(shelter);
+
+        mockMvc.perform(put("/shelter/{id}", 1L)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(new Shelter("SHELTER1", 10))))
+                .andExpect(status().isOk())
+                .andDo(document("update-shelter", pathParameters(
+                        parameterWithName("id").description("id of shelter to update")
+                        ),
+                        responseFields(fieldWithPath("id").description("Id of the shelter"),
+                        fieldWithPath("name").description("Name of the shelter"),
+                        fieldWithPath("capacity").description("Capacity of the shelter")),
+                        requestFields(
+                                fieldWithPath("id").ignored(),
+                                fieldWithPath("name").description("Name of the shelter"),
+                                fieldWithPath("capacity").description("Capacity of the shelter"))));
     }
 }

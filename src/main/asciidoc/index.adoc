@@ -38,3 +38,19 @@ include::{snippets}/GetShelterDetailsById/http-response.adoc[]
 .response-fields
 include::{snippets}/GetShelterDetailsById/response-fields.adoc[]
 
+=== Update Shelter
+.request
+include::{snippets}/update-shelter/http-request.adoc[]
+
+.request-fields
+include::{snippets}/update-shelter/request-fields.adoc[]
+
+.request-body
+include::{snippets}/update-shelter/request-body.adoc[]
+
+.response
+include::{snippets}/update-shelter/http-response.adoc[]
+
+.response-fields
+include::{snippets}/update-shelter/response-fields.adoc[]
+
