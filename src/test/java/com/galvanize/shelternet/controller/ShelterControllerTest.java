@@ -17,6 +17,7 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -113,6 +114,13 @@ public class ShelterControllerTest {
                 .andExpect(jsonPath("$.id").value(existingShelter.getId()))
                 .andExpect(jsonPath("$.name").value("Updated Shelter"))
                 .andExpect(jsonPath("$.capacity").value(10));
+    }
+    @Test
+    public void deleteShelterById() throws Exception {
+        Shelter existingShelter = shelterRepository.save(new Shelter("Original Shelter", 20));
+        mockMvc.perform(delete("/shelter/" + existingShelter.getId()))
+                .andExpect(status().isOk());
+        assertEquals(0,shelterRepository.findAll().size());
     }
 
 }

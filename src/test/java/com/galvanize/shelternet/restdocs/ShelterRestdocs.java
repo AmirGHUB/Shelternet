@@ -19,11 +19,11 @@ import java.util.Optional;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -120,4 +120,15 @@ public class ShelterRestdocs {
                                 fieldWithPath("name").description("Name of the shelter"),
                                 fieldWithPath("capacity").description("Capacity of the shelter"))));
     }
+    @Test
+    public void deleteShelterRestDocTest() throws Exception {
+
+        mockMvc.perform(delete("/shelter/{id}", 1L))
+                .andExpect(status().isOk())
+                .andDo(document("delete-shelter", pathParameters(
+                        parameterWithName("id").description("id of shelter to delete")
+                        )));
+
+    }
+
 }

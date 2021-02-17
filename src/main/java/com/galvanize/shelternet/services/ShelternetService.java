@@ -33,4 +33,8 @@ public class ShelternetService {
         shelterToUpdate.setId(shelterId);
         return shelterRepository.save(shelterToUpdate);
     }
+
+    public void delete(Long id) {
+        shelterRepository.deleteById(id);
+    }
 }

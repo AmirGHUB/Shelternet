@@ -87,4 +87,10 @@ public class ShelterServiceTest {
         verify(shelterRepository, times(1)).save(updatedShelter);
         verifyNoMoreInteractions(shelterRepository);
     }
+
+    @Test
+    public void deleteShelterById() {
+       shelternetService.delete(1L);
+       verify(shelterRepository).deleteById(1L);
+    }
 }

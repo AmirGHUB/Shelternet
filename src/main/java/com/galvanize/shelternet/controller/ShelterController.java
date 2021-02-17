@@ -44,4 +44,9 @@ public class ShelterController {
     public Shelter updateShelter(@PathVariable Long id, @RequestBody Shelter shelterToUpdate) {
         return shelternetService.updateShelter(id, shelterToUpdate);
     }
+
+    @DeleteMapping("/shelter/{id}")
+    public void deleteShelter(@PathVariable Long id) {
+        shelternetService.delete(id);
+    }
 }
