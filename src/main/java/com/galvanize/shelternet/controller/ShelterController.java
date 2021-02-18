@@ -54,4 +54,6 @@ public class ShelterController {
     public void deleteShelter(@PathVariable Long id) {
         shelternetService.delete(id);
     }
+
+
 }
