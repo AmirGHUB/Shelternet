@@ -2,6 +2,7 @@ package com.galvanize.shelternet.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.galvanize.shelternet.model.Animal;
+import com.galvanize.shelternet.model.AnimalTransfer;
 import com.galvanize.shelternet.model.Shelter;
 import com.galvanize.shelternet.repository.ShelterRepository;
 import org.junit.jupiter.api.Test;
@@ -158,6 +159,49 @@ public class ShelterControllerTest {
         mockMvc.perform(delete("/shelters/" + existingShelter.getId()))
                 .andExpect(status().isOk());
         assertEquals(0, shelterRepository.findAll().size());
+    }
+
+    @Test
+    public void transferAnimal_succesfullyTransfersAnimal() throws Exception {
+        Shelter shelter1 = new Shelter("Shelter A", 20);
+        Animal animal = new Animal("Dog", "Dalmention", LocalDate.of(2009, 04, 1), "M", "black");
+        shelter1.addAnimal(animal);
+        shelter1 = shelterRepository.save(shelter1);
+        Shelter shelter2 = shelterRepository.save(new Shelter("Shelter B", 20));
+
+        AnimalTransfer animalTransfer = new AnimalTransfer(shelter1.getId(), shelter2.getId(), shelter1.getAnimals().get(0).getId());
+        String jsonString = objectMapper.writeValueAsString(animalTransfer);
+
+        mockMvc.perform(put("/shelters/transfer-animal")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonString))
+                .andExpect(status().isOk());
+
+        assertEquals(0, shelterRepository.getOne(shelter1.getId()).getAnimals().size());
+        assertEquals(1, shelterRepository.getOne(shelter2.getId()).getAnimals().size());
+    }
+
+    @Test
+    public void transferAnimal_returnsBadRequest() throws Exception {
+        Shelter shelter1 = new Shelter("Shelter A", 20);
+        Animal animal1 = new Animal("Dog", "Dalmention", LocalDate.of(2009, 04, 1), "M", "black");
+        shelter1.addAnimal(animal1);
+        shelter1 = shelterRepository.save(shelter1);
+        Shelter shelter2 = new Shelter("Shelter A", 1);
+        Animal animal2 = new Animal("Dog", "Dalmention", LocalDate.of(2009, 04, 1), "M", "black");
+        shelter2.addAnimal(animal2);
+        shelter2 = shelterRepository.save(shelter2);
+
+        AnimalTransfer animalTransfer = new AnimalTransfer(shelter1.getId(), shelter2.getId(), shelter1.getAnimals().get(0).getId());
+        String jsonString = objectMapper.writeValueAsString(animalTransfer);
+
+        mockMvc.perform(put("/shelters/transfer-animal")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonString))
+                .andExpect(status().isBadRequest());
+
+        assertEquals(1, shelterRepository.getOne(shelter1.getId()).getAnimals().size());
+        assertEquals(1, shelterRepository.getOne(shelter2.getId()).getAnimals().size());
     }
 
     @Test

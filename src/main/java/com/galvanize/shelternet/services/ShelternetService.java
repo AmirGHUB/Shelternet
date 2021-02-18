@@ -1,12 +1,14 @@
 package com.galvanize.shelternet.services;
 
 import com.galvanize.shelternet.model.Animal;
+import com.galvanize.shelternet.model.AnimalTransfer;
 import com.galvanize.shelternet.model.Shelter;
 import com.galvanize.shelternet.model.ShelterDto;
 import com.galvanize.shelternet.repository.ShelterRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -52,10 +54,36 @@ public class ShelternetService {
     }
 
     private ShelterDto mapToDto(Shelter shelter) {
-        return new ShelterDto(shelter.getId(), shelter.getName(), shelter.getMaxCapacity() - shelter.getAnimals().size(), shelter.getAnimals());
+        return new ShelterDto(shelter.getId(), shelter.getName(), getCurrentCapacity(shelter), shelter.getAnimals());
+    }
+
+    public boolean transferAnimal(AnimalTransfer animalTransfer) {
+        Shelter shelterToTransferFrom = shelterRepository.findById(animalTransfer.getShelterIdFrom()).get();
+        Animal animalToTransfer = getAnimalFromShelter(shelterToTransferFrom, animalTransfer.getAnimalId()).get();
+        Shelter shelterToTransferTo = shelterRepository.findById(animalTransfer.getShelterIdTo()).get();
+
+        if (getCurrentCapacity(shelterToTransferTo) > 0) {
+            shelterToTransferFrom.getAnimals().remove(animalToTransfer);
+            shelterToTransferTo.addAnimal(animalToTransfer);
+            shelterRepository.save(shelterToTransferFrom);
+            shelterRepository.save(shelterToTransferTo);
+            return true;
+        }
+        return false;
     }
 
     public List<Animal> getAnimalsByShelterId(Long shelterId) {
         return shelterRepository.getOne(shelterId).getAnimals();
     }
+
+    private Optional<Animal> getAnimalFromShelter(Shelter shelter, Long animalId) {
+        return shelter.getAnimals().stream()
+                .filter(animal -> animal.getId().equals(animalId))
+                .findFirst();
+    }
+
+    private Integer getCurrentCapacity(Shelter shelter) {
+        return shelter.getMaxCapacity() - shelter.getAnimals().size();
+    }
 }
+

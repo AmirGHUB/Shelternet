@@ -1,6 +1,7 @@
 package com.galvanize.shelternet.services;
 
 import com.galvanize.shelternet.model.Animal;
+import com.galvanize.shelternet.model.AnimalTransfer;
 import com.galvanize.shelternet.model.Shelter;
 import com.galvanize.shelternet.model.ShelterDto;
 import com.galvanize.shelternet.repository.ShelterRepository;
@@ -13,8 +14,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -119,6 +121,61 @@ public class ShelterServiceTest {
     public void deleteShelterById() {
         shelternetService.delete(1L);
         verify(shelterRepository).deleteById(1L);
+    }
+
+    @Test
+    public void transferAnimal_transfersAnimalBetweenShelters() {
+        Animal animal = new Animal("Dog","Dalmention", LocalDate.of(2009,4,1),"M", "black");
+        animal.setId(2L);
+        Shelter shelter1 = new Shelter("shelterToTransferFrom", 5);
+        shelter1.setId(1L);
+        shelter1.addAnimal(animal);
+        Shelter shelter2 = new Shelter("shelterToTransferTo", 5);
+        shelter2.setId(3L);
+
+        Shelter shelter1Updated = new Shelter("shelterToTransferFrom", 5);
+        shelter1Updated.setId(1L);
+        shelter1Updated.setAnimals(new ArrayList<>());
+        Shelter shelter2Updated = new Shelter("shelterToTransferTo", 5);
+        shelter2Updated.setId(3L);
+        shelter2Updated.addAnimal(animal);
+
+        when(shelterRepository.findById(1L)).thenReturn(Optional.of(shelter1));
+        when(shelterRepository.findById(3L)).thenReturn(Optional.of(shelter2));
+        when(shelterRepository.save(shelter1Updated)).thenReturn(null);
+        when(shelterRepository.save(shelter2Updated)).thenReturn(null);
+
+        AnimalTransfer animalTransfer = new AnimalTransfer(1L, 3L, 2L);
+
+        boolean result = shelternetService.transferAnimal(animalTransfer);
+
+        assertTrue(result);
+        verify(shelterRepository).save(shelter1Updated);
+        verify(shelterRepository).save(shelter2Updated);
+        verifyNoMoreInteractions(shelterRepository);
+    }
+
+
+    @Test
+    public void transferAnimal_returnsFalseIfShelterToTransferToIsFull() {
+        Animal animal = new Animal("Dog","Dalmention", LocalDate.of(2009,4,1),"M", "black");
+        animal.setId(2L);
+        Shelter shelter1 = new Shelter("shelterToTransferFrom", 5);
+        shelter1.setId(1L);
+        shelter1.addAnimal(animal);
+        Shelter shelter2 = new Shelter("shelterToTransferTo", 1);
+        shelter2.addAnimal(animal);
+        shelter2.setId(3L);
+
+        when(shelterRepository.findById(1L)).thenReturn(Optional.of(shelter1));
+        when(shelterRepository.findById(3L)).thenReturn(Optional.of(shelter2));
+
+        AnimalTransfer animalTransfer = new AnimalTransfer(1L, 3L, 2L);
+
+        boolean result = shelternetService.transferAnimal(animalTransfer);
+
+        assertFalse(result);
+        verifyNoMoreInteractions(shelterRepository);
     }
 
     @Test

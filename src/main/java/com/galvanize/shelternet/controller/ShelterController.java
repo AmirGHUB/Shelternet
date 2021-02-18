@@ -1,10 +1,12 @@
 package com.galvanize.shelternet.controller;
 
 import com.galvanize.shelternet.model.Animal;
+import com.galvanize.shelternet.model.AnimalTransfer;
 import com.galvanize.shelternet.model.Shelter;
 import com.galvanize.shelternet.model.ShelterDto;
 import com.galvanize.shelternet.services.ShelternetService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -48,11 +50,16 @@ public class ShelterController {
         return shelternetService.updateShelter(id, shelterToUpdate);
     }
 
+    @PutMapping("/transfer-animal")
+    public ResponseEntity<Void> transferAnimal(@RequestBody AnimalTransfer animalTransfer) {
+        return shelternetService.transferAnimal(animalTransfer)
+                ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
     @DeleteMapping("/{id}")
     public void deleteShelter(@PathVariable Long id) {
         shelternetService.delete(id);
     }
-
 
     @GetMapping("/{shelterId}/animals")
     public List<Animal> getAnimalsByShelterId(@PathVariable Long shelterId) {
