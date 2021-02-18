@@ -130,4 +130,16 @@ include::{snippets}/get-animals-by-shelter-id/http-response.adoc[]
 .response-fields
 include::{snippets}/get-animals-by-shelter-id/response-fields.adoc[]
 
+=== Transfer Animal To Different Shelter
+
+.request
+include::{snippets}/transfer-animal/http-request.adoc[]
+
+.request-fields
+include::{snippets}/transfer-animal/request-fields.adoc[]
+
+.response
+include::{snippets}/transfer-animal/http-response.adoc[]
+
+
 

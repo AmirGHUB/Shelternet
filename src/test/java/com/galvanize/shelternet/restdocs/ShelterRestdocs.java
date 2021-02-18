@@ -3,6 +3,7 @@ package com.galvanize.shelternet.restdocs;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.galvanize.shelternet.controller.ShelterController;
 import com.galvanize.shelternet.model.Animal;
+import com.galvanize.shelternet.model.AnimalTransfer;
 import com.galvanize.shelternet.model.Shelter;
 import com.galvanize.shelternet.model.ShelterDto;
 import com.galvanize.shelternet.services.ShelternetService;
@@ -14,10 +15,12 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.time.LocalDate;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
@@ -217,5 +220,23 @@ public class ShelterRestdocs {
                                 fieldWithPath("[*].sex").description("Sex of the Animal"),
                                 fieldWithPath("[*].color").description("Color of the Animal")
                         )));
+    }
+
+
+    @Test
+    public void transferAnimal_succesfullyTransfersAnimal() throws Exception {
+        AnimalTransfer animalTransfer = new AnimalTransfer(1L, 2L, 1L);
+        String jsonString = objectMapper.writeValueAsString(animalTransfer);
+
+        when(shelternetService.transferAnimal(animalTransfer)).thenReturn(true);
+
+        mockMvc.perform(put("/shelters/transfer-animal")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonString))
+                .andExpect(status().isOk())
+                .andDo(document("transfer-animal",   requestFields(
+                        fieldWithPath("shelterIdFrom").description("Id of shelter to transfer animal from"),
+                        fieldWithPath("shelterIdTo").description("Id of shelter to transfer animal to"),
+                        fieldWithPath("animalId").description("Id of animal to transfer"))));
     }
 }
