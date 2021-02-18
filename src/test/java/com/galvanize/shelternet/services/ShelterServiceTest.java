@@ -114,4 +114,5 @@ public class ShelterServiceTest {
         shelternetService.delete(1L);
         verify(shelterRepository).deleteById(1L);
     }
+
 }

@@ -14,6 +14,7 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
+import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -155,4 +156,7 @@ public class ShelterControllerTest {
                 .andExpect(status().isOk());
         assertEquals(0, shelterRepository.findAll().size());
     }
+
+
 }
+

@@ -46,4 +46,5 @@ public class ShelternetService {
     public void delete(Long id) {
         shelterRepository.deleteById(id);
     }
+
 }
