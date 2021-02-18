@@ -204,7 +204,7 @@ public class ShelterRestdocs {
 
         when(shelternetService.getAnimalsByShelterId(shelter.getId())).thenReturn(expected);
 
-        mockMvc.perform(get("/shelters/animals/{shelterId}", shelter.getId()))
+        mockMvc.perform(get("/shelters/{shelterId}/animals/", shelter.getId()))
                 .andExpect(status().isOk())
                 .andDo(document("get-animals-by-shelter-id", pathParameters(
                         parameterWithName("shelterId").description("id of the shelter")

@@ -171,7 +171,7 @@ public class ShelterControllerTest {
         shelter = shelterRepository.save(shelter);
 
         String expectedString = objectMapper.writeValueAsString(expected);
-        mockMvc.perform(get("/shelters/animals" + "/" + shelter.getId()))
+        mockMvc.perform(get("/shelters/" + shelter.getId() + "/animals"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(expectedString));
     }

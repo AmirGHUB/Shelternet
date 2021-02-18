@@ -54,7 +54,7 @@ public class ShelterController {
     }
 
 
-    @GetMapping("/animals/{shelterId}")
+    @GetMapping("/{shelterId}/animals")
     public List<Animal> getAnimalsByShelterId(@PathVariable Long shelterId) {
         return shelternetService.getAnimalsByShelterId(shelterId);
     }
