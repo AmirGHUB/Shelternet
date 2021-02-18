@@ -169,7 +169,7 @@ public class ShelterRestdocs {
 
         mockMvc.perform(post("/shelters/1/animal/")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(animal)))
+                .content(objectMapper.writeValueAsString(new Animal("Dog", "Dalmention", LocalDate.of(2009, 4, 1), "M", "black"))))
                 .andExpect(status().isOk())
                 .andDo(document("SurrenderAnimal",
                         responseFields(
