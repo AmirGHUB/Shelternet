@@ -92,4 +92,14 @@ include::{snippets}/adoption-application/http-response.adoc[]
 .response-fields
 include::{snippets}/adoption-application/response-fields.adoc[]
 
+=== Get All Animals
+
+.request
+include::{snippets}/get-all-animals/http-request.adoc[]
+
+.response
+include::{snippets}/get-all-animals/http-response.adoc[]
+
+.response-fields
+include::{snippets}/get-all-animals/response-fields.adoc[]
 
