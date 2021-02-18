@@ -11,7 +11,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.LocalDate;
 import java.util.List;
 
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -30,7 +31,8 @@ public class AnimalServiceTest {
         List<Animal> animals1 = List.of(animal1,animal2,animal3);
         when(animalRepository.findAll()).thenReturn(animals1);
         List<Animal> result = animalService.getAllAnimals();
-
+        assertEquals(animals1,result);
+        verify(animalRepository,times(1)).findAll();
+        verifyNoMoreInteractions(animalRepository);
     }
-
 }
