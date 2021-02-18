@@ -79,4 +79,17 @@ include::{snippets}/SurrenderAnimal/http-response.adoc[]
 .response-fields
 include::{snippets}/SurrenderAnimal/response-fields.adoc[]
 
+=== Create Adoption Application
+.request
+include::{snippets}/adoption-application/http-request.adoc[]
+
+.request-fields
+include::{snippets}/adoption-application/request-fields.adoc[]
+
+.response
+include::{snippets}/adoption-application/http-response.adoc[]
+
+.response-fields
+include::{snippets}/adoption-application/response-fields.adoc[]
+
 
