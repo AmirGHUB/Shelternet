@@ -1,5 +1,49 @@
-== Shelternet API
+= Shelternet API
+
+== Adoption Application Endpoints
+
+=== Create Adoption Application
+
+.request
+include::{snippets}/adoption-application/http-request.adoc[]
+
+.request-fields
+include::{snippets}/adoption-application/request-fields.adoc[]
+
+.response
+include::{snippets}/adoption-application/http-response.adoc[]
+
+.response-fields
+include::{snippets}/adoption-application/response-fields.adoc[]
+
+=== Get All Applications
+
+.request
+include::{snippets}/get-all-applications/http-request.adoc[]
+
+.response
+include::{snippets}/get-all-applications/http-response.adoc[]
+
+.response-fields
+include::{snippets}/get-all-applications/response-fields.adoc[]
+
+== Animal Endpoints
+
+=== Get All Animals
+
+.request
+include::{snippets}/get-all-animals/http-request.adoc[]
+
+.response
+include::{snippets}/get-all-animals/http-response.adoc[]
+
+.response-fields
+include::{snippets}/get-all-animals/response-fields.adoc[]
+
+== Shelter Endpoints
+
 === Register Shelter
+
 .request
 include::{snippets}/register-shelter/http-request.adoc[]
 
@@ -17,10 +61,8 @@ include::{snippets}/register-shelter/response-fields.adoc[]
 .request
 include::{snippets}/GetAllShelters/http-request.adoc[]
 
-
 .response
 include::{snippets}/GetAllShelters/http-response.adoc[]
-
 
 .response-fields
 include::{snippets}/GetAllShelters/response-fields.adoc[]
@@ -30,15 +72,14 @@ include::{snippets}/GetAllShelters/response-fields.adoc[]
 .request
 include::{snippets}/GetShelterDetailsById/http-request.adoc[]
 
-
 .response
 include::{snippets}/GetShelterDetailsById/http-response.adoc[]
-
 
 .response-fields
 include::{snippets}/GetShelterDetailsById/response-fields.adoc[]
 
 === Update Shelter
+
 .request
 include::{snippets}/update-shelter/http-request.adoc[]
 
@@ -64,7 +105,6 @@ include::{snippets}/delete-shelter/path-parameters.adoc[]
 .response
 include::{snippets}/delete-shelter/http-response.adoc[]
 
-
 === Surrender Animal
 
 .request
@@ -79,36 +119,4 @@ include::{snippets}/SurrenderAnimal/http-response.adoc[]
 .response-fields
 include::{snippets}/SurrenderAnimal/response-fields.adoc[]
 
-=== Create Adoption Application
-.request
-include::{snippets}/adoption-application/http-request.adoc[]
-
-.request-fields
-include::{snippets}/adoption-application/request-fields.adoc[]
-
-.response
-include::{snippets}/adoption-application/http-response.adoc[]
-
-.response-fields
-include::{snippets}/adoption-application/response-fields.adoc[]
-
-=== Get All Applications
-.request
-include::{snippets}/get-all-applications/http-request.adoc[]
-
-.response
-include::{snippets}/get-all-applications/http-response.adoc[]
-
-.response-fields
-include::{snippets}/get-all-applications/response-fields.adoc[]
-
-=== Get All Animals
-.request
-include::{snippets}/get-all-animals/http-request.adoc[]
-
-.response
-include::{snippets}/get-all-animals/http-response.adoc[]
-
-.response-fields
-include::{snippets}/get-all-animals/response-fields.adoc[]
 
