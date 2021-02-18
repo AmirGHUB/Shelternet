@@ -41,7 +41,7 @@ public class ShelternetService {
     }
 
     public ShelterDto updateShelter(Long shelterId, Shelter shelterToUpdate) {
-        Shelter retrievedShelter =  shelterRepository.getOne(shelterId);
+        Shelter retrievedShelter = shelterRepository.getOne(shelterId);
         shelterToUpdate.setId(shelterId);
         shelterToUpdate.setAnimals(retrievedShelter.getAnimals());
         return mapToDto(shelterRepository.save(shelterToUpdate));
@@ -53,5 +53,9 @@ public class ShelternetService {
 
     private ShelterDto mapToDto(Shelter shelter) {
         return new ShelterDto(shelter.getId(), shelter.getName(), shelter.getMaxCapacity() - shelter.getAnimals().size(), shelter.getAnimals());
+    }
+
+    public List<Animal> getAnimalsByShelterId(Long shelterId) {
+        return shelterRepository.getOne(shelterId).getAnimals();
     }
 }

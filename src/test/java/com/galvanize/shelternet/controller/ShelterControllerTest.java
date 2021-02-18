@@ -159,5 +159,21 @@ public class ShelterControllerTest {
                 .andExpect(status().isOk());
         assertEquals(0, shelterRepository.findAll().size());
     }
+
+    @Test
+    public void getAnimalsByShelterId() throws Exception {
+        Animal animal1 = new Animal("Dog", "Dalmention", LocalDate.of(2009, 4, 1), "M", "black");
+        Animal animal2 = new Animal("Cat", "AfricanCat", LocalDate.of(2021, 2, 1), "M", "black");
+        List<Animal> expected = List.of(animal1, animal2);
+        Shelter shelter = new Shelter("Shelter1", 50);
+        shelter.addAnimal(animal1);
+        shelter.addAnimal(animal2);
+        shelter = shelterRepository.save(shelter);
+
+        String expectedString = objectMapper.writeValueAsString(expected);
+        mockMvc.perform(get("/shelters/animals" + "/" + shelter.getId()))
+                .andExpect(status().isOk())
+                .andExpect(content().string(expectedString));
+    }
 }
 

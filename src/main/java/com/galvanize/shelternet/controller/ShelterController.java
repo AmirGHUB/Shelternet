@@ -29,7 +29,7 @@ public class ShelterController {
     }
 
     @GetMapping
-    public List<ShelterDto> getAllShelters(){
+    public List<ShelterDto> getAllShelters() {
         return shelternetService.getAllShelters();
     }
 
@@ -40,7 +40,7 @@ public class ShelterController {
 
     @PostMapping("/{id}/animal")
     public Animal surrenderAnimal(@PathVariable Long id, @RequestBody Animal animal) {
-        return  shelternetService.surrenderAnimal(id, animal);
+        return shelternetService.surrenderAnimal(id, animal);
     }
 
     @PutMapping("/{id}")
@@ -54,4 +54,8 @@ public class ShelterController {
     }
 
 
+    @GetMapping("/animals/{shelterId}")
+    public List<Animal> getAnimalsByShelterId(@PathVariable Long shelterId) {
+        return shelternetService.getAnimalsByShelterId(shelterId);
+    }
 }

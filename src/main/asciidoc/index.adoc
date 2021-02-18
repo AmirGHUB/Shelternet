@@ -119,4 +119,15 @@ include::{snippets}/SurrenderAnimal/http-response.adoc[]
 .response-fields
 include::{snippets}/SurrenderAnimal/response-fields.adoc[]
 
+=== Get Animals by Shelter ID
+
+.request
+include::{snippets}/get-animals-by-shelter-id/http-request.adoc[]
+
+.response
+include::{snippets}/get-animals-by-shelter-id/http-response.adoc[]
+
+.response-fields
+include::{snippets}/get-animals-by-shelter-id/response-fields.adoc[]
+
 

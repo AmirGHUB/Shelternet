@@ -22,10 +22,11 @@ import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(controllers = ShelterController.class)
@@ -162,7 +163,6 @@ public class ShelterRestdocs {
 
     @Test
     public void acceptSurrenderedAnimals() throws Exception {
-
         Animal animal = new Animal("Dog", "Dalmention", LocalDate.of(2009, 4, 1), "M", "black");
         animal.setId(1L);
         when(shelternetService.surrenderAnimal(1L, animal)).thenReturn(animal);
@@ -186,9 +186,36 @@ public class ShelterRestdocs {
                                 fieldWithPath("birthDate").description("Birth Date of the Animal"),
                                 fieldWithPath("sex").description("Sex of the Animal"),
                                 fieldWithPath("color").description("Color of the Animal"))));
-
-
     }
 
+    @Test
+    public void getAnimalsByShelterId() throws Exception {
+        Animal animal1 = new Animal("Dog", "Dalmention", LocalDate.of(2009, 4, 1), "M", "black");
+        Animal animal2 = new Animal("Cat", "AfricanCat", LocalDate.of(2021, 2, 1), "M", "black");
+        animal1.setId(2L);
+        animal2.setId(3L);
 
+        List<Animal> expected = List.of(animal1, animal2);
+
+        Shelter shelter = new Shelter("Shelter1", 50);
+        shelter.setId(1L);
+        shelter.addAnimal(animal1);
+        shelter.addAnimal(animal2);
+
+        when(shelternetService.getAnimalsByShelterId(shelter.getId())).thenReturn(expected);
+
+        mockMvc.perform(get("/shelters/animals/{shelterId}", shelter.getId()))
+                .andExpect(status().isOk())
+                .andDo(document("get-animals-by-shelter-id", pathParameters(
+                        parameterWithName("shelterId").description("id of the shelter")
+                        ),
+                        responseFields(
+                                fieldWithPath("[*].id").description("Id of the Animal"),
+                                fieldWithPath("[*].name").description("Name of the Animal"),
+                                fieldWithPath("[*].species").description("Species of the Animal"),
+                                fieldWithPath("[*].birthDate").description("Birth Date of the Animal"),
+                                fieldWithPath("[*].sex").description("Sex of the Animal"),
+                                fieldWithPath("[*].color").description("Color of the Animal")
+                        )));
+    }
 }

@@ -13,7 +13,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -36,7 +35,7 @@ public class ShelterServiceTest {
 
         ShelterDto actual = shelternetService.registerShelter(shelter);
 
-        ShelterDto expected = new ShelterDto(1L,"SHELTER1",10,new ArrayList<>());
+        ShelterDto expected = new ShelterDto(1L, "SHELTER1", 10, new ArrayList<>());
         verify(shelterRepository, times(1)).save(shelter);
 
         assertEquals(expected, actual);
@@ -62,14 +61,14 @@ public class ShelterServiceTest {
     @Test
     public void getShelterDetails() {
         Shelter shelter = new Shelter("SHELTER1", 10);
-        Animal animal = new Animal("Dog","Dalmention", LocalDate.of(2009,4,1),"M", "black");
+        Animal animal = new Animal("Dog", "Dalmention", LocalDate.of(2009, 4, 1), "M", "black");
         shelter.setId(1L);
         shelter.addAnimal(animal);
 
         when(shelterRepository.getOne(shelter.getId())).thenReturn(shelter);
 
         ShelterDto actual = shelternetService.getShelterDetails(shelter.getId());
-        ShelterDto expected = new ShelterDto(1L,"SHELTER1",9,List.of(animal));
+        ShelterDto expected = new ShelterDto(1L, "SHELTER1", 9, List.of(animal));
 
         assertEquals(expected, actual);
 
@@ -80,18 +79,18 @@ public class ShelterServiceTest {
     @Test
     public void acceptSurrenderedAnimals() {
         Shelter shelter = new Shelter("SHELTER1", 10);
-        Animal animal = new Animal("Dog","Dalmention", LocalDate.of(2009,4,1),"M", "black");
+        Animal animal = new Animal("Dog", "Dalmention", LocalDate.of(2009, 4, 1), "M", "black");
         shelter.setId(1L);
         shelter.addAnimal(animal);
         when(shelterRepository.getOne(shelter.getId())).thenReturn(shelter);
         when(shelterRepository.save(shelter)).thenReturn(shelter);
 
-        Animal actualAnimal = shelternetService.surrenderAnimal(shelter.getId(),animal);
+        Animal actualAnimal = shelternetService.surrenderAnimal(shelter.getId(), animal);
 
-        assertEquals(animal,actualAnimal);
+        assertEquals(animal, actualAnimal);
 
-        verify(shelterRepository,times(1)).getOne(shelter.getId());
-        verify(shelterRepository,times(1)).save(shelter);
+        verify(shelterRepository, times(1)).getOne(shelter.getId());
+        verify(shelterRepository, times(1)).save(shelter);
 
 
     }
@@ -108,7 +107,7 @@ public class ShelterServiceTest {
 
         ShelterDto actual = shelternetService.updateShelter(1L, shelterToUpdate);
 
-        ShelterDto expected = new ShelterDto(1L,"SHELTER1",10,new ArrayList<>());
+        ShelterDto expected = new ShelterDto(1L, "SHELTER1", 10, new ArrayList<>());
 
         assertEquals(expected, actual);
         verify(shelterRepository, times(1)).getOne(1L);
@@ -122,4 +121,22 @@ public class ShelterServiceTest {
         verify(shelterRepository).deleteById(1L);
     }
 
+    @Test
+    public void getAnimalsByShelterId() {
+        Animal animal1 = new Animal("Dog", "Dalmention", LocalDate.of(2009, 4, 1), "M", "black");
+        Animal animal2 = new Animal("Cat", "AfricanCat", LocalDate.of(2021, 2, 1), "M", "black");
+        List<Animal> expected = List.of(animal1, animal2);
+        Shelter shelter = new Shelter("Shelter1", 50);
+        shelter.setId(1L);
+        shelter.addAnimal(animal1);
+        shelter.addAnimal(animal2);
+
+        when(shelterRepository.getOne(any())).thenReturn(shelter);
+
+        List<Animal> actual = shelternetService.getAnimalsByShelterId(shelter.getId());
+
+        verify(shelterRepository).getOne(shelter.getId());
+
+        assertEquals(expected, actual);
+    }
 }
