@@ -82,6 +82,10 @@ public class ShelterControllerTest {
     @Test
     public void getShelterDetails() throws Exception {
         Shelter shelter = new Shelter("SHELTER1", 10);
+        Animal animal1 = new Animal("Dog","Dalmention", LocalDate.of(2009,4,1),"M", "black");
+        Animal animal2 = new Animal("hob","wildcat", LocalDate.of(2010,5,2),"F", "white");
+        shelter.addAnimal(animal1);
+        shelter.addAnimal(animal2);
 
         MvcResult result = mockMvc.perform(post("/shelter")
                 .content(objectMapper.writeValueAsString(shelter))
@@ -96,7 +100,7 @@ public class ShelterControllerTest {
                 .perform(get("/shelter" + "/" + shelterResult.getId()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("SHELTER1"))
-                .andExpect(jsonPath("$.capacity").value(10));
+                .andExpect(jsonPath("$.capacity").value(8));
 
     }
 
@@ -114,7 +118,7 @@ public class ShelterControllerTest {
         String jsonResult = result.getResponse().getContentAsString();
         Shelter shelterResult = objectMapper.readValue(jsonResult, Shelter.class);
 
-        Animal animal = new Animal("Dog","Dalmention", LocalDate.of(2009,04,1),"M", "black");
+        Animal animal = new Animal("Dog","Dalmention", LocalDate.of(2009,4,1),"M", "black");
 
         mockMvc.perform(post("/shelter/"+shelterResult.getId()+"/animal/")
                 .contentType(MediaType.APPLICATION_JSON)

@@ -16,15 +16,14 @@ public class Shelter {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-
     private String name;
-    private Integer capacity;
+    private Integer maxCapacity;
     @OneToMany(cascade = CascadeType.ALL)
     private List<Animal> animals;
 
-    public Shelter(String name, Integer capacity) {
+    public Shelter(String name, Integer maxCapacity) {
         this.name = name;
-        this.capacity = capacity;
+        this.maxCapacity = maxCapacity;
         animals = new ArrayList<>();
     }
 

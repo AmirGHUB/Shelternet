@@ -2,12 +2,13 @@ package com.galvanize.shelternet.controller;
 
 import com.galvanize.shelternet.model.Animal;
 import com.galvanize.shelternet.model.Shelter;
+import com.galvanize.shelternet.model.ShelterDto;
 import com.galvanize.shelternet.services.ShelternetService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
+
 
 @RestController
 public class ShelterController {
@@ -26,17 +27,17 @@ public class ShelterController {
 
     @PostMapping("/shelter")
     @ResponseStatus(HttpStatus.CREATED)
-    public Shelter registerShelter(@RequestBody Shelter shelter) {
+    public ShelterDto registerShelter(@RequestBody Shelter shelter) {
         return shelternetService.registerShelter(shelter);
     }
 
     @GetMapping("/shelter")
-    public List<Shelter> getAllShelters(){
+    public List<ShelterDto> getAllShelters(){
         return shelternetService.getAllShelters();
     }
 
     @GetMapping("/shelter/{id}")
-    public Optional<Shelter> getShelterDetails(@PathVariable Long id) {
+    public ShelterDto getShelterDetails(@PathVariable Long id) {
         return shelternetService.getShelterDetails(id);
     }
 
@@ -46,7 +47,7 @@ public class ShelterController {
     }
 
     @PutMapping("/shelter/{id}")
-    public Shelter updateShelter(@PathVariable Long id, @RequestBody Shelter shelterToUpdate) {
+    public ShelterDto updateShelter(@PathVariable Long id, @RequestBody Shelter shelterToUpdate) {
         return shelternetService.updateShelter(id, shelterToUpdate);
     }
 

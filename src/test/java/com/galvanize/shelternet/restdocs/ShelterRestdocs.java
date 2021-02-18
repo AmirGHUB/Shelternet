@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.galvanize.shelternet.controller.ShelterController;
 import com.galvanize.shelternet.model.Animal;
 import com.galvanize.shelternet.model.Shelter;
+import com.galvanize.shelternet.model.ShelterDto;
 import com.galvanize.shelternet.services.ShelternetService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,6 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -46,21 +46,24 @@ public class ShelterRestdocs {
     public void registerShelterRestDocTest() throws Exception {
         Shelter shelter = new Shelter("SHELTER1", 10);
         shelter.setId(1L);
-        when(shelternetService.registerShelter(shelter)).thenReturn(shelter);
+
+        ShelterDto expected = new ShelterDto(shelter.getId(), shelter.getName(), shelter.getMaxCapacity(), shelter.getAnimals());
+        when(shelternetService.registerShelter(shelter)).thenReturn(expected);
 
         mockMvc.perform(post("/shelter")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(new Shelter("SHELTER1", 10))))
                 .andExpect(status().isCreated())
-                .andDo(document("register-shelter", responseFields(
-                        fieldWithPath("id").description("Id of the shelter"),
-                        fieldWithPath("name").description("Name of the shelter"),
-                        fieldWithPath("capacity").description("Capacity of the shelter"),
-                        fieldWithPath("animals").description("Animals in the shelter")),
+                .andDo(document("register-shelter",
+                        responseFields(
+                                fieldWithPath("id").description("Id of the shelter"),
+                                fieldWithPath("name").description("Name of the shelter"),
+                                fieldWithPath("capacity").description("Capacity of the shelter"),
+                                fieldWithPath("animals").description("Animals in the shelter")),
                         requestFields(
                                 fieldWithPath("id").ignored(),
                                 fieldWithPath("name").description("Name of the shelter"),
-                                fieldWithPath("capacity").description("Capacity of the shelter"),
+                                fieldWithPath("maxCapacity").description("Capacity of the shelter"),
                                 fieldWithPath("animals").ignored())));
     }
 
@@ -71,7 +74,10 @@ public class ShelterRestdocs {
         Shelter shelter2 = new Shelter("SHELTER2", 20);
         shelter.setId(1L);
         shelter2.setId(2L);
-        when(shelternetService.getAllShelters()).thenReturn(List.of(shelter, shelter2));
+
+        ShelterDto expected1 = new ShelterDto(shelter.getId(), shelter.getName(), shelter.getMaxCapacity(), shelter.getAnimals());
+        ShelterDto expected2 = new ShelterDto(shelter2.getId(), shelter2.getName(), shelter2.getMaxCapacity(), shelter2.getAnimals());
+        when(shelternetService.getAllShelters()).thenReturn(List.of(expected1, expected2));
 
         mockMvc
                 .perform(get("/shelter"))
@@ -90,11 +96,13 @@ public class ShelterRestdocs {
         Shelter shelter = new Shelter("SHELTER1", 10);
 
         shelter.setId(1L);
-        Animal animal = new Animal("Dog","Dalmention", LocalDate.of(2009,04,1),"M", "black");
+        Animal animal = new Animal("Dog", "Dalmention", LocalDate.of(2009, 4, 1), "M", "black");
         animal.setId(1L);
         shelter.addAnimal(animal);
 
-        when(shelternetService.getShelterDetails(shelter.getId())).thenReturn(Optional.of(shelter));
+        ShelterDto expected = new ShelterDto(shelter.getId(), shelter.getName(), shelter.getMaxCapacity(), shelter.getAnimals());
+
+        when(shelternetService.getShelterDetails(shelter.getId())).thenReturn(expected);
 
         mockMvc
                 .perform(get("/shelter" + "/" + shelter.getId()))
@@ -117,7 +125,9 @@ public class ShelterRestdocs {
     public void updateShelterRestDocTest() throws Exception {
         Shelter shelter = new Shelter("SHELTER1", 10);
         shelter.setId(1L);
-        when(shelternetService.updateShelter(1L, shelter)).thenReturn(shelter);
+
+        ShelterDto expected = new ShelterDto(shelter.getId(), shelter.getName(), shelter.getMaxCapacity(), shelter.getAnimals());
+        when(shelternetService.updateShelter(1L, shelter)).thenReturn(expected);
 
         mockMvc.perform(put("/shelter/{id}", 1L)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -134,7 +144,7 @@ public class ShelterRestdocs {
                         requestFields(
                                 fieldWithPath("id").ignored(),
                                 fieldWithPath("name").description("Name of the shelter"),
-                                fieldWithPath("capacity").description("Capacity of the shelter"),
+                                fieldWithPath("maxCapacity").description("Capacity of the shelter"),
                                 fieldWithPath("animals").ignored()
                         )));
     }
@@ -153,7 +163,7 @@ public class ShelterRestdocs {
     @Test
     public void acceptSurrenderedAnimals() throws Exception {
 
-        Animal animal = new Animal("Dog","Dalmention", LocalDate.of(2009,04,1),"M", "black");
+        Animal animal = new Animal("Dog", "Dalmention", LocalDate.of(2009, 4, 1), "M", "black");
         animal.setId(1L);
         when(shelternetService.surrenderAnimal(1L, animal)).thenReturn(animal);
 
@@ -161,13 +171,14 @@ public class ShelterRestdocs {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(animal)))
                 .andExpect(status().isOk())
-                .andDo(document("SurrenderAnimal", responseFields(
-                        fieldWithPath("id").description("Id of the Animal"),
-                        fieldWithPath("name").description("Name of the Animal"),
-                        fieldWithPath("species").description("Species of the Animal"),
-                        fieldWithPath("birthDate").description("Birth Date of the Animal"),
-                        fieldWithPath("sex").description("Sex of the Animal"),
-                        fieldWithPath("color").description("Color of the Animal")),
+                .andDo(document("SurrenderAnimal",
+                        responseFields(
+                                fieldWithPath("id").description("Id of the Animal"),
+                                fieldWithPath("name").description("Name of the Animal"),
+                                fieldWithPath("species").description("Species of the Animal"),
+                                fieldWithPath("birthDate").description("Birth Date of the Animal"),
+                                fieldWithPath("sex").description("Sex of the Animal"),
+                                fieldWithPath("color").description("Color of the Animal")),
                         requestFields(
                                 fieldWithPath("id").ignored(),
                                 fieldWithPath("name").description("Name of the Animal"),
