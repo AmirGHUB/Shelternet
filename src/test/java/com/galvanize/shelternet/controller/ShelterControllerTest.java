@@ -77,8 +77,8 @@ public class ShelterControllerTest {
     @Test
     public void getShelterDetails() throws Exception {
         Shelter shelter = new Shelter("SHELTER1", 10);
-        Animal animal1 = new Animal("Dog","Dalmention", LocalDate.of(2009,4,1),"M", "black");
-        Animal animal2 = new Animal("hob","wildcat", LocalDate.of(2010,5,2),"F", "white");
+        Animal animal1 = new Animal("Dog", "Dalmention", LocalDate.of(2009, 4, 1), "M", "black");
+        Animal animal2 = new Animal("hob", "wildcat", LocalDate.of(2010, 5, 2), "F", "white");
         shelter.addAnimal(animal1);
         shelter.addAnimal(animal2);
 
@@ -113,9 +113,9 @@ public class ShelterControllerTest {
         String jsonResult = result.getResponse().getContentAsString();
         Shelter shelterResult = objectMapper.readValue(jsonResult, Shelter.class);
 
-        Animal animal = new Animal("Dog","Dalmention", LocalDate.of(2009,4,1),"M", "black");
+        Animal animal = new Animal("Dog", "Dalmention", LocalDate.of(2009, 4, 1), "M", "black");
 
-        mockMvc.perform(post("/shelter/"+shelterResult.getId()+"/animal/")
+        mockMvc.perform(post("/shelter/" + shelterResult.getId() + "/animal/")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(animal)))
                 .andExpect(status().isOk())
@@ -135,7 +135,10 @@ public class ShelterControllerTest {
 
     @Test
     public void updateShelter() throws Exception {
-        Shelter existingShelter = shelterRepository.save(new Shelter("Original Shelter", 20));
+        Shelter existingShelter = new Shelter("Original Shelter", 20);
+        Animal animal = new Animal("Dog", "Dalmention", LocalDate.of(2009, 04, 1), "M", "black");
+        existingShelter.addAnimal(animal);
+        existingShelter = shelterRepository.save(existingShelter);
         Shelter shelterToUpdate = new Shelter("Updated Shelter", 10);
         String shelterString = objectMapper.writeValueAsString(shelterToUpdate);
 
@@ -145,7 +148,8 @@ public class ShelterControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(existingShelter.getId()))
                 .andExpect(jsonPath("$.name").value("Updated Shelter"))
-                .andExpect(jsonPath("$.capacity").value(10));
+                .andExpect(jsonPath("$.capacity").value(9))
+                .andExpect(jsonPath("$.animals.[0].name").value("Dog"));
     }
 
     @Test
@@ -155,7 +159,5 @@ public class ShelterControllerTest {
                 .andExpect(status().isOk());
         assertEquals(0, shelterRepository.findAll().size());
     }
-
-
 }
 

@@ -103,7 +103,7 @@ public class ShelterServiceTest {
         Shelter existingShelter = new Shelter("SHELTER0", 20);
         updatedShelter.setId(1L);
 
-        when(shelterRepository.findById(1L)).thenReturn(Optional.of(existingShelter));
+        when(shelterRepository.getOne(1L)).thenReturn(existingShelter);
         when(shelterRepository.save(updatedShelter)).thenReturn(updatedShelter);
 
         ShelterDto actual = shelternetService.updateShelter(1L, shelterToUpdate);
@@ -111,7 +111,7 @@ public class ShelterServiceTest {
         ShelterDto expected = new ShelterDto(1L,"SHELTER1",10,new ArrayList<>());
 
         assertEquals(expected, actual);
-        verify(shelterRepository, times(1)).findById(1L);
+        verify(shelterRepository, times(1)).getOne(1L);
         verify(shelterRepository, times(1)).save(updatedShelter);
         verifyNoMoreInteractions(shelterRepository);
     }

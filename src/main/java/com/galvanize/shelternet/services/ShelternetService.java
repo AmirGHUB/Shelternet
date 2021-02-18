@@ -41,8 +41,9 @@ public class ShelternetService {
     }
 
     public ShelterDto updateShelter(Long shelterId, Shelter shelterToUpdate) {
-        shelterRepository.findById(shelterId).get();
+        Shelter retrievedShelter =  shelterRepository.getOne(shelterId);
         shelterToUpdate.setId(shelterId);
+        shelterToUpdate.setAnimals(retrievedShelter.getAnimals());
         return mapToDto(shelterRepository.save(shelterToUpdate));
     }
 
