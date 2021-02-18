@@ -76,7 +76,7 @@ public class AdoptionApplicationRestdocs {
                                 fieldWithPath("address").description("Address of the customer"),
                                 fieldWithPath("phoneNumber").description("Phone number of the customer"),
                                 fieldWithPath("animalId").description("Id of the animal to be adopted"),
-                                fieldWithPath("status").description("Status of the application"))));
+                                fieldWithPath("status").ignored())));
     }
 
     @Test
