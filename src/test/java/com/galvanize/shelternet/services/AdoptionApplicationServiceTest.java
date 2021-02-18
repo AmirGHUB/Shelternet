@@ -10,6 +10,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -48,4 +49,22 @@ public class AdoptionApplicationServiceTest {
 
         assertEquals(Optional.empty(), result);
     }
+
+    @Test
+    public void getAllApplications_callsFindAllOnRepository() {
+        AdoptionApplication adoptionApplication1 = new AdoptionApplication("JOHN", "5131 W Thunderbird Rd.", "602-444-4444", 1L);
+        AdoptionApplication adoptionApplication2 = new AdoptionApplication("Mark", "another address", "876-990-7661", 4L);
+        AdoptionApplication adoptionApplication3 = new AdoptionApplication("Jane", "yet another address", "145-640-9900", 5L);
+        List<AdoptionApplication> applications = List.of(adoptionApplication1, adoptionApplication2, adoptionApplication3);
+
+        when(adoptionApplicationRepository.findAll()).thenReturn(applications);
+
+        List<AdoptionApplication> result = adoptionApplicationService.getAllApplications();
+
+        assertEquals(applications, result);
+        verify(adoptionApplicationRepository, times(1)).findAll();
+        verifyNoMoreInteractions(adoptionApplicationRepository);
+    }
+
+
 }

@@ -6,6 +6,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/application")
 public class AdoptionApplicationController {
@@ -22,6 +24,10 @@ public class AdoptionApplicationController {
         return adoptionApplicationService.submitAdoptionApplication(adoptionApplication)
                 .map(application -> new ResponseEntity<>(application, HttpStatus.CREATED))
                 .orElse(new ResponseEntity<>(HttpStatus.BAD_REQUEST));
+    }
 
+    @GetMapping
+    public List<AdoptionApplication> getAllApplications() {
+        return adoptionApplicationService.getAllApplications();
     }
 }

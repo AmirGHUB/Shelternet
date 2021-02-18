@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.galvanize.shelternet.model.AdoptionApplication;
 import com.galvanize.shelternet.model.Animal;
 import com.galvanize.shelternet.model.ApplicationStatus;
+import com.galvanize.shelternet.repository.AdoptionApplicationRepository;
 import com.galvanize.shelternet.repository.AnimalRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import javax.transaction.Transactional;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -32,6 +34,9 @@ public class AdoptionApplicationControllerTest {
 
     @Autowired
     private AnimalRepository animalRepository;
+
+    @Autowired
+    private AdoptionApplicationRepository adoptionApplicationRepository;
 
     @Test
     public void submitAdoptionApplication() throws Exception {
@@ -61,5 +66,18 @@ public class AdoptionApplicationControllerTest {
                 .content(objectMapper.writeValueAsString(adoptionApplication))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void getAllApplications() throws Exception {
+        AdoptionApplication adoptionApplication1 = adoptionApplicationRepository.save(new AdoptionApplication("JOHN", "5131 W Thunderbird Rd.", "602-444-4444", 1L));
+        AdoptionApplication adoptionApplication2 = adoptionApplicationRepository.save(new AdoptionApplication("Mark", "another address", "876-990-7661", 4L));
+        AdoptionApplication adoptionApplication3 = adoptionApplicationRepository.save(new AdoptionApplication("Jane", "yet another address", "145-640-9900", 5L));
+        List<AdoptionApplication> applications = List.of(adoptionApplication1, adoptionApplication2, adoptionApplication3);
+        String expected = objectMapper.writeValueAsString(applications);
+
+        mockMvc.perform(get("/application"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(expected));
     }
 }
