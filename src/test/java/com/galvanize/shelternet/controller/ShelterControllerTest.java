@@ -35,11 +35,6 @@ public class ShelterControllerTest {
     @Autowired
     private ShelterRepository shelterRepository;
 
-    @Test
-    public void homeTest() throws Exception {
-        mockMvc.perform(get("/home")).andExpect(status().isOk())
-                .andExpect(content().string("Welcome to Shelternet"));
-    }
 
     @Test
     public void registerShelterTest() throws Exception {

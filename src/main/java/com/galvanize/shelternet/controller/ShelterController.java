@@ -20,10 +20,6 @@ public class ShelterController {
         this.shelternetService = shelternetService;
     }
 
-    @GetMapping("/home")
-    public String home() {
-        return "Welcome to Shelternet";
-    }
 
     @PostMapping("/shelter")
     @ResponseStatus(HttpStatus.CREATED)
