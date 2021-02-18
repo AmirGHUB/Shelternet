@@ -17,13 +17,16 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(controllers = AdoptionApplicationController.class)
@@ -74,5 +77,24 @@ public class AdoptionApplicationRestdocs {
                                 fieldWithPath("phoneNumber").description("Phone number of the customer"),
                                 fieldWithPath("animalId").description("Id of the animal to be adopted"),
                                 fieldWithPath("status").description("Status of the application"))));
+    }
+
+    @Test
+    public void getAllApplications() throws Exception {
+        AdoptionApplication adoptionApplication1 = new AdoptionApplication("JOHN", "5131 W Thunderbird Rd.", "602-444-4444", 1L);
+        AdoptionApplication adoptionApplication2 = new AdoptionApplication("Mark", "another address", "876-990-7661", 4L);
+        List<AdoptionApplication> applications = List.of(adoptionApplication1, adoptionApplication2);
+        when(adoptionApplicationService.getAllApplications()).thenReturn(applications);
+
+        mockMvc.perform(get("/application"))
+                .andExpect(status().isOk())
+                .andDo(document("get-all-applications", responseFields(
+                        fieldWithPath("[*].id").description("The ID of the application."),
+                        fieldWithPath("[*].name").description("The Name of the applicant."),
+                        fieldWithPath("[*].address").description("The address of the applicant."),
+                        fieldWithPath("[*].phoneNumber").description("The phone number of the applicant."),
+                        fieldWithPath("[*].animalId").description("The Id of the animal to be adopted."),
+                        fieldWithPath("[*].status").description("The status of the application.")
+                )));
     }
 }

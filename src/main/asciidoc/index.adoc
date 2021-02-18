@@ -92,8 +92,17 @@ include::{snippets}/adoption-application/http-response.adoc[]
 .response-fields
 include::{snippets}/adoption-application/response-fields.adoc[]
 
-=== Get All Animals
+=== Get All Applications
+.request
+include::{snippets}/get-all-applications/http-request.adoc[]
 
+.response
+include::{snippets}/get-all-applications/http-response.adoc[]
+
+.response-fields
+include::{snippets}/get-all-applications/response-fields.adoc[]
+
+=== Get All Animals
 .request
 include::{snippets}/get-all-animals/http-request.adoc[]
 
