@@ -50,7 +50,7 @@ public class ShelterRestdocs {
         ShelterDto expected = new ShelterDto(shelter.getId(), shelter.getName(), shelter.getMaxCapacity(), shelter.getAnimals());
         when(shelternetService.registerShelter(shelter)).thenReturn(expected);
 
-        mockMvc.perform(post("/shelter")
+        mockMvc.perform(post("/shelters")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(new Shelter("SHELTER1", 10))))
                 .andExpect(status().isCreated())
@@ -80,7 +80,7 @@ public class ShelterRestdocs {
         when(shelternetService.getAllShelters()).thenReturn(List.of(expected1, expected2));
 
         mockMvc
-                .perform(get("/shelter"))
+                .perform(get("/shelters"))
                 .andExpect(status().isOk())
                 .andDo(document("GetAllShelters", responseFields(
                         fieldWithPath("[*].id").description("The ID of the shelter."),
@@ -105,7 +105,7 @@ public class ShelterRestdocs {
         when(shelternetService.getShelterDetails(shelter.getId())).thenReturn(expected);
 
         mockMvc
-                .perform(get("/shelter" + "/" + shelter.getId()))
+                .perform(get("/shelters" + "/" + shelter.getId()))
                 .andExpect(status().isOk())
                 .andDo(document("GetShelterDetailsById", responseFields(
                         fieldWithPath("id").description("The ID of the shelter."),
@@ -129,7 +129,7 @@ public class ShelterRestdocs {
         ShelterDto expected = new ShelterDto(shelter.getId(), shelter.getName(), shelter.getMaxCapacity(), shelter.getAnimals());
         when(shelternetService.updateShelter(1L, shelter)).thenReturn(expected);
 
-        mockMvc.perform(put("/shelter/{id}", 1L)
+        mockMvc.perform(put("/shelters/{id}", 1L)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(new Shelter("SHELTER1", 10))))
                 .andExpect(status().isOk())
@@ -152,7 +152,7 @@ public class ShelterRestdocs {
     @Test
     public void deleteShelterRestDocTest() throws Exception {
 
-        mockMvc.perform(delete("/shelter/{id}", 1L))
+        mockMvc.perform(delete("/shelters/{id}", 1L))
                 .andExpect(status().isOk())
                 .andDo(document("delete-shelter", pathParameters(
                         parameterWithName("id").description("id of shelter to delete")
@@ -167,7 +167,7 @@ public class ShelterRestdocs {
         animal.setId(1L);
         when(shelternetService.surrenderAnimal(1L, animal)).thenReturn(animal);
 
-        mockMvc.perform(post("/shelter/1/animal/")
+        mockMvc.perform(post("/shelters/1/animal/")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(animal)))
                 .andExpect(status().isOk())

@@ -11,6 +11,7 @@ import java.util.List;
 
 
 @RestController
+@RequestMapping("/shelters")
 public class ShelterController {
 
 
@@ -21,33 +22,33 @@ public class ShelterController {
     }
 
 
-    @PostMapping("/shelter")
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ShelterDto registerShelter(@RequestBody Shelter shelter) {
         return shelternetService.registerShelter(shelter);
     }
 
-    @GetMapping("/shelter")
+    @GetMapping
     public List<ShelterDto> getAllShelters(){
         return shelternetService.getAllShelters();
     }
 
-    @GetMapping("/shelter/{id}")
+    @GetMapping("/{id}")
     public ShelterDto getShelterDetails(@PathVariable Long id) {
         return shelternetService.getShelterDetails(id);
     }
 
-    @PostMapping("/shelter/{id}/animal")
+    @PostMapping("/{id}/animal")
     public Animal surrenderAnimal(@PathVariable Long id, @RequestBody Animal animal) {
         return  shelternetService.surrenderAnimal(id, animal);
     }
 
-    @PutMapping("/shelter/{id}")
+    @PutMapping("/{id}")
     public ShelterDto updateShelter(@PathVariable Long id, @RequestBody Shelter shelterToUpdate) {
         return shelternetService.updateShelter(id, shelterToUpdate);
     }
 
-    @DeleteMapping("/shelter/{id}")
+    @DeleteMapping("/{id}")
     public void deleteShelter(@PathVariable Long id) {
         shelternetService.delete(id);
     }

@@ -46,7 +46,7 @@ public class AdoptionApplicationControllerTest {
 
         AdoptionApplication adoptionApplication = new AdoptionApplication("JOHN", "5131 W Thunderbird Rd.", "602-444-4444", animalSaved.getId());
 
-        mockMvc.perform(post("/application")
+        mockMvc.perform(post("/applications")
                 .content(objectMapper.writeValueAsString(adoptionApplication))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
@@ -62,7 +62,7 @@ public class AdoptionApplicationControllerTest {
     public void submitAdoptionApplication_WhenAnimalDoesntExists() throws Exception {
         AdoptionApplication adoptionApplication = new AdoptionApplication("JOHN", "5131 W Thunderbird Rd.", "602-444-4444", 1L);
 
-        mockMvc.perform(post("/application")
+        mockMvc.perform(post("/applications")
                 .content(objectMapper.writeValueAsString(adoptionApplication))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
@@ -76,7 +76,7 @@ public class AdoptionApplicationControllerTest {
         List<AdoptionApplication> applications = List.of(adoptionApplication1, adoptionApplication2, adoptionApplication3);
         String expected = objectMapper.writeValueAsString(applications);
 
-        mockMvc.perform(get("/application"))
+        mockMvc.perform(get("/applications"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(expected));
     }

@@ -58,7 +58,7 @@ public class AdoptionApplicationRestdocs {
         when(adoptionApplicationService.submitAdoptionApplication(any())).thenReturn(Optional.of(adoptionApplication));
         adoptionApplicationService.submitAdoptionApplication(adoptionApplication);
 
-        mockMvc.perform(post("/application")
+        mockMvc.perform(post("/applications")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(new AdoptionApplication("JOHN", "5131 W Thunderbird Rd.", "602-444-4444", animalSaved.getId()))))
                 .andExpect(status().isCreated())
@@ -86,7 +86,7 @@ public class AdoptionApplicationRestdocs {
         List<AdoptionApplication> applications = List.of(adoptionApplication1, adoptionApplication2);
         when(adoptionApplicationService.getAllApplications()).thenReturn(applications);
 
-        mockMvc.perform(get("/application"))
+        mockMvc.perform(get("/applications"))
                 .andExpect(status().isOk())
                 .andDo(document("get-all-applications", responseFields(
                         fieldWithPath("[*].id").description("The ID of the application."),
