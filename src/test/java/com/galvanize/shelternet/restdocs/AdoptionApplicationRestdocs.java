@@ -58,9 +58,12 @@ public class AdoptionApplicationRestdocs {
         when(adoptionApplicationService.submitAdoptionApplication(any())).thenReturn(Optional.of(adoptionApplication));
         adoptionApplicationService.submitAdoptionApplication(adoptionApplication);
 
+        AdoptionApplication request = new AdoptionApplication("JOHN", "5131 W Thunderbird Rd.", "602-444-4444", animalSaved.getId());
+        request.setStatus(null);
+
         mockMvc.perform(post("/applications")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(new AdoptionApplication("JOHN", "5131 W Thunderbird Rd.", "602-444-4444", animalSaved.getId()))))
+                .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isCreated())
                 .andDo(document("adoption-application", responseFields(
                         fieldWithPath("id").description("Id of the application"),
