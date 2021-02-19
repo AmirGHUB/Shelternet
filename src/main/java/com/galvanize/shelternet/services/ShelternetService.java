@@ -44,6 +44,7 @@ public class ShelternetService {
         Animal animal = modelMapper.map(animalDto, Animal.class);
         shelter.addAnimal(animal);
         animal.setShelter(shelter);
+        animal.setOnsite(true);
         shelter = shelterRepository.save(shelter);
 
         return modelMapper.map(
@@ -97,7 +98,8 @@ public class ShelternetService {
     }
 
     private Integer getCurrentCapacity(Shelter shelter) {
-        return shelter.getMaxCapacity() - shelter.getAnimals().size();
+        long animalsOnSite = shelter.getAnimals().stream().filter(Animal::getOnsite).count();
+        return shelter.getMaxCapacity() - (int) animalsOnSite;
     }
 }
 

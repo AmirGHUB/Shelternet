@@ -83,6 +83,28 @@ public class ShelterServiceTest {
     }
 
     @Test
+    public void getShelterDetails_SomeAnimalsNotOnSite() {
+        Shelter shelter = new Shelter("SHELTER1", 10);
+        Animal animal1 = new Animal("Dog", "Dalmention", LocalDate.of(2009, 4, 1), "M", "black");
+        Animal animal2 = new Animal("Cat", "Dalmention", LocalDate.of(2009, 4, 1), "M", "black");
+        Animal animal3 = new Animal("Cat", "Dalmention", LocalDate.of(2009, 4, 1), "M", "black");
+        animal1.setOnsite(false);
+        animal2.setOnsite(true);
+        animal3.setOnsite(true);
+        shelter.setId(1L);
+
+        shelter.addAnimal(animal1);
+        shelter.addAnimal(animal2);
+        shelter.addAnimal(animal3);
+
+        when(shelterRepository.getOne(shelter.getId())).thenReturn(shelter);
+
+        ShelterDto actual = shelternetService.getShelterDetails(shelter.getId());
+
+        assertEquals(8, actual.getCapacity());
+    }
+
+    @Test
     public void acceptSurrenderedAnimals() {
         Shelter shelter = new Shelter("SHELTER1", 10);
         AnimalDto animal = new AnimalDto(1L,"Dog", "Dalmention", LocalDate.of(2009, 4, 1), "M", "black");

@@ -20,6 +20,7 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -131,16 +132,15 @@ public class ShelterControllerTest {
                 .andExpect(jsonPath("$.sex").value("M"))
                 .andExpect(jsonPath("$.color").value("black"));
 
+        Animal retrievedAnimal = animalRepository.findAll().get(0);
+
+        assertEquals("SHELTER1", retrievedAnimal.getShelter().getName());
+        assertTrue(retrievedAnimal.getOnsite());
+
         mockMvc
                 .perform(get("/shelters/" + shelterResult.getId()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.capacity").value(9));
-
-        Animal retrievedAnimal = animalRepository.findAll().get(0);
-
-        assertEquals("SHELTER1",retrievedAnimal.getShelter().getName());
-
-
     }
 
     @Test
