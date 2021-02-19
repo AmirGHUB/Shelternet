@@ -2,6 +2,7 @@ package com.galvanize.shelternet.services;
 
 import com.galvanize.shelternet.model.Animal;
 import com.galvanize.shelternet.model.AnimalDto;
+import com.galvanize.shelternet.model.AnimalRequestIds;
 import com.galvanize.shelternet.repository.AnimalRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -24,9 +25,9 @@ public class AnimalService {
         return animalRepository.findAll();
     }
 
-    public List<AnimalDto> request(List<Long> ids) {
+    public List<AnimalDto> request(AnimalRequestIds ids) {
         List<Animal> animalList = new ArrayList<>();
-        for (Long i : ids) {
+        for (Long i : ids.getAnimalIds()) {
             Animal animal = animalRepository.getOne(i);
             animal.setOnsite(false);
             animalList.add(animal);

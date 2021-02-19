@@ -3,6 +3,7 @@ package com.galvanize.shelternet.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.galvanize.shelternet.model.Animal;
 import com.galvanize.shelternet.model.AnimalDto;
+import com.galvanize.shelternet.model.AnimalRequestIds;
 import com.galvanize.shelternet.model.Shelter;
 import com.galvanize.shelternet.repository.AnimalRepository;
 import com.galvanize.shelternet.repository.ShelterRepository;
@@ -64,9 +65,11 @@ public class AnimalControllerTest {
 
         shelter = shelterRepository.save(shelter);
 
+        AnimalRequestIds animalRequestIds = new AnimalRequestIds(List.of(animal1.getId(), animal2.getId()));
+
         String result = mockMvc.perform(post("/animals/request/")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(List.of(animal1.getId(), animal2.getId()))))
+                .content(objectMapper.writeValueAsString(animalRequestIds)))
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
         AnimalDto animalDto1 = new AnimalDto(animal1.getId(), "Dog", "Dalmention", LocalDate.of(2009, 4, 1), "M", "black");
