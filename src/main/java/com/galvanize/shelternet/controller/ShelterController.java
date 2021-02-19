@@ -1,9 +1,6 @@
 package com.galvanize.shelternet.controller;
 
-import com.galvanize.shelternet.model.Animal;
-import com.galvanize.shelternet.model.AnimalTransfer;
-import com.galvanize.shelternet.model.Shelter;
-import com.galvanize.shelternet.model.ShelterDto;
+import com.galvanize.shelternet.model.*;
 import com.galvanize.shelternet.services.ShelternetService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,7 +38,7 @@ public class ShelterController {
     }
 
     @PostMapping("/{id}/animal")
-    public Animal surrenderAnimal(@PathVariable Long id, @RequestBody Animal animal) {
+    public AnimalDto surrenderAnimal(@PathVariable Long id, @RequestBody AnimalDto animal) {
         return shelternetService.surrenderAnimal(id, animal);
     }
 

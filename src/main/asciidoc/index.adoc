@@ -143,3 +143,17 @@ include::{snippets}/transfer-animal/http-response.adoc[]
 
 
 
+=== Request Animals by IDs
+.request
+include::{snippets}/request-animals-by-ids/http-request.adoc[]
+
+.request-fields
+include::{snippets}/request-animals-by-ids/request-fields.adoc[]
+
+.response
+include::{snippets}/request-animals-by-ids/http-response.adoc[]
+
+.response-fields
+include::{snippets}/request-animals-by-ids/response-fields.adoc[]
+
+
