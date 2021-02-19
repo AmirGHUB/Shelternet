@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.galvanize.shelternet.model.Animal;
 import com.galvanize.shelternet.model.AnimalTransfer;
 import com.galvanize.shelternet.model.Shelter;
+import com.galvanize.shelternet.repository.AnimalRepository;
 import com.galvanize.shelternet.repository.ShelterRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,9 @@ public class ShelterControllerTest {
 
     @Autowired
     private ShelterRepository shelterRepository;
+
+    @Autowired
+    private AnimalRepository animalRepository;
 
 
     @Test
@@ -131,6 +135,11 @@ public class ShelterControllerTest {
                 .perform(get("/shelters/" + shelterResult.getId()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.capacity").value(9));
+
+        Animal retrievedAnimal = animalRepository.findAll().get(0);
+
+        assertEquals("SHELTER1",retrievedAnimal.getShelter().getName());
+
 
     }
 

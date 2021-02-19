@@ -1,11 +1,9 @@
 package com.galvanize.shelternet.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDate;
 
 @Getter
@@ -24,6 +22,9 @@ public class Animal {
     private String sex;
     private String color;
     private Boolean onsite;
+    @JsonIgnore
+    @ManyToOne(cascade = CascadeType.ALL)
+    private Shelter shelter;
 
     public Animal(String name, String species, LocalDate birthDate, String sex, String color) {
         this.name = name;

@@ -43,6 +43,7 @@ public class ShelternetService {
         Shelter shelter = shelterRepository.getOne(id);
         Animal animal = modelMapper.map(animalDto, Animal.class);
         shelter.addAnimal(animal);
+        animal.setShelter(shelter);
         shelter = shelterRepository.save(shelter);
 
         return modelMapper.map(
