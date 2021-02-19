@@ -29,4 +29,9 @@ public class AdoptionApplicationController {
     public List<AdoptionApplication> getAllApplications() {
         return adoptionApplicationService.getAllApplications();
     }
+
+    @PutMapping("{id}/update-status")
+    public void updateStatus(@PathVariable Long id, @RequestParam boolean isApproved) {
+        adoptionApplicationService.updateStatus(id, isApproved);
+    }
 }

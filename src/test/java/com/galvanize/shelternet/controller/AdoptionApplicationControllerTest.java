@@ -82,4 +82,28 @@ public class AdoptionApplicationControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string(expected));
     }
+
+    @Test
+    public void updateStatus_approvesApplication() throws Exception {
+        Animal animal = animalRepository.save(new Animal("DOGGY", "DOG", LocalDate.of(2020, 4, 15), "M", "WHITE"));
+        AdoptionApplication adoptionApplication1 = adoptionApplicationRepository.save(new AdoptionApplication("JOHN", "5131 W Thunderbird Rd.", "602-444-4444", animal.getId()));
+
+        mockMvc.perform(put("/applications/{id}/update-status?isApproved=true", adoptionApplication1.getId()))
+                .andExpect(status().isOk());
+
+        assertEquals("ADOPTED", animalRepository.findById(animal.getId()).get().getStatus());
+        assertEquals("APPROVED", adoptionApplicationRepository.findById(adoptionApplication1.getId()).get().getStatus());
+    }
+
+    @Test
+    public void updateStatus_rejectsApplication() throws Exception {
+        Animal animal = animalRepository.save(new Animal("DOGGY", "DOG", LocalDate.of(2020, 4, 15), "M", "WHITE"));
+        AdoptionApplication adoptionApplication1 = adoptionApplicationRepository.save(new AdoptionApplication("JOHN", "5131 W Thunderbird Rd.", "602-444-4444", animal.getId()));
+
+        mockMvc.perform(put("/applications/{id}/update-status?isApproved=false", adoptionApplication1.getId()))
+                .andExpect(status().isOk());
+
+        assertEquals("AVAILABLE", animalRepository.findById(animal.getId()).get().getStatus());
+        assertEquals("REJECTED", adoptionApplicationRepository.findById(adoptionApplication1.getId()).get().getStatus());
+    }
 }

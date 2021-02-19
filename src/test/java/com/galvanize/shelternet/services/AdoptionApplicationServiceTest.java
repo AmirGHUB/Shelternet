@@ -92,5 +92,56 @@ public class AdoptionApplicationServiceTest {
         verifyNoMoreInteractions(adoptionApplicationRepository);
     }
 
+    @Test
+    public void updateStatus_setsStatusToApproved_andRemovesAnimalFromShelter() {
+        Animal animal1 = new Animal("Dog", "Dalmention", LocalDate.of(2009, 4, 1), "M", "black");
+        animal1.setId(1L);
+        animal1.setStatus("ADOPTION_PENDING");
+        Animal animal2 = new Animal("Dog", "Dalmention", LocalDate.of(2009, 4, 1), "M", "black");
+        animal2.setId(1L);
+        animal2.setStatus("ADOPTED");
+
+        AdoptionApplication adoptionApplication1 = new AdoptionApplication("JOHN", "5131 W Thunderbird Rd.", "602-444-4444", 1L);
+        adoptionApplication1.setId(1L);
+        AdoptionApplication adoptionApplication2 = new AdoptionApplication("JOHN", "5131 W Thunderbird Rd.", "602-444-4444", 1L);
+        adoptionApplication2.setId(1L);
+        adoptionApplication2.setStatus("APPROVED");
+
+        when(adoptionApplicationRepository.findById(1L)).thenReturn(Optional.of(adoptionApplication1));
+        when(animalRepository.findById(1L)).thenReturn(Optional.of(animal1));
+        when(animalRepository.save(animal2)).thenReturn(null);
+        when(adoptionApplicationRepository.save(adoptionApplication2)).thenReturn(null);
+
+        adoptionApplicationService.updateStatus(1L, true);
+
+        verifyNoMoreInteractions(adoptionApplicationRepository);
+        verifyNoMoreInteractions(animalRepository);
+    }
+
+    @Test
+    public void updateStatus_setsStatusToRejected_andSetsAnimalStatusToAvailable() {
+        Animal animal1 = new Animal("Dog", "Dalmention", LocalDate.of(2009, 4, 1), "M", "black");
+        animal1.setId(1L);
+        animal1.setStatus("ADOPTION_PENDING");
+        Animal animal2 = new Animal("Dog", "Dalmention", LocalDate.of(2009, 4, 1), "M", "black");
+        animal2.setId(1L);
+        animal2.setStatus("AVAILABLE");
+
+        AdoptionApplication adoptionApplication1 = new AdoptionApplication("JOHN", "5131 W Thunderbird Rd.", "602-444-4444", 1L);
+        adoptionApplication1.setId(1L);
+        AdoptionApplication adoptionApplication2 = new AdoptionApplication("JOHN", "5131 W Thunderbird Rd.", "602-444-4444", 1L);
+        adoptionApplication2.setId(1L);
+        adoptionApplication2.setStatus("REJECTED");
+
+        when(adoptionApplicationRepository.findById(1L)).thenReturn(Optional.of(adoptionApplication1));
+        when(animalRepository.findById(1L)).thenReturn(Optional.of(animal1));
+        when(animalRepository.save(animal2)).thenReturn(null);
+        when(adoptionApplicationRepository.save(adoptionApplication2)).thenReturn(null);
+
+        adoptionApplicationService.updateStatus(1L, false);
+
+        verifyNoMoreInteractions(adoptionApplicationRepository);
+        verifyNoMoreInteractions(animalRepository);
+    }
 
 }

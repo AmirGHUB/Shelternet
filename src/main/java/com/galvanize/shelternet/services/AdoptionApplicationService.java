@@ -34,4 +34,22 @@ public class AdoptionApplicationService {
     public List<AdoptionApplication> getAllApplications() {
         return adoptionApplicationRepository.findAll();
     }
+
+    public void updateStatus(Long applicationId, boolean isApproved) {
+        AdoptionApplication adoptionApplication = adoptionApplicationRepository.findById(applicationId).get();
+        Animal animal = animalRepository.findById(adoptionApplication.getAnimalId()).get();
+
+        if(isApproved) {
+            adoptionApplication.setStatus("APPROVED");
+            animal.setStatus("ADOPTED");
+        } else {
+            adoptionApplication.setStatus("REJECTED");
+            animal.setStatus("AVAILABLE");
+        }
+
+        adoptionApplicationRepository.save(adoptionApplication);
+        animalRepository.save(animal);
+    }
+
+
 }
