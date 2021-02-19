@@ -124,6 +124,7 @@ public class ShelterRestdocs {
                         fieldWithPath("animals.[*].sex").description("Sex of the Animal"),
                         fieldWithPath("animals.[*].color").description("Color of the Animal"),
                         fieldWithPath("animals.[*].onsite").description("The Animal is in the shelter"),
+                        fieldWithPath("animals.[*].notes").description("Notes on the Animal"),
                         fieldWithPath("animals.[*].status").description("Adoption status of the Animal")
                 )));
     }
@@ -169,12 +170,12 @@ public class ShelterRestdocs {
 
     @Test
     public void acceptSurrenderedAnimals() throws Exception {
-        AnimalDto animal = new AnimalDto(1L,"Dog", "Dalmention", LocalDate.of(2009, 4, 1), "M", "black");
+        AnimalDto animal = new AnimalDto(1L,"Dog", "Dalmention", LocalDate.of(2009, 4, 1), "M", "black",null);
         when(shelternetService.surrenderAnimal(1L, animal)).thenReturn(animal);
 
         mockMvc.perform(post("/shelters/1/animal/")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(new AnimalDto(null,"Dog", "Dalmention", LocalDate.of(2009, 4, 1), "M", "black"))))
+                .content(objectMapper.writeValueAsString(new AnimalDto(null,"Dog", "Dalmention", LocalDate.of(2009, 4, 1), "M", "black",null))))
                 .andExpect(status().isOk())
                 .andDo(document("SurrenderAnimal",
                         responseFields(
@@ -183,15 +184,17 @@ public class ShelterRestdocs {
                                 fieldWithPath("species").description("Species of the Animal"),
                                 fieldWithPath("birthDate").description("Birth Date of the Animal"),
                                 fieldWithPath("sex").description("Sex of the Animal"),
-                                fieldWithPath("color").description("Color of the Animal")
-                        ),
+                                fieldWithPath("color").description("Color of the Animal"),
+                                fieldWithPath("notes").description("Notes on the Animal")),
+
                         requestFields(
                                 fieldWithPath("id").ignored(),
                                 fieldWithPath("name").description("Name of the Animal"),
                                 fieldWithPath("species").description("Species of the Animal"),
                                 fieldWithPath("birthDate").description("Birth Date of the Animal"),
                                 fieldWithPath("sex").description("Sex of the Animal"),
-                                fieldWithPath("color").description("Color of the Animal"))));
+                                fieldWithPath("color").description("Color of the Animal"),
+                                fieldWithPath("notes").ignored())));
     }
 
     @Test
@@ -223,7 +226,8 @@ public class ShelterRestdocs {
                                 fieldWithPath("[*].sex").description("Sex of the Animal"),
                                 fieldWithPath("[*].color").description("Color of the Animal"),
                                 fieldWithPath("[*].onsite").description("The animal is in shelter."),
-                                fieldWithPath("[*].status").description("Adoption status of the Animal")
+                                fieldWithPath("[*].notes").description("Notes on the Animal."),
+                                fieldWithPath("[*].status").description("Status of adoption.")
                         )));
     }
 

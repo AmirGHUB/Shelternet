@@ -1,9 +1,14 @@
 package com.galvanize.shelternet.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.galvanize.shelternet.model.Animal;
 import com.galvanize.shelternet.model.AnimalDto;
+import com.galvanize.shelternet.model.AnimalReturnDto;
+import com.galvanize.shelternet.model.Shelter;
 import com.galvanize.shelternet.model.AnimalRequestIds;
+import com.galvanize.shelternet.model.Shelter;
+import com.galvanize.shelternet.model.AnimalReturnDto;
 import com.galvanize.shelternet.model.Shelter;
 import com.galvanize.shelternet.repository.AnimalRepository;
 import com.galvanize.shelternet.repository.ShelterRepository;
@@ -72,13 +77,50 @@ public class AnimalControllerTest {
                 .content(objectMapper.writeValueAsString(animalRequestIds)))
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
-        AnimalDto animalDto1 = new AnimalDto(animal1.getId(), "Dog", "Dalmention", LocalDate.of(2009, 4, 1), "M", "black");
-        AnimalDto animalDto2 = new AnimalDto(animal2.getId(), "Cat", "Tabby", LocalDate.of(2010, 4, 1), "M", "white");
+        AnimalDto animalDto1 = new AnimalDto(animal1.getId(), "Dog", "Dalmention", LocalDate.of(2009, 4, 1), "M", "black",null);
+        AnimalDto animalDto2 = new AnimalDto(animal2.getId(), "Cat", "Tabby", LocalDate.of(2010, 4, 1), "M", "white",null);
         assertEquals(objectMapper.writeValueAsString(List.of(animalDto1, animalDto2)), result);
 
         mockMvc
                 .perform(get("/shelters" + "/" + shelter.getId()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.capacity").value(49));
+    }
+
+    @Test
+    public void returnAnimalsFromPetStore() throws Exception {
+        Shelter shelter = new Shelter("Dallas Animal Shelter", 20);
+        Animal animal1 = new Animal("Dog", "Dalmention", LocalDate.of(2009, 04, 1), "M", "black");
+        Animal animal2 = new Animal("Cat", "Tabby", LocalDate.of(2010, 04, 1), "M", "white");
+        animal1.setShelter(shelter);
+        animal2.setShelter(shelter);
+        shelter.addAnimal(animal1);
+        shelter.addAnimal(animal2);
+        animal1 = animalRepository.save(animal1);
+        animal2 = animalRepository.save(animal2);
+
+        AnimalRequestIds animalRequestIds = new AnimalRequestIds(List.of(animal1.getId(), animal2.getId()));
+
+        mockMvc.perform(post("/animals/request/")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(animalRequestIds)))
+                .andExpect(status().isOk());
+
+
+        List<AnimalReturnDto> returnedAnimals = List.of(new AnimalReturnDto(animal1.getId(),"Bob is super friendly"),
+                new AnimalReturnDto(animal2.getId(),"Seems to have fleas"));
+
+        mockMvc
+                .perform(post("/animals/return")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(returnedAnimals)))
+                .andExpect(status().isOk());
+
+        Animal fetchedAnimal1 = animalRepository.getOne(animal1.getId());
+
+        assertEquals("Dallas Animal Shelter" , fetchedAnimal1.getShelter().getName());
+        assertEquals(true, fetchedAnimal1.getOnsite());
+        assertEquals("Bob is super friendly" , fetchedAnimal1.getNotes());
+
     }
 }

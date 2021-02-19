@@ -107,7 +107,7 @@ public class ShelterServiceTest {
     @Test
     public void acceptSurrenderedAnimals() {
         Shelter shelter = new Shelter("SHELTER1", 10);
-        AnimalDto animal = new AnimalDto(1L,"Dog", "Dalmention", LocalDate.of(2009, 4, 1), "M", "black");
+        AnimalDto animal = new AnimalDto(1L,"Dog", "Dalmention", LocalDate.of(2009, 4, 1), "M", "black",null);
         shelter.addAnimal(modelMapper.map(animal, Animal.class));
         when(shelterRepository.getOne(shelter.getId())).thenReturn(shelter);
         when(shelterRepository.save(shelter)).thenReturn(shelter);

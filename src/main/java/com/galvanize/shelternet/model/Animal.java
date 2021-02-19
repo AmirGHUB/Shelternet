@@ -22,6 +22,7 @@ public class Animal {
     private String sex;
     private String color;
     private Boolean onsite;
+    private String notes;
     @JsonIgnore
     @ManyToOne(cascade = CascadeType.ALL)
     private Shelter shelter;
