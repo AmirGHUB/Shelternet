@@ -15,12 +15,11 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+
 
 import java.time.LocalDate;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -62,7 +61,8 @@ public class AnimalRestdocs {
                         fieldWithPath("[*].birthDate").description("The BirthDate of the animal."),
                         fieldWithPath("[*].sex").description("The Sex of the animal."),
                         fieldWithPath("[*].color").description("The Color of the animal."),
-                        fieldWithPath("[*].onsite").description("The animal is in shelter.")
+                        fieldWithPath("[*].onsite").description("The animal is in shelter."),
+                        fieldWithPath("[*].status").description("Adoption status of the Animal")
                         )));
 
     }

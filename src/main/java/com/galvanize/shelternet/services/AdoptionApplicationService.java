@@ -1,6 +1,7 @@
 package com.galvanize.shelternet.services;
 
 import com.galvanize.shelternet.model.AdoptionApplication;
+import com.galvanize.shelternet.model.Animal;
 import com.galvanize.shelternet.repository.AdoptionApplicationRepository;
 import com.galvanize.shelternet.repository.AnimalRepository;
 import org.springframework.stereotype.Service;
@@ -20,9 +21,14 @@ public class AdoptionApplicationService {
         this.animalRepository = animalRepository;
     }
 
-    public Optional<AdoptionApplication> submitAdoptionApplication(AdoptionApplication adoptionApplication) {
-       return animalRepository.findById(adoptionApplication.getAnimalId())
-               .map(a -> adoptionApplicationRepository.save(adoptionApplication));
+    public AdoptionApplication submitAdoptionApplication(AdoptionApplication adoptionApplication) {
+       Optional<Animal> animal = animalRepository.findById(adoptionApplication.getAnimalId());
+       if(!animal.isPresent() || animal.get().getStatus().equals("ADOPTION_PENDING")) {
+           return null;
+       }
+       animal.get().setStatus("ADOPTION_PENDING");
+       animalRepository.save(animal.get());
+       return adoptionApplicationRepository.save(adoptionApplication);
     }
 
     public List<AdoptionApplication> getAllApplications() {

@@ -55,7 +55,7 @@ public class AdoptionApplicationRestdocs {
 
         AdoptionApplication adoptionApplication = new AdoptionApplication("JOHN", "5131 W Thunderbird Rd.", "602-444-4444", animalSaved.getId());
         adoptionApplication.setId(1L);
-        when(adoptionApplicationService.submitAdoptionApplication(any())).thenReturn(Optional.of(adoptionApplication));
+        when(adoptionApplicationService.submitAdoptionApplication(any())).thenReturn(adoptionApplication);
         adoptionApplicationService.submitAdoptionApplication(adoptionApplication);
 
         AdoptionApplication request = new AdoptionApplication("JOHN", "5131 W Thunderbird Rd.", "602-444-4444", animalSaved.getId());

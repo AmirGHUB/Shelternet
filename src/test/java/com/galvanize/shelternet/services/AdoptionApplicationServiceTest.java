@@ -10,6 +10,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,24 +31,49 @@ public class AdoptionApplicationServiceTest {
 
     @Test
     public void submitAdoptionApplication() {
+        Animal animal1 = new Animal("Dog", "Dalmention", LocalDate.of(2009, 4, 1), "M", "black");
+        Animal animal2 = new Animal("Dog", "Dalmention", LocalDate.of(2009, 4, 1), "M", "black");
+        animal1.setId(1L);
+        animal2.setId(2L);
+        animal2.setStatus("ADOPTION_PENDING");
         AdoptionApplication adoptionApplication = new AdoptionApplication("JOHN", "5131 W Thunderbird Rd.", "602-444-4444", 1L);
         when(adoptionApplicationRepository.save(adoptionApplication)).thenReturn(adoptionApplication);
-        when(animalRepository.findById(1L)).thenReturn(Optional.of(new Animal()));
-        Optional<AdoptionApplication> result = adoptionApplicationService.submitAdoptionApplication(adoptionApplication);
+        when(animalRepository.findById(1L)).thenReturn(Optional.of(animal1));
+        when(animalRepository.save(animal2)).thenReturn(null);
+        AdoptionApplication result = adoptionApplicationService.submitAdoptionApplication(adoptionApplication);
 
         verify(adoptionApplicationRepository, times(1)).save(adoptionApplication);
         verifyNoMoreInteractions(adoptionApplicationRepository);
+        verifyNoMoreInteractions(animalRepository);
 
-        assertEquals(Optional.of(adoptionApplication), result);
+        assertEquals(adoptionApplication, result);
+    }
+
+
+    @Test
+    public void submitAdoptionApplication_returnsNullIfAnimalNotPresent() {
+
+        AdoptionApplication adoptionApplication = new AdoptionApplication("JOHN", "5131 W Thunderbird Rd.", "602-444-4444", 1L);
+        when(animalRepository.findById(1L)).thenReturn(Optional.ofNullable(null));
+        AdoptionApplication result = adoptionApplicationService.submitAdoptionApplication(adoptionApplication);
+
+        verifyNoMoreInteractions(animalRepository);
+
+        assertEquals(null, result);
     }
 
     @Test
-    public void submitAdoptionApplication_ForAnAnimalThatDoesntExists() {
+    public void submitAdoptionApplication_returnsNullIfAnimalNotAvailable() {
+        Animal animal1 = new Animal("Dog", "Dalmention", LocalDate.of(2009, 4, 1), "M", "black");
+        animal1.setId(1L);
+        animal1.setStatus("ADOPTION_PENDING");
         AdoptionApplication adoptionApplication = new AdoptionApplication("JOHN", "5131 W Thunderbird Rd.", "602-444-4444", 1L);
-        when(animalRepository.findById(1L)).thenReturn(Optional.empty());
-        Optional<AdoptionApplication> result = adoptionApplicationService.submitAdoptionApplication(adoptionApplication);
+        when(animalRepository.findById(1L)).thenReturn(Optional.of(animal1));
+        AdoptionApplication result = adoptionApplicationService.submitAdoptionApplication(adoptionApplication);
 
-        assertEquals(Optional.empty(), result);
+        verifyNoMoreInteractions(animalRepository);
+
+        assertEquals(null, result);
     }
 
     @Test

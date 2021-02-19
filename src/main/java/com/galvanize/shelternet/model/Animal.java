@@ -25,6 +25,7 @@ public class Animal {
     @JsonIgnore
     @ManyToOne(cascade = CascadeType.ALL)
     private Shelter shelter;
+    private String status;
 
     public Animal(String name, String species, LocalDate birthDate, String sex, String color) {
         this.name = name;
@@ -32,6 +33,7 @@ public class Animal {
         this.birthDate = birthDate;
         this.sex = sex;
         this.color = color;
+        this.status="AVAILABLE";
         this.onsite = true;
     }
 }

@@ -19,11 +19,10 @@ public class AdoptionApplicationController {
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<AdoptionApplication> submitApplication(@RequestBody AdoptionApplication adoptionApplication) {
-        return adoptionApplicationService.submitAdoptionApplication(adoptionApplication)
-                .map(application -> new ResponseEntity<>(application, HttpStatus.CREATED))
-                .orElse(new ResponseEntity<>(HttpStatus.BAD_REQUEST));
+        AdoptionApplication updatedApplication= adoptionApplicationService.submitAdoptionApplication(adoptionApplication);
+        return updatedApplication==null
+                ? new ResponseEntity<>(HttpStatus.BAD_REQUEST) : new ResponseEntity<>(updatedApplication,HttpStatus.CREATED);
     }
 
     @GetMapping
