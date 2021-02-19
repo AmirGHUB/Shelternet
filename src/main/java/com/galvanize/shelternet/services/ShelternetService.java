@@ -1,10 +1,12 @@
 package com.galvanize.shelternet.services;
 
 import com.galvanize.shelternet.model.Animal;
+import com.galvanize.shelternet.model.AnimalDto;
 import com.galvanize.shelternet.model.AnimalTransfer;
 import com.galvanize.shelternet.model.Shelter;
 import com.galvanize.shelternet.model.ShelterDto;
 import com.galvanize.shelternet.repository.ShelterRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,6 +17,8 @@ import java.util.stream.Collectors;
 public class ShelternetService {
 
     private ShelterRepository shelterRepository;
+
+    ModelMapper modelMapper = new ModelMapper();
 
     public ShelternetService(ShelterRepository shelterRepository) {
         this.shelterRepository = shelterRepository;
@@ -35,11 +39,20 @@ public class ShelternetService {
         return mapToDto(shelterRepository.getOne(id));
     }
 
-    public Animal surrenderAnimal(Long id, Animal animal) {
+    public AnimalDto surrenderAnimal(Long id, AnimalDto animalDto) {
         Shelter shelter = shelterRepository.getOne(id);
+        Animal animal = modelMapper.map(animalDto, Animal.class);
         shelter.addAnimal(animal);
-        Shelter shelter1 = shelterRepository.save(shelter);
-        return shelter1.getAnimals().stream().filter(animal1 -> animal1.equals(animal)).findFirst().get();
+        shelter = shelterRepository.save(shelter);
+
+        return modelMapper.map(
+                shelter.getAnimals()
+                        .stream()
+                        .filter(a -> a.equals(animal))
+                        .findFirst()
+                        .get(),
+                AnimalDto.class
+        );
     }
 
     public ShelterDto updateShelter(Long shelterId, Shelter shelterToUpdate) {

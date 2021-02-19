@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.galvanize.shelternet.controller.AnimalController;
 import com.galvanize.shelternet.controller.ShelterController;
 import com.galvanize.shelternet.model.Animal;
+import com.galvanize.shelternet.model.AnimalDto;
 import com.galvanize.shelternet.repository.AnimalRepository;
 import com.galvanize.shelternet.services.AnimalService;
 import org.junit.jupiter.api.Test;
@@ -12,17 +13,20 @@ import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDoc
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.time.LocalDate;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -32,6 +36,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class AnimalRestdocs {
     @Autowired
     private MockMvc mockMvc;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @MockBean
     private AnimalService animalService;
@@ -54,8 +61,32 @@ public class AnimalRestdocs {
                         fieldWithPath("[*].species").description("The Species of the animal."),
                         fieldWithPath("[*].birthDate").description("The BirthDate of the animal."),
                         fieldWithPath("[*].sex").description("The Sex of the animal."),
-                        fieldWithPath("[*].color").description("The Color of the animal.")
+                        fieldWithPath("[*].color").description("The Color of the animal."),
+                        fieldWithPath("[*].onsite").description("The animal is in shelter.")
                         )));
 
     }
+    @Test
+    public void animalRequest() throws Exception {
+
+        AnimalDto animal1 = new AnimalDto(1L,"Dog", "Dalmention", LocalDate.of(2009, 04, 1), "M", "black");
+        AnimalDto animal2 = new AnimalDto(2L,"Cat", "Tabby", LocalDate.of(2010, 04, 1), "M", "white");
+        AnimalDto animal3 = new AnimalDto(3L,"Dog", "CockerSpaniel", LocalDate.of(2006, 04, 1), "F", "red");
+        List<AnimalDto> animalList = List.of(animal1, animal2, animal3);
+        when(animalService.request(any())).thenReturn(animalList);
+        mockMvc.perform(post("/animals/request/")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(List.of(animal1.getId(), animal2.getId(), animal3.getId()))))
+                .andExpect(status().isOk())
+                .andDo(document("request-animals-by-ids", responseFields(
+                        fieldWithPath("[*].id").description("The ID of the animal."),
+                        fieldWithPath("[*].name").description("The Name of the animal."),
+                        fieldWithPath("[*].species").description("The Species of the animal."),
+                        fieldWithPath("[*].birthDate").description("The BirthDate of the animal."),
+                        fieldWithPath("[*].sex").description("The Sex of the animal."),
+                        fieldWithPath("[*].color").description("The Color of the animal.")
+                ),requestFields(fieldWithPath("[*]").description("Requested animal ids."))));
+
+    }
 }
+

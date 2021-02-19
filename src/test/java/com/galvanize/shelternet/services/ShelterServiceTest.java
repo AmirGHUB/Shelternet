@@ -1,6 +1,7 @@
 package com.galvanize.shelternet.services;
 
 import com.galvanize.shelternet.model.Animal;
+import com.galvanize.shelternet.model.AnimalDto;
 import com.galvanize.shelternet.model.AnimalTransfer;
 import com.galvanize.shelternet.model.Shelter;
 import com.galvanize.shelternet.model.ShelterDto;
@@ -10,6 +11,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.modelmapper.ModelMapper;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -28,6 +30,8 @@ public class ShelterServiceTest {
 
     @InjectMocks
     private ShelternetService shelternetService;
+
+    ModelMapper modelMapper = new ModelMapper();
 
     @Test
     public void registerShelterTest() {
@@ -81,13 +85,12 @@ public class ShelterServiceTest {
     @Test
     public void acceptSurrenderedAnimals() {
         Shelter shelter = new Shelter("SHELTER1", 10);
-        Animal animal = new Animal("Dog", "Dalmention", LocalDate.of(2009, 4, 1), "M", "black");
-        shelter.setId(1L);
-        shelter.addAnimal(animal);
+        AnimalDto animal = new AnimalDto(1L,"Dog", "Dalmention", LocalDate.of(2009, 4, 1), "M", "black");
+        shelter.addAnimal(modelMapper.map(animal, Animal.class));
         when(shelterRepository.getOne(shelter.getId())).thenReturn(shelter);
         when(shelterRepository.save(shelter)).thenReturn(shelter);
 
-        Animal actualAnimal = shelternetService.surrenderAnimal(shelter.getId(), animal);
+        AnimalDto actualAnimal = shelternetService.surrenderAnimal(shelter.getId(), animal);
 
         assertEquals(animal, actualAnimal);
 

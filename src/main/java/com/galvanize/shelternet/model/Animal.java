@@ -23,6 +23,7 @@ public class Animal {
     private LocalDate birthDate;
     private String sex;
     private String color;
+    private Boolean onsite;
 
     public Animal(String name, String species, LocalDate birthDate, String sex, String color) {
         this.name = name;
@@ -30,5 +31,6 @@ public class Animal {
         this.birthDate = birthDate;
         this.sex = sex;
         this.color = color;
+        this.onsite = true;
     }
 }
