@@ -3,7 +3,6 @@ package com.galvanize.shelternet.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.galvanize.shelternet.model.AdoptionApplication;
 import com.galvanize.shelternet.model.Animal;
-import com.galvanize.shelternet.model.ApplicationStatus;
 import com.galvanize.shelternet.repository.AdoptionApplicationRepository;
 import com.galvanize.shelternet.repository.AnimalRepository;
 import org.junit.jupiter.api.Test;
@@ -18,6 +17,7 @@ import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -55,7 +55,9 @@ public class AdoptionApplicationControllerTest {
                 .andExpect(jsonPath("$.address").value("5131 W Thunderbird Rd."))
                 .andExpect(jsonPath("$.phoneNumber").value("602-444-4444"))
                 .andExpect(jsonPath("$.animalId").value(animalSaved.getId()))
-                .andExpect(jsonPath("$.status").value(ApplicationStatus.PENDING.name()));
+                .andExpect(jsonPath("$.status").value("PENDING"));
+        AdoptionApplication application = adoptionApplicationRepository.findAll().get(0);
+        assertEquals("PENDING",application.getStatus());
     }
 
     @Test

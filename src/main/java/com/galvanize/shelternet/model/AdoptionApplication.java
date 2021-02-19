@@ -3,10 +3,7 @@ package com.galvanize.shelternet.model;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Data
 @NoArgsConstructor
@@ -20,13 +17,13 @@ public class AdoptionApplication {
     private String address;
     private String phoneNumber;
     private Long animalId;
-    private ApplicationStatus status;
+    private String status;
 
     public AdoptionApplication(String name, String address, String phoneNumber, Long animalId) {
         this.name = name;
         this.address = address;
         this.phoneNumber = phoneNumber;
         this.animalId = animalId;
-        this.status = ApplicationStatus.PENDING;
+        this.status = "PENDING";
     }
 }
