@@ -54,6 +54,17 @@ include::{snippets}/get-all-animals/http-response.adoc[]
 .response-fields
 include::{snippets}/get-all-animals/response-fields.adoc[]
 
+=== Adopt Animals
+
+.request
+include::{snippets}/adopt-animals/http-request.adoc[]
+
+.request-fields
+include::{snippets}/adopt-animals/request-fields.adoc[]
+
+.response
+include::{snippets}/adopt-animals/http-response.adoc[]
+
 == Shelter Endpoints
 
 === Register Shelter

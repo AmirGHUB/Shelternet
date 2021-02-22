@@ -19,6 +19,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.time.LocalDate;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -90,6 +91,19 @@ public class AnimalRestdocs {
                         fieldWithPath("[*].color").description("The Color of the animal."),
                         fieldWithPath("[*].notes").description("Notes on the Animal")
                 ),requestFields(fieldWithPath("animalIds").description("Requested animal ids."))));
+    }
+    @Test
+    public void adoptAnimals() throws Exception {
+
+        String ids = objectMapper.writeValueAsString(List.of(1L, 2L, 3L));
+        mockMvc.perform(post("/animals/adopted")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(ids))
+                .andExpect(status().isOk())
+                .andDo(document("adopt-animals", requestFields(
+                        fieldWithPath("[*]").description("The id of the animal to adopt")
+                )));
+
     }
 }
 
