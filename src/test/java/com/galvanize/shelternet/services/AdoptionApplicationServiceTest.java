@@ -33,6 +33,7 @@ public class AdoptionApplicationServiceTest {
     public void submitAdoptionApplication() {
         Animal animal1 = new Animal("Dog", "Dalmention", LocalDate.of(2009, 4, 1), "M", "black");
         Animal animal2 = new Animal("Dog", "Dalmention", LocalDate.of(2009, 4, 1), "M", "black");
+        animal1.setStatus(null);
         animal1.setId(1L);
         animal2.setId(2L);
         animal2.setStatus("ADOPTION_PENDING");
