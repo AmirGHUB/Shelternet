@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+
 import java.util.List;
 
 
@@ -22,9 +23,8 @@ public class ShelterController {
 
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public ShelterDto registerShelter(@RequestBody Shelter shelter) {
-        return shelternetService.registerShelter(shelter);
+    public ResponseEntity<ShelterDto> registerShelter(@RequestBody Shelter shelter) {
+        return new ResponseEntity<>(shelternetService.registerShelter(shelter), HttpStatus.CREATED);
     }
 
     @GetMapping

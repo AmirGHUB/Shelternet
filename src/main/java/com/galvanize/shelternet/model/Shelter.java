@@ -1,5 +1,7 @@
 package com.galvanize.shelternet.model;
 
+
+
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,7 +18,9 @@ public class Shelter {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    @Column(nullable = false)
     private String name;
+    @Column(nullable = false)
     private Integer maxCapacity;
     @OneToMany(cascade = CascadeType.ALL)
     private List<Animal> animals;

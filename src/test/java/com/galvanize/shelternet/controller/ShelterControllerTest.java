@@ -13,14 +13,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.web.util.NestedServletException;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -52,6 +52,16 @@ public class ShelterControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.name").value("SHELTER1"))
                 .andExpect(jsonPath("$.capacity").value(10));
+    }
+
+    @Test
+    public void registerShelterTest_withoutNameAndCapacity() throws Exception {
+        Shelter shelter = new Shelter(null,0);
+
+        assertThrows(NestedServletException.class,
+                () -> mockMvc.perform(post("/shelters")
+                .content(objectMapper.writeValueAsString(shelter))
+                .contentType(MediaType.APPLICATION_JSON)));
     }
 
     @Test
