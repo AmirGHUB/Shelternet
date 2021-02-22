@@ -11,7 +11,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.modelmapper.ModelMapper;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -30,8 +29,6 @@ public class ShelterServiceTest {
 
     @InjectMocks
     private ShelternetService shelternetService;
-
-    ModelMapper modelMapper = new ModelMapper();
 
     @Test
     public void registerShelterTest() {
@@ -107,14 +104,14 @@ public class ShelterServiceTest {
     @Test
     public void acceptSurrenderedAnimals() {
         Shelter shelter = new Shelter("SHELTER1", 10);
-        AnimalDto animal = new AnimalDto(1L,"Dog", "Dalmention", LocalDate.of(2009, 4, 1), "M", "black",null);
-        shelter.addAnimal(modelMapper.map(animal, Animal.class));
+        AnimalDto animalDto = new AnimalDto(1L, "Dog", "Dalmention", LocalDate.of(2009, 4, 1), "M", "black", null);
+        shelter.addAnimal(new Animal("Dog", "Dalmention", LocalDate.of(2009, 4, 1), "M", "black"));
         when(shelterRepository.getOne(shelter.getId())).thenReturn(shelter);
         when(shelterRepository.save(shelter)).thenReturn(shelter);
 
-        AnimalDto actualAnimal = shelternetService.surrenderAnimal(shelter.getId(), animal);
+        AnimalDto actualAnimal = shelternetService.surrenderAnimal(shelter.getId(), animalDto);
 
-        assertEquals(animal, actualAnimal);
+        assertEquals(animalDto, actualAnimal);
 
         verify(shelterRepository, times(1)).getOne(shelter.getId());
         verify(shelterRepository, times(1)).save(shelter);
@@ -150,7 +147,7 @@ public class ShelterServiceTest {
 
     @Test
     public void transferAnimal_transfersAnimalBetweenShelters() {
-        Animal animal = new Animal("Dog","Dalmention", LocalDate.of(2009,4,1),"M", "black");
+        Animal animal = new Animal("Dog", "Dalmention", LocalDate.of(2009, 4, 1), "M", "black");
         animal.setId(2L);
         Shelter shelter1 = new Shelter("shelterToTransferFrom", 5);
         shelter1.setId(1L);
@@ -183,7 +180,7 @@ public class ShelterServiceTest {
 
     @Test
     public void transferAnimal_returnsFalseIfShelterToTransferToIsFull() {
-        Animal animal = new Animal("Dog","Dalmention", LocalDate.of(2009,4,1),"M", "black");
+        Animal animal = new Animal("Dog", "Dalmention", LocalDate.of(2009, 4, 1), "M", "black");
         animal.setId(2L);
         Shelter shelter1 = new Shelter("shelterToTransferFrom", 5);
         shelter1.setId(1L);
