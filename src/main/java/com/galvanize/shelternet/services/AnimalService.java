@@ -40,17 +40,17 @@ public class AnimalService {
         }
     }
 
-    public void adoptAnimals(List<Long> animalIds) {
+    public boolean adoptAnimals(List<Long> animalIds) {
         List<Animal> animalList = new ArrayList<>();
         for (Long id: animalIds) {
             Animal animalToUpdate = animalRepository.findById(id).get();
-            if(animalToUpdate.getStatus().equals("AVAILABLE")) {
-                animalToUpdate.setStatus("ADOPTED");
-                animalList.add(animalToUpdate);
+            if(!animalToUpdate.getStatus().equals("AVAILABLE")) {
+                return false;
             }
+            animalToUpdate.setStatus("ADOPTED");
+            animalList.add(animalToUpdate);
         }
-        if(animalList.size() == animalIds.size()) {
-            animalRepository.saveAll(animalList);
-        }
+        animalRepository.saveAll(animalList);
+        return true;
     }
 }

@@ -15,7 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.LocalDate;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 
@@ -108,7 +108,8 @@ public class AnimalServiceTest {
         when(animalRepository.findById(3L)).thenReturn(java.util.Optional.of(animal2));
         when(animalRepository.saveAll(List.of(animal1Updated, animal2Updated))).thenReturn(null);
 
-        animalService.adoptAnimals(List.of(2L, 3L));
+        boolean result = animalService.adoptAnimals(List.of(2L, 3L));
+        assertTrue(result);
         verifyNoMoreInteractions(animalRepository);
 
     }
@@ -125,7 +126,8 @@ public class AnimalServiceTest {
         when(animalRepository.findById(2L)).thenReturn(java.util.Optional.of(animal1));
         when(animalRepository.findById(3L)).thenReturn(java.util.Optional.of(animal2));
 
-        animalService.adoptAnimals(List.of(2L, 3L));
+        boolean result = animalService.adoptAnimals(List.of(2L, 3L));
+        assertFalse(result);
         verifyNoMoreInteractions(animalRepository);
 
     }

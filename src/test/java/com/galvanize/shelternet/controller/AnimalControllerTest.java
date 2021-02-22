@@ -129,8 +129,7 @@ public class AnimalControllerTest {
         Animal animal1 = animalRepository.save(new Animal("Dog", "Dalmention", LocalDate.of(2009, 4, 1), "M", "black"));
         Animal animal2 = animalRepository.save(new Animal("Cat", "AfricanCat", LocalDate.of(2021, 2, 1), "M", "black"));
         Animal animal3 = animalRepository.save(new Animal("Tiger", "BengalTiger", LocalDate.of(2015, 2, 1), "M", "White"));
-        List<Animal> expected = List.of(animal1, animal2, animal3);
-        String ids = objectMapper.writeValueAsString(List.of(animal1.getId(), animal2.getId(), animal3.getId()));
+        String ids = objectMapper.writeValueAsString(new AnimalRequestIds(List.of(animal1.getId(), animal2.getId(), animal3.getId())));
         mockMvc.perform(post("/animals/adopted")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(ids))

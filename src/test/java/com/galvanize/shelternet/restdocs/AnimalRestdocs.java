@@ -94,16 +94,16 @@ public class AnimalRestdocs {
     }
     @Test
     public void adoptAnimals() throws Exception {
-
-        String ids = objectMapper.writeValueAsString(List.of(1L, 2L, 3L));
+        AnimalRequestIds requestIds = new AnimalRequestIds(List.of(1L, 2L, 3L));
+        when(animalService.adoptAnimals(requestIds.getAnimalIds())).thenReturn(true);
+        String ids = objectMapper.writeValueAsString(requestIds);
         mockMvc.perform(post("/animals/adopted")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(ids))
                 .andExpect(status().isOk())
                 .andDo(document("adopt-animals", requestFields(
-                        fieldWithPath("[*]").description("The id of the animal to adopt")
+                        fieldWithPath("animalIds[*]").description("The id of the animal to adopt")
                 )));
-
     }
 }
 

@@ -5,6 +5,8 @@ import com.galvanize.shelternet.model.AnimalDto;
 import com.galvanize.shelternet.model.AnimalRequestIds;
 import com.galvanize.shelternet.model.AnimalReturnDto;
 import com.galvanize.shelternet.services.AnimalService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -34,7 +36,8 @@ public class AnimalController {
     }
 
     @PostMapping("/adopted")
-    public void adoptAnimals(@RequestBody List<Long> ids) {
-        animalService.adoptAnimals(ids);
+    public ResponseEntity<Void> adoptAnimals(@RequestBody AnimalRequestIds ids) {
+        return animalService.adoptAnimals(ids.getAnimalIds())
+                ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 }
