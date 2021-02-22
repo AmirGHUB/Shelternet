@@ -27,6 +27,20 @@ include::{snippets}/get-all-applications/http-response.adoc[]
 .response-fields
 include::{snippets}/get-all-applications/response-fields.adoc[]
 
+=== Approve Or Reject Application
+
+.request
+include::{snippets}/update-application-status/http-request.adoc[]
+
+.response
+include::{snippets}/update-application-status/http-response.adoc[]
+
+.path-parameters
+include::{snippets}/update-application-status/path-parameters.adoc[]
+
+.request-parameters
+include::{snippets}/update-application-status/request-parameters.adoc[]
+
 == Animal Endpoints
 
 === Get All Animals

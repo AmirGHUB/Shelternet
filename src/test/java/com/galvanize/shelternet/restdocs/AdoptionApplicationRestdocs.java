@@ -20,13 +20,16 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.restdocs.request.RequestDocumentation.*;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(controllers = AdoptionApplicationController.class)
@@ -98,6 +101,18 @@ public class AdoptionApplicationRestdocs {
                         fieldWithPath("[*].phoneNumber").description("The phone number of the applicant."),
                         fieldWithPath("[*].animalId").description("The Id of the animal to be adopted."),
                         fieldWithPath("[*].status").description("The status of the application.")
+                )));
+    }
+
+    @Test
+    public void updateStatus_approvesApplication() throws Exception {
+
+        mockMvc.perform(put("/applications/{id}/update-status?isApproved=true", 1L))
+                .andExpect(status().isOk())
+                .andDo(document("update-application-status", pathParameters(
+                        parameterWithName("id").description("Id of application to approve or reject")
+                ), requestParameters(
+                        parameterWithName("isApproved").description("boolean value for if application is approved or rejected")
                 )));
     }
 }
