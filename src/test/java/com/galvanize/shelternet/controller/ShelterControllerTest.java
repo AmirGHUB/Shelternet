@@ -42,16 +42,20 @@ public class ShelterControllerTest {
     private AnimalRepository animalRepository;
 
 
+
     @Test
     public void registerShelterTest() throws Exception {
-        Shelter shelter = new Shelter("SHELTER1", 10);
+        String shelter = "{\n" +
+                "    \"name\":\"SHELTER6\",\n" +
+                "    \"maxCapacity\":5\n" +
+                "}";
 
         mockMvc.perform(post("/shelters")
-                .content(objectMapper.writeValueAsString(shelter))
+                .content(shelter)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.name").value("SHELTER1"))
-                .andExpect(jsonPath("$.capacity").value(10));
+                .andExpect(jsonPath("$.name").value("SHELTER6"))
+                .andExpect(jsonPath("$.capacity").value(5));
     }
 
     @Test
@@ -98,17 +102,10 @@ public class ShelterControllerTest {
         shelter.addAnimal(animal1);
         shelter.addAnimal(animal2);
 
-        MvcResult result = mockMvc.perform(post("/shelters")
-                .content(objectMapper.writeValueAsString(shelter))
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated())
-                .andReturn();
-
-        String jsonResult = result.getResponse().getContentAsString();
-        Shelter shelterResult = objectMapper.readValue(jsonResult, Shelter.class);
+        shelter = shelterRepository.save(shelter);
 
         mockMvc
-                .perform(get("/shelters" + "/" + shelterResult.getId()))
+                .perform(get("/shelters" + "/" + shelter.getId()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("SHELTER1"))
                 .andExpect(jsonPath("$.capacity").value(8));

@@ -17,7 +17,8 @@ public class ShelternetService {
         this.shelterRepository = shelterRepository;
     }
 
-    public ShelterDto registerShelter(Shelter shelter) {
+    public ShelterDto registerShelter(RegisterShelterDto registerShelterDto) {
+        Shelter shelter = new Shelter(registerShelterDto.getName(), registerShelterDto.getMaxCapacity());
         return mapToDto(shelterRepository.save(shelter));
     }
 

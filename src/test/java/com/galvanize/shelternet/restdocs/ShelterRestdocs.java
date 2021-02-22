@@ -2,11 +2,7 @@ package com.galvanize.shelternet.restdocs;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.galvanize.shelternet.controller.ShelterController;
-import com.galvanize.shelternet.model.Animal;
-import com.galvanize.shelternet.model.AnimalDto;
-import com.galvanize.shelternet.model.AnimalTransfer;
-import com.galvanize.shelternet.model.Shelter;
-import com.galvanize.shelternet.model.ShelterDto;
+import com.galvanize.shelternet.model.*;
 import com.galvanize.shelternet.services.ShelternetService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -49,11 +46,10 @@ public class ShelterRestdocs {
 
     @Test
     public void registerShelterRestDocTest() throws Exception {
-        Shelter shelter = new Shelter("SHELTER1", 10);
-        shelter.setId(1L);
+        RegisterShelterDto registerShelterDto = new RegisterShelterDto("SHELTER1", 10);
 
-        ShelterDto expected = new ShelterDto(shelter.getId(), shelter.getName(), shelter.getMaxCapacity(), shelter.getAnimals());
-        when(shelternetService.registerShelter(shelter)).thenReturn(expected);
+        ShelterDto expected = new ShelterDto(1L, registerShelterDto.getName(), registerShelterDto.getMaxCapacity(), new ArrayList<>());
+        when(shelternetService.registerShelter(registerShelterDto)).thenReturn(expected);
 
         mockMvc.perform(post("/shelters")
                 .contentType(MediaType.APPLICATION_JSON)

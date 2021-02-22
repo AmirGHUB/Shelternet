@@ -1,10 +1,6 @@
 package com.galvanize.shelternet.services;
 
-import com.galvanize.shelternet.model.Animal;
-import com.galvanize.shelternet.model.AnimalDto;
-import com.galvanize.shelternet.model.AnimalTransfer;
-import com.galvanize.shelternet.model.Shelter;
-import com.galvanize.shelternet.model.ShelterDto;
+import com.galvanize.shelternet.model.*;
 import com.galvanize.shelternet.repository.ShelterRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,14 +28,14 @@ public class ShelterServiceTest {
 
     @Test
     public void registerShelterTest() {
+        RegisterShelterDto registerShelterDto = new RegisterShelterDto("SHELTER1", 10);
         Shelter shelter = new Shelter("SHELTER1", 10);
         shelter.setId(1L);
-        when(shelterRepository.save(any())).thenReturn(shelter);
+        when(shelterRepository.save(shelter)).thenReturn(shelter);
 
-        ShelterDto actual = shelternetService.registerShelter(shelter);
+        ShelterDto actual = shelternetService.registerShelter(registerShelterDto);
 
         ShelterDto expected = new ShelterDto(1L, "SHELTER1", 10, new ArrayList<>());
-        verify(shelterRepository, times(1)).save(shelter);
 
         assertEquals(expected, actual);
     }
