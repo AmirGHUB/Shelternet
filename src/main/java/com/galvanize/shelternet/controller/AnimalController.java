@@ -28,8 +28,8 @@ public class AnimalController {
     }
 
     @PostMapping("/return")
-    public void returnAnimalsToShelter(@RequestBody List<AnimalReturnDto> animals){
-        animalService.returnAnimalsToShelter(animals);
+    public void returnAnimalsToShelter(@RequestBody AnimalReturn animalReturn){
+        animalService.returnAnimalsToShelter(animalReturn.getAnimals());
     }
 
     @PostMapping("/adopted")

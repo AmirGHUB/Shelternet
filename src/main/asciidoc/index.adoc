@@ -65,6 +65,17 @@ include::{snippets}/adopt-animals/request-fields.adoc[]
 .response
 include::{snippets}/adopt-animals/http-response.adoc[]
 
+=== Return Animals From Pet Store
+
+.request
+include::{snippets}/return-animals-from-petstore/http-request.adoc[]
+
+.request-fields
+include::{snippets}/return-animals-from-petstore/request-fields.adoc[]
+
+.response
+include::{snippets}/return-animals-from-petstore/http-response.adoc[]
+
 == Shelter Endpoints
 
 === Register Shelter

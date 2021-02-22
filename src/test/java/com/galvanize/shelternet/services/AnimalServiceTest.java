@@ -79,7 +79,7 @@ public class AnimalServiceTest {
 
         AnimalReturnDto returnDto1 = new AnimalReturnDto(2L, "best animal ever");
 
-        when(animalRepository.getOne(returnDto1.getAnimalId())).thenReturn(animal1);
+        when(animalRepository.getOne(returnDto1.getId())).thenReturn(animal1);
         when(animalRepository.save(any())).thenReturn(animal1);
 
         animalService.returnAnimalsToShelter(List.of(returnDto1));

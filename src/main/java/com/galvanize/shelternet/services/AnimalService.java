@@ -33,7 +33,7 @@ public class AnimalService {
 
     public void returnAnimalsToShelter(List<AnimalReturnDto> animals) {
         for (AnimalReturnDto returnDto : animals) {
-            Animal animal = animalRepository.getOne(returnDto.getAnimalId());
+            Animal animal = animalRepository.getOne(returnDto.getId());
             animal.setOnsite(true);
             animal.setNotes(returnDto.getNotes());
             animalRepository.save(animal);

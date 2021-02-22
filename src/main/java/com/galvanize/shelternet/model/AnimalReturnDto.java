@@ -4,6 +4,6 @@ import lombok.Value;
 
 @Value
 public class AnimalReturnDto {
-    Long animalId;
+    Long id;
     String notes;
 }

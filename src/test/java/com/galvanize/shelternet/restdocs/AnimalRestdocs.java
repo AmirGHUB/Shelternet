@@ -2,10 +2,7 @@ package com.galvanize.shelternet.restdocs;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.galvanize.shelternet.controller.AnimalController;
-import com.galvanize.shelternet.model.Animal;
-import com.galvanize.shelternet.model.AnimalDto;
-import com.galvanize.shelternet.model.AnimalRequestIds;
-import com.galvanize.shelternet.model.Shelter;
+import com.galvanize.shelternet.model.*;
 import com.galvanize.shelternet.services.AnimalService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -139,5 +136,23 @@ public class AnimalRestdocs {
                         fieldWithPath("animalIds[*]").description("The id of the animal to adopt")
                 )));
     }
+
+    @Test
+    public void returnAnimalsFromPetStore() throws Exception {
+        List<AnimalReturnDto> returnedAnimals = List.of(new AnimalReturnDto(1L, "Bob is super friendly"),
+                new AnimalReturnDto(2L, "Seems to have fleas"));
+
+        AnimalReturn animalReturn = new AnimalReturn(returnedAnimals);
+
+        mockMvc.perform(post("/animals/return")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(animalReturn)))
+                .andExpect(status().isOk())
+                .andDo(document("return-animals-from-petstore", requestFields(
+                        fieldWithPath("animals[*].id").description("The id of the animal to return"),
+                        fieldWithPath("animals[*].notes").description("notes on the animal")
+                )));
+    }
+
 }
 

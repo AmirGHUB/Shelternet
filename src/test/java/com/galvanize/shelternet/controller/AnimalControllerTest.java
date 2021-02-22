@@ -1,11 +1,7 @@
 package com.galvanize.shelternet.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.galvanize.shelternet.model.Animal;
-import com.galvanize.shelternet.model.AnimalDto;
-import com.galvanize.shelternet.model.AnimalReturnDto;
-import com.galvanize.shelternet.model.Shelter;
-import com.galvanize.shelternet.model.AnimalRequestIds;
+import com.galvanize.shelternet.model.*;
 import com.galvanize.shelternet.repository.AnimalRepository;
 import com.galvanize.shelternet.repository.ShelterRepository;
 import org.junit.jupiter.api.Test;
@@ -107,10 +103,12 @@ public class AnimalControllerTest {
         List<AnimalReturnDto> returnedAnimals = List.of(new AnimalReturnDto(animal1.getId(), "Bob is super friendly"),
                 new AnimalReturnDto(animal2.getId(), "Seems to have fleas"));
 
+        AnimalReturn animalReturn = new AnimalReturn(returnedAnimals);
+
         mockMvc
                 .perform(post("/animals/return")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(returnedAnimals)))
+                        .content(objectMapper.writeValueAsString(animalReturn)))
                 .andExpect(status().isOk());
 
         Animal fetchedAnimal1 = animalRepository.getOne(animal1.getId());
