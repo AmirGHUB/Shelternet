@@ -1,5 +1,4 @@
 package com.galvanize.shelternet.controller;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.galvanize.shelternet.model.Animal;
 import com.galvanize.shelternet.model.AnimalTransfer;
@@ -64,13 +63,39 @@ public class ShelterControllerTest {
 
     @Test
     public void registerShelterTest_withoutNameAndCapacity() throws Exception {
-        Shelter shelter = new Shelter(null,0);
+        Shelter shelter = new Shelter(null, 0);
 
         assertThrows(NestedServletException.class,
                 () -> mockMvc.perform(post("/shelters")
                         .with(SecurityMockMvcRequestPostProcessors.httpBasic("user", "shelterPass1"))
                         .content(objectMapper.writeValueAsString(shelter))
                         .contentType(MediaType.APPLICATION_JSON)));
+    }
+
+    @Test
+    @Transactional(value = Transactional.TxType.NEVER)
+
+    public void registerShelter_withDuplicateName() throws Exception {
+        try {
+            Shelter shelter = new Shelter("SHELTER1", 10);
+
+            mockMvc.perform(post("/shelters")
+                    .content(objectMapper.writeValueAsString(shelter))
+                    .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isCreated())
+                    .andExpect(jsonPath("$.name").value("SHELTER1"))
+                    .andExpect(jsonPath("$.capacity").value(10));
+
+            assertThrows(NestedServletException.class,
+                    () -> mockMvc.perform(post("/shelters")
+                            .content(objectMapper.writeValueAsString(shelter))
+                            .contentType(MediaType.APPLICATION_JSON)));
+        } catch (Exception e) {
+            fail();
+
+        } finally {
+            shelterRepository.deleteAll();
+        }
     }
 
     @Test
@@ -215,7 +240,7 @@ public class ShelterControllerTest {
         Animal animal1 = new Animal("Dog", "Dalmention", LocalDate.of(2009, 04, 1), "M", "black");
         shelter1.addAnimal(animal1);
         shelter1 = shelterRepository.save(shelter1);
-        Shelter shelter2 = new Shelter("Shelter A", 1);
+        Shelter shelter2 = new Shelter("Shelter B", 1);
         Animal animal2 = new Animal("Dog", "Dalmention", LocalDate.of(2009, 04, 1), "M", "black");
         shelter2.addAnimal(animal2);
         shelter2 = shelterRepository.save(shelter2);
@@ -248,5 +273,6 @@ public class ShelterControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string(expectedString));
     }
+
 }
 
