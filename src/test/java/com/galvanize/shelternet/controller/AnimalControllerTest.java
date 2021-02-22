@@ -1,15 +1,11 @@
 package com.galvanize.shelternet.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.galvanize.shelternet.model.Animal;
 import com.galvanize.shelternet.model.AnimalDto;
 import com.galvanize.shelternet.model.AnimalReturnDto;
 import com.galvanize.shelternet.model.Shelter;
 import com.galvanize.shelternet.model.AnimalRequestIds;
-import com.galvanize.shelternet.model.Shelter;
-import com.galvanize.shelternet.model.AnimalReturnDto;
-import com.galvanize.shelternet.model.Shelter;
 import com.galvanize.shelternet.repository.AnimalRepository;
 import com.galvanize.shelternet.repository.ShelterRepository;
 import org.junit.jupiter.api.Test;
@@ -24,6 +20,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -77,8 +74,8 @@ public class AnimalControllerTest {
                 .content(objectMapper.writeValueAsString(animalRequestIds)))
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
-        AnimalDto animalDto1 = new AnimalDto(animal1.getId(), "Dog", "Dalmention", LocalDate.of(2009, 4, 1), "M", "black",null);
-        AnimalDto animalDto2 = new AnimalDto(animal2.getId(), "Cat", "Tabby", LocalDate.of(2010, 4, 1), "M", "white",null);
+        AnimalDto animalDto1 = new AnimalDto(animal1.getId(), "Dog", "Dalmention", LocalDate.of(2009, 4, 1), "M", "black", null);
+        AnimalDto animalDto2 = new AnimalDto(animal2.getId(), "Cat", "Tabby", LocalDate.of(2010, 4, 1), "M", "white", null);
         assertEquals(objectMapper.writeValueAsString(List.of(animalDto1, animalDto2)), result);
 
         mockMvc
@@ -107,8 +104,8 @@ public class AnimalControllerTest {
                 .andExpect(status().isOk());
 
 
-        List<AnimalReturnDto> returnedAnimals = List.of(new AnimalReturnDto(animal1.getId(),"Bob is super friendly"),
-                new AnimalReturnDto(animal2.getId(),"Seems to have fleas"));
+        List<AnimalReturnDto> returnedAnimals = List.of(new AnimalReturnDto(animal1.getId(), "Bob is super friendly"),
+                new AnimalReturnDto(animal2.getId(), "Seems to have fleas"));
 
         mockMvc
                 .perform(post("/animals/return")
@@ -118,10 +115,47 @@ public class AnimalControllerTest {
 
         Animal fetchedAnimal1 = animalRepository.getOne(animal1.getId());
 
-        assertEquals("Dallas Animal Shelter" , fetchedAnimal1.getShelter().getName());
+        assertEquals("Dallas Animal Shelter", fetchedAnimal1.getShelter().getName());
         assertEquals(true, fetchedAnimal1.getOnsite());
-        assertEquals("Bob is super friendly" , fetchedAnimal1.getNotes());
+        assertEquals("Bob is super friendly", fetchedAnimal1.getNotes());
 
+    }
+
+    @Test
+    public void requestAnimalsBackFromPetStore() throws Exception {
+        Shelter shelter = new Shelter("Dallas Animal Shelter", 20);
+        Animal animal1 = new Animal("Dog", "Dalmention", LocalDate.of(2009, 4, 1), "M", "black");
+        Animal animal2 = new Animal("Cat", "Tabby", LocalDate.of(2010, 4, 1), "M", "white");
+        animal1.setShelter(shelter);
+        animal2.setShelter(shelter);
+        animal1.setOnsite(false);
+        animal2.setOnsite(false);
+        animal1.setStatus("NOT AVAILABLE");
+        animal2.setStatus("NOT AVAILABLE");
+        shelter.addAnimal(animal1);
+        shelter.addAnimal(animal2);
+        shelter = shelterRepository.save(shelter);
+        animal1 = shelter.getAnimals().get(0);
+        animal2 = shelter.getAnimals().get(1);
+
+
+        AnimalRequestIds animalRequestIds = new AnimalRequestIds(List.of(
+                animal1.getId(), animal2.getId())
+        );
+
+        mockMvc.perform(post("/animals/return-request")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(animalRequestIds)))
+                .andExpect(status().isOk());
+
+        animal1 = animalRepository.getOne(animal1.getId());
+        animal2 = animalRepository.getOne(animal2.getId());
+
+        assertTrue(animal1.getOnsite());
+        assertTrue(animal2.getOnsite());
+
+        assertEquals("AVAILABLE", animal1.getStatus());
+        assertEquals("AVAILABLE", animal2.getStatus());
     }
 
     @Test

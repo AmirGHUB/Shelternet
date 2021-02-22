@@ -16,6 +16,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 
@@ -52,8 +53,8 @@ public class AnimalServiceTest {
         AnimalRequestIds animalRequestIds = new AnimalRequestIds(List.of(animal1.getId(), animal2.getId()));
 
         List<AnimalDto> actual = animalService.request(animalRequestIds);
-        AnimalDto animalDto1 = new AnimalDto(1L, "Micro", "Dog", LocalDate.now(), "M", "Brown",null);
-        AnimalDto animalDto2 = new AnimalDto(2L, "Sammy", "Dog", LocalDate.now(), "M", "Black",null);
+        AnimalDto animalDto1 = new AnimalDto(1L, "Micro", "Dog", LocalDate.now(), "M", "Brown", null);
+        AnimalDto animalDto2 = new AnimalDto(2L, "Sammy", "Dog", LocalDate.now(), "M", "Black", null);
 
         List<AnimalDto> expected = List.of(animalDto1, animalDto2);
         assertEquals(expected, actual);
@@ -70,22 +71,43 @@ public class AnimalServiceTest {
     public void returnAnimalsToShelter() {
         Shelter shelter = new Shelter("Dallas Animal Shelter", 20);
         shelter.setId(1L);
-        Animal animal1 = new Animal("Dog", "Dalmention", LocalDate.of(2009, 04, 1), "M", "black");
+        Animal animal1 = new Animal("Dog", "Dalmention", LocalDate.of(2009, 4, 1), "M", "black");
         animal1.setId(2L);
         animal1.setShelter(shelter);
         shelter.addAnimal(animal1);
 
 
-        AnimalReturnDto returnDto1 = new AnimalReturnDto(2L,"best animal ever");
+        AnimalReturnDto returnDto1 = new AnimalReturnDto(2L, "best animal ever");
 
         when(animalRepository.getOne(returnDto1.getAnimalId())).thenReturn(animal1);
         when(animalRepository.save(any())).thenReturn(animal1);
 
         animalService.returnAnimalsToShelter(List.of(returnDto1));
 
-        assertEquals("Dallas Animal Shelter" , animal1.getShelter().getName());
+        assertEquals("Dallas Animal Shelter", animal1.getShelter().getName());
         assertEquals(true, animal1.getOnsite());
         assertEquals("best animal ever", animal1.getNotes());
+    }
+
+    @Test
+    public void requestAnimalsBackFromPetStore() {
+        Animal animal = new Animal("Dog", "Dalmention", LocalDate.of(2009, 4, 1), "M", "black");
+        animal.setId(1L);
+        animal.setOnsite(false);
+        animal.setStatus("NOT AVAILABLE");
+
+        when(animalRepository.getOne(any())).thenReturn(animal);
+
+        AnimalRequestIds animalRequestIds = new AnimalRequestIds();
+        animalRequestIds.setAnimalIds(List.of(1L));
+
+        animalService.requestAnimalsBack(animalRequestIds);
+
+        verify(animalRepository).getOne(animal.getId());
+        verify(animalRepository).save(animal);
+
+        assertEquals("AVAILABLE", animal.getStatus());
+        assertTrue(animal.getOnsite());
     }
 
     @Test

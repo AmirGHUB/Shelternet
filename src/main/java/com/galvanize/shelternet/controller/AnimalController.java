@@ -1,9 +1,6 @@
 package com.galvanize.shelternet.controller;
 
-import com.galvanize.shelternet.model.Animal;
-import com.galvanize.shelternet.model.AnimalDto;
-import com.galvanize.shelternet.model.AnimalRequestIds;
-import com.galvanize.shelternet.model.AnimalReturnDto;
+import com.galvanize.shelternet.model.*;
 import com.galvanize.shelternet.services.AnimalService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,5 +36,10 @@ public class AnimalController {
     public ResponseEntity<Void> adoptAnimals(@RequestBody AnimalRequestIds ids) {
         return animalService.adoptAnimals(ids.getAnimalIds())
                 ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    @PostMapping("/return-request")
+    public void requestAnimalsBack(@RequestBody AnimalRequestIds animalRequestIds){
+         animalService.requestAnimalsBack(animalRequestIds);
     }
 }

@@ -5,6 +5,7 @@ import com.galvanize.shelternet.controller.AnimalController;
 import com.galvanize.shelternet.model.Animal;
 import com.galvanize.shelternet.model.AnimalDto;
 import com.galvanize.shelternet.model.AnimalRequestIds;
+import com.galvanize.shelternet.model.Shelter;
 import com.galvanize.shelternet.services.AnimalService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,15 +65,15 @@ public class AnimalRestdocs {
                         fieldWithPath("[*].onsite").description("The animal is in shelter."),
                         fieldWithPath("[*].notes").description("Notes on the Animal"),
                         fieldWithPath("[*].status").description("Adoption status of the Animal")
-                        )));
+                )));
 
     }
 
     @Test
     public void animalRequest() throws Exception {
-        AnimalDto animal1 = new AnimalDto(1L, "Dog", "Dalmention", LocalDate.of(2009, 4, 1), "M", "black",null);
-        AnimalDto animal2 = new AnimalDto(2L, "Cat", "Tabby", LocalDate.of(2010, 4, 1), "M", "white",null);
-        AnimalDto animal3 = new AnimalDto(3L, "Dog", "CockerSpaniel", LocalDate.of(2006, 4, 1), "F", "red",null);
+        AnimalDto animal1 = new AnimalDto(1L, "Dog", "Dalmention", LocalDate.of(2009, 4, 1), "M", "black", null);
+        AnimalDto animal2 = new AnimalDto(2L, "Cat", "Tabby", LocalDate.of(2010, 4, 1), "M", "white", null);
+        AnimalDto animal3 = new AnimalDto(3L, "Dog", "CockerSpaniel", LocalDate.of(2006, 4, 1), "F", "red", null);
         List<AnimalDto> animalList = List.of(animal1, animal2, animal3);
 
         AnimalRequestIds animalRequestIds = new AnimalRequestIds(List.of(animal1.getId(), animal2.getId(), animal3.getId()));
@@ -90,7 +91,40 @@ public class AnimalRestdocs {
                         fieldWithPath("[*].sex").description("The Sex of the animal."),
                         fieldWithPath("[*].color").description("The Color of the animal."),
                         fieldWithPath("[*].notes").description("Notes on the Animal")
-                ),requestFields(fieldWithPath("animalIds").description("Requested animal ids."))));
+                ), requestFields(fieldWithPath("animalIds").description("Requested animal ids."))));
+    }
+
+    @Test
+    public void requestAnimalsBackFromPetStore() throws Exception {
+        Shelter shelter = new Shelter("Dallas Animal Shelter", 20);
+        shelter.setId(1L);
+        Animal animal1 = new Animal("Dog", "Dalmention", LocalDate.of(2009, 4, 1), "M", "black");
+        Animal animal2 = new Animal("Cat", "Tabby", LocalDate.of(2010, 4, 1), "M", "white");
+        animal1.setId(2L);
+        animal2.setId(3L);
+        animal1.setShelter(shelter);
+        animal2.setShelter(shelter);
+        animal1.setOnsite(false);
+        animal2.setOnsite(false);
+        animal1.setStatus("NOT AVAILABLE");
+        animal2.setStatus("NOT AVAILABLE");
+        shelter.addAnimal(animal1);
+        shelter.addAnimal(animal2);
+        animal1 = shelter.getAnimals().get(0);
+        animal2 = shelter.getAnimals().get(1);
+
+
+        AnimalRequestIds animalRequestIds = new AnimalRequestIds(List.of(animal1.getId(), animal2.getId()));
+
+        animalService.requestAnimalsBack(animalRequestIds);
+
+        mockMvc.perform(post("/animals/return-request")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(animalRequestIds)))
+                .andExpect(status().isOk())
+                .andDo(document("return-animals-back-to-shelter",
+                        requestFields(
+                                fieldWithPath("animalIds").description("Requested animal ids."))));
     }
     @Test
     public void adoptAnimals() throws Exception {

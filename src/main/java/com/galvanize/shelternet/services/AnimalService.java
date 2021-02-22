@@ -53,4 +53,13 @@ public class AnimalService {
         animalRepository.saveAll(animalList);
         return true;
     }
+
+    public void requestAnimalsBack(AnimalRequestIds animalRequestIds) {
+        animalRequestIds.getAnimalIds().forEach(animal -> {
+            Animal animalFounded = animalRepository.getOne(animal);
+            animalFounded.setOnsite(true);
+            animalFounded.setStatus("AVAILABLE");
+            animalRepository.save(animalFounded);
+        });
+    }
 }
