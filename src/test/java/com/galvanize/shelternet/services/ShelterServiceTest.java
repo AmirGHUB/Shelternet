@@ -207,11 +207,14 @@ public class ShelterServiceTest {
     public void getAnimalsByShelterId() {
         Animal animal1 = new Animal("Dog", "Dalmention", LocalDate.of(2009, 4, 1), "M", "black");
         Animal animal2 = new Animal("Cat", "AfricanCat", LocalDate.of(2021, 2, 1), "M", "black");
+        Animal animal3 = new Animal("Cat", "Tabby", LocalDate.of(2016, 2, 1), "F", "white");
+        animal3.setStatus("ADOPTED");
         List<Animal> expected = List.of(animal1, animal2);
         Shelter shelter = new Shelter("Shelter1", 50);
         shelter.setId(1L);
         shelter.addAnimal(animal1);
         shelter.addAnimal(animal2);
+        shelter.addAnimal(animal3);
 
         when(shelterRepository.getOne(any())).thenReturn(shelter);
 

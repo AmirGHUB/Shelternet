@@ -88,7 +88,10 @@ public class ShelternetService {
     }
 
     public List<Animal> getAnimalsByShelterId(Long shelterId) {
-        return shelterRepository.getOne(shelterId).getAnimals();
+        return shelterRepository.getOne(shelterId).getAnimals()
+                .stream()
+                .filter(animal -> !animal.getStatus().equals("ADOPTED"))
+                .collect(Collectors.toList());
     }
 
     private Optional<Animal> getAnimalFromShelter(Shelter shelter, Long animalId) {
