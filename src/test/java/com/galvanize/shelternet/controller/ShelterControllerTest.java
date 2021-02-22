@@ -80,6 +80,7 @@ public class ShelterControllerTest {
             Shelter shelter = new Shelter("SHELTER1", 10);
 
             mockMvc.perform(post("/shelters")
+                    .with(SecurityMockMvcRequestPostProcessors.httpBasic("user", "shelterPass1"))
                     .content(objectMapper.writeValueAsString(shelter))
                     .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isCreated())
@@ -88,11 +89,11 @@ public class ShelterControllerTest {
 
             assertThrows(NestedServletException.class,
                     () -> mockMvc.perform(post("/shelters")
+                            .with(SecurityMockMvcRequestPostProcessors.httpBasic("user", "shelterPass1"))
                             .content(objectMapper.writeValueAsString(shelter))
                             .contentType(MediaType.APPLICATION_JSON)));
         } catch (Exception e) {
             fail();
-
         } finally {
             shelterRepository.deleteAll();
         }
