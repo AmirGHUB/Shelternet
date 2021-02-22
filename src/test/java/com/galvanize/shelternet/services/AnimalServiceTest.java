@@ -87,4 +87,47 @@ public class AnimalServiceTest {
         assertEquals(true, animal1.getOnsite());
         assertEquals("best animal ever", animal1.getNotes());
     }
+
+    @Test
+    public void adoptAnimals() {
+        Animal animal1 = new Animal("Dog", "Dalmention", LocalDate.of(2009, 04, 1), "M", "black");
+        animal1.setId(2L);
+        animal1.setStatus("AVAILABLE");
+        Animal animal2 = new Animal("Dog", "Dalmention", LocalDate.of(2009, 04, 1), "M", "black");
+        animal2.setId(3L);
+        animal2.setStatus("AVAILABLE");
+
+        Animal animal1Updated = new Animal("Dog", "Dalmention", LocalDate.of(2009, 04, 1), "M", "black");
+        animal1Updated.setId(2L);
+        animal1Updated.setStatus("ADOPTED");
+        Animal animal2Updated = new Animal("Dog", "Dalmention", LocalDate.of(2009, 04, 1), "M", "black");
+        animal2Updated.setId(3L);
+        animal2Updated.setStatus("ADOPTED");
+
+        when(animalRepository.findById(2L)).thenReturn(java.util.Optional.of(animal1));
+        when(animalRepository.findById(3L)).thenReturn(java.util.Optional.of(animal2));
+        when(animalRepository.saveAll(List.of(animal1Updated, animal2Updated))).thenReturn(null);
+
+        animalService.adoptAnimals(List.of(2L, 3L));
+        verifyNoMoreInteractions(animalRepository);
+
+    }
+
+    @Test
+    public void adoptAnimals_DoesNotCallSaveIfAnimalIsUnAvailable() {
+        Animal animal1 = new Animal("Dog", "Dalmention", LocalDate.of(2009, 04, 1), "M", "black");
+        animal1.setId(2L);
+        animal1.setStatus("AVAILABLE");
+        Animal animal2 = new Animal("Dog", "Dalmention", LocalDate.of(2009, 04, 1), "M", "black");
+        animal2.setId(3L);
+        animal2.setStatus("ADOPTION_PENDING");
+
+        when(animalRepository.findById(2L)).thenReturn(java.util.Optional.of(animal1));
+        when(animalRepository.findById(3L)).thenReturn(java.util.Optional.of(animal2));
+
+        animalService.adoptAnimals(List.of(2L, 3L));
+        verifyNoMoreInteractions(animalRepository);
+
+    }
+
 }

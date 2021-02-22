@@ -32,4 +32,9 @@ public class AnimalController {
     public void returnAnimalsToShelter(@RequestBody List<AnimalReturnDto> animals){
         animalService.returnAnimalsToShelter(animals);
     }
+
+    @PostMapping("/adopted")
+    public void adoptAnimals(@RequestBody List<Long> ids) {
+        animalService.adoptAnimals(ids);
+    }
 }

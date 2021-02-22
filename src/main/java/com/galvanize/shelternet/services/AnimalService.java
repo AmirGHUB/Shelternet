@@ -39,4 +39,18 @@ public class AnimalService {
             animalRepository.save(animal);
         }
     }
+
+    public void adoptAnimals(List<Long> animalIds) {
+        List<Animal> animalList = new ArrayList<>();
+        for (Long id: animalIds) {
+            Animal animalToUpdate = animalRepository.findById(id).get();
+            if(animalToUpdate.getStatus().equals("AVAILABLE")) {
+                animalToUpdate.setStatus("ADOPTED");
+                animalList.add(animalToUpdate);
+            }
+        }
+        if(animalList.size() == animalIds.size()) {
+            animalRepository.saveAll(animalList);
+        }
+    }
 }
