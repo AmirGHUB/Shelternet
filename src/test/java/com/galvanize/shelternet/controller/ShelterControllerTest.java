@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.web.util.NestedServletException;
@@ -26,6 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@ActiveProfiles("test")
 @Transactional
 public class ShelterControllerTest {
 
@@ -51,6 +54,7 @@ public class ShelterControllerTest {
                 "}";
 
         mockMvc.perform(post("/shelters")
+                .with(SecurityMockMvcRequestPostProcessors.httpBasic("user", "shelterPass1"))
                 .content(shelter)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
@@ -64,8 +68,9 @@ public class ShelterControllerTest {
 
         assertThrows(NestedServletException.class,
                 () -> mockMvc.perform(post("/shelters")
-                .content(objectMapper.writeValueAsString(shelter))
-                .contentType(MediaType.APPLICATION_JSON)));
+                        .with(SecurityMockMvcRequestPostProcessors.httpBasic("user", "shelterPass1"))
+                        .content(objectMapper.writeValueAsString(shelter))
+                        .contentType(MediaType.APPLICATION_JSON)));
     }
 
     @Test
@@ -74,11 +79,13 @@ public class ShelterControllerTest {
         Shelter shelter2 = new Shelter("SHELTER2", 20);
 
         mockMvc.perform(post("/shelters")
+                .with(SecurityMockMvcRequestPostProcessors.httpBasic("user", "shelterPass1"))
                 .content(objectMapper.writeValueAsString(shelter))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
 
         mockMvc.perform(post("/shelters")
+                .with(SecurityMockMvcRequestPostProcessors.httpBasic("user", "shelterPass1"))
                 .content(objectMapper.writeValueAsString(shelter2))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
@@ -118,6 +125,7 @@ public class ShelterControllerTest {
         Shelter shelter = new Shelter("SHELTER1", 10);
 
         MvcResult result = mockMvc.perform(post("/shelters")
+                .with(SecurityMockMvcRequestPostProcessors.httpBasic("user", "shelterPass1"))
                 .content(objectMapper.writeValueAsString(shelter))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
@@ -129,6 +137,7 @@ public class ShelterControllerTest {
         Animal animal = new Animal("Dog", "Dalmention", LocalDate.of(2009, 4, 1), "M", "black");
 
         mockMvc.perform(post("/shelters/" + shelterResult.getId() + "/animal/")
+                .with(SecurityMockMvcRequestPostProcessors.httpBasic("user", "shelterPass1"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(animal)))
                 .andExpect(status().isOk())
@@ -160,6 +169,7 @@ public class ShelterControllerTest {
         String shelterString = objectMapper.writeValueAsString(shelterToUpdate);
 
         mockMvc.perform(put("/shelters/" + existingShelter.getId())
+                .with(SecurityMockMvcRequestPostProcessors.httpBasic("user", "shelterPass1"))
                 .content(shelterString)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -172,7 +182,8 @@ public class ShelterControllerTest {
     @Test
     public void deleteShelterById() throws Exception {
         Shelter existingShelter = shelterRepository.save(new Shelter("Original Shelter", 20));
-        mockMvc.perform(delete("/shelters/" + existingShelter.getId()))
+        mockMvc.perform(delete("/shelters/" + existingShelter.getId())
+                .with(SecurityMockMvcRequestPostProcessors.httpBasic("user", "shelterPass1")))
                 .andExpect(status().isOk());
         assertEquals(0, shelterRepository.findAll().size());
     }
@@ -189,6 +200,7 @@ public class ShelterControllerTest {
         String jsonString = objectMapper.writeValueAsString(animalTransfer);
 
         mockMvc.perform(put("/shelters/transfer-animal")
+                .with(SecurityMockMvcRequestPostProcessors.httpBasic("user", "shelterPass1"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonString))
                 .andExpect(status().isOk());
@@ -212,6 +224,7 @@ public class ShelterControllerTest {
         String jsonString = objectMapper.writeValueAsString(animalTransfer);
 
         mockMvc.perform(put("/shelters/transfer-animal")
+                .with(SecurityMockMvcRequestPostProcessors.httpBasic("user", "shelterPass1"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonString))
                 .andExpect(status().isBadRequest());

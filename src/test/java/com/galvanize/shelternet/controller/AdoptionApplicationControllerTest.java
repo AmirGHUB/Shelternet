@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 import javax.transaction.Transactional;
@@ -23,6 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@ActiveProfiles("test")
 @Transactional
 public class AdoptionApplicationControllerTest {
 
@@ -48,6 +51,7 @@ public class AdoptionApplicationControllerTest {
 
         mockMvc.perform(post("/applications")
                 .content(objectMapper.writeValueAsString(adoptionApplication))
+                .with(SecurityMockMvcRequestPostProcessors.httpBasic("user", "shelterPass1"))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").exists())
@@ -65,6 +69,7 @@ public class AdoptionApplicationControllerTest {
         AdoptionApplication adoptionApplication = new AdoptionApplication("JOHN", "5131 W Thunderbird Rd.", "602-444-4444", 1L);
 
         mockMvc.perform(post("/applications")
+                .with(SecurityMockMvcRequestPostProcessors.httpBasic("user", "shelterPass1"))
                 .content(objectMapper.writeValueAsString(adoptionApplication))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
@@ -88,7 +93,8 @@ public class AdoptionApplicationControllerTest {
         Animal animal = animalRepository.save(new Animal("DOGGY", "DOG", LocalDate.of(2020, 4, 15), "M", "WHITE"));
         AdoptionApplication adoptionApplication1 = adoptionApplicationRepository.save(new AdoptionApplication("JOHN", "5131 W Thunderbird Rd.", "602-444-4444", animal.getId()));
 
-        mockMvc.perform(put("/applications/{id}/update-status?isApproved=true", adoptionApplication1.getId()))
+        mockMvc.perform(put("/applications/{id}/update-status?isApproved=true", adoptionApplication1.getId())
+                .with(SecurityMockMvcRequestPostProcessors.httpBasic("user", "shelterPass1")))
                 .andExpect(status().isOk());
 
         assertEquals("ADOPTED", animalRepository.findById(animal.getId()).get().getStatus());
@@ -100,7 +106,8 @@ public class AdoptionApplicationControllerTest {
         Animal animal = animalRepository.save(new Animal("DOGGY", "DOG", LocalDate.of(2020, 4, 15), "M", "WHITE"));
         AdoptionApplication adoptionApplication1 = adoptionApplicationRepository.save(new AdoptionApplication("JOHN", "5131 W Thunderbird Rd.", "602-444-4444", animal.getId()));
 
-        mockMvc.perform(put("/applications/{id}/update-status?isApproved=false", adoptionApplication1.getId()))
+        mockMvc.perform(put("/applications/{id}/update-status?isApproved=false", adoptionApplication1.getId())
+                .with(SecurityMockMvcRequestPostProcessors.httpBasic("user", "shelterPass1")))
                 .andExpect(status().isOk());
 
         assertEquals("AVAILABLE", animalRepository.findById(animal.getId()).get().getStatus());

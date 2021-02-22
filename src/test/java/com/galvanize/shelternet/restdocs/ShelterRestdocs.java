@@ -11,6 +11,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
@@ -33,6 +35,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(controllers = ShelterController.class)
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs
+@ActiveProfiles("test")
 public class ShelterRestdocs {
 
     @Autowired
@@ -52,6 +55,7 @@ public class ShelterRestdocs {
         when(shelternetService.registerShelter(registerShelterDto)).thenReturn(expected);
 
         mockMvc.perform(post("/shelters")
+                .with(SecurityMockMvcRequestPostProcessors.httpBasic("user", "shelterPass1"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(new Shelter("SHELTER1", 10))))
                 .andExpect(status().isCreated())
@@ -134,6 +138,7 @@ public class ShelterRestdocs {
         when(shelternetService.updateShelter(1L, shelter)).thenReturn(expected);
 
         mockMvc.perform(put("/shelters/{id}", 1L)
+                .with(SecurityMockMvcRequestPostProcessors.httpBasic("user", "shelterPass1"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(new Shelter("SHELTER1", 10))))
                 .andExpect(status().isOk())
@@ -156,7 +161,8 @@ public class ShelterRestdocs {
     @Test
     public void deleteShelterRestDocTest() throws Exception {
 
-        mockMvc.perform(delete("/shelters/{id}", 1L))
+        mockMvc.perform(delete("/shelters/{id}", 1L)
+                .with(SecurityMockMvcRequestPostProcessors.httpBasic("user", "shelterPass1")))
                 .andExpect(status().isOk())
                 .andDo(document("delete-shelter", pathParameters(
                         parameterWithName("id").description("id of shelter to delete")
@@ -170,6 +176,7 @@ public class ShelterRestdocs {
         when(shelternetService.surrenderAnimal(1L, animal)).thenReturn(animal);
 
         mockMvc.perform(post("/shelters/1/animal/")
+                .with(SecurityMockMvcRequestPostProcessors.httpBasic("user", "shelterPass1"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(new AnimalDto(null,"Dog", "Dalmention", LocalDate.of(2009, 4, 1), "M", "black",null))))
                 .andExpect(status().isOk())
@@ -236,6 +243,7 @@ public class ShelterRestdocs {
         when(shelternetService.transferAnimal(animalTransfer)).thenReturn(true);
 
         mockMvc.perform(put("/shelters/transfer-animal")
+                .with(SecurityMockMvcRequestPostProcessors.httpBasic("user", "shelterPass1"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonString))
                 .andExpect(status().isOk())

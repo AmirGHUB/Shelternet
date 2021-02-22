@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 import javax.transaction.Transactional;
@@ -23,6 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@ActiveProfiles("test")
 @Transactional
 public class AnimalControllerTest {
     @Autowired
@@ -67,6 +70,7 @@ public class AnimalControllerTest {
 
         String result = mockMvc.perform(post("/animals/request/")
                 .contentType(MediaType.APPLICATION_JSON)
+                .with(SecurityMockMvcRequestPostProcessors.httpBasic("user", "shelterPass1"))
                 .content(objectMapper.writeValueAsString(animalRequestIds)))
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
@@ -96,6 +100,7 @@ public class AnimalControllerTest {
 
         mockMvc.perform(post("/animals/request/")
                 .contentType(MediaType.APPLICATION_JSON)
+                .with(SecurityMockMvcRequestPostProcessors.httpBasic("user", "shelterPass1"))
                 .content(objectMapper.writeValueAsString(animalRequestIds)))
                 .andExpect(status().isOk());
 
@@ -108,6 +113,7 @@ public class AnimalControllerTest {
         mockMvc
                 .perform(post("/animals/return")
                         .contentType(MediaType.APPLICATION_JSON)
+                        .with(SecurityMockMvcRequestPostProcessors.httpBasic("user", "shelterPass1"))
                         .content(objectMapper.writeValueAsString(animalReturn)))
                 .andExpect(status().isOk());
 
@@ -143,6 +149,7 @@ public class AnimalControllerTest {
 
         mockMvc.perform(post("/animals/return-request")
                 .contentType(MediaType.APPLICATION_JSON)
+                .with(SecurityMockMvcRequestPostProcessors.httpBasic("user", "shelterPass1"))
                 .content(objectMapper.writeValueAsString(animalRequestIds)))
                 .andExpect(status().isOk());
 
@@ -164,6 +171,7 @@ public class AnimalControllerTest {
         String ids = objectMapper.writeValueAsString(new AnimalRequestIds(List.of(animal1.getId(), animal2.getId(), animal3.getId())));
         mockMvc.perform(post("/animals/adopted")
                 .contentType(MediaType.APPLICATION_JSON)
+                .with(SecurityMockMvcRequestPostProcessors.httpBasic("user", "shelterPass1"))
                 .content(ids))
                 .andExpect(status().isOk());
         assertEquals("ADOPTED", animalRepository.findById(animal1.getId()).get().getStatus());

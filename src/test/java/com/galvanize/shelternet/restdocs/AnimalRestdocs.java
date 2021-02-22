@@ -11,6 +11,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 
@@ -29,6 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(controllers = AnimalController.class)
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs
+@ActiveProfiles("test")
 public class AnimalRestdocs {
     @Autowired
     private MockMvc mockMvc;
@@ -77,6 +80,7 @@ public class AnimalRestdocs {
 
         when(animalService.request(any())).thenReturn(animalList);
         mockMvc.perform(post("/animals/request/")
+                .with(SecurityMockMvcRequestPostProcessors.httpBasic("user", "shelterPass1"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(animalRequestIds)))
                 .andExpect(status().isOk())
@@ -116,6 +120,7 @@ public class AnimalRestdocs {
         animalService.requestAnimalsBack(animalRequestIds);
 
         mockMvc.perform(post("/animals/return-request")
+                .with(SecurityMockMvcRequestPostProcessors.httpBasic("user", "shelterPass1"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(animalRequestIds)))
                 .andExpect(status().isOk())
@@ -129,6 +134,7 @@ public class AnimalRestdocs {
         when(animalService.adoptAnimals(requestIds.getAnimalIds())).thenReturn(true);
         String ids = objectMapper.writeValueAsString(requestIds);
         mockMvc.perform(post("/animals/adopted")
+                .with(SecurityMockMvcRequestPostProcessors.httpBasic("user", "shelterPass1"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(ids))
                 .andExpect(status().isOk())
@@ -145,6 +151,7 @@ public class AnimalRestdocs {
         AnimalReturn animalReturn = new AnimalReturn(returnedAnimals);
 
         mockMvc.perform(post("/animals/return")
+                        .with(SecurityMockMvcRequestPostProcessors.httpBasic("user", "shelterPass1"))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(animalReturn)))
                 .andExpect(status().isOk())

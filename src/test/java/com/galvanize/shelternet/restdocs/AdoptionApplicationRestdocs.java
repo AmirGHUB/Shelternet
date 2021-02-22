@@ -14,6 +14,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDate;
@@ -35,6 +37,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(controllers = AdoptionApplicationController.class)
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs
+@ActiveProfiles("test")
 public class AdoptionApplicationRestdocs {
 
     @Autowired
@@ -65,6 +68,7 @@ public class AdoptionApplicationRestdocs {
         request.setStatus(null);
 
         mockMvc.perform(post("/applications")
+                .with(SecurityMockMvcRequestPostProcessors.httpBasic("user", "shelterPass1"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isCreated())
@@ -107,7 +111,8 @@ public class AdoptionApplicationRestdocs {
     @Test
     public void updateStatus_approvesApplication() throws Exception {
 
-        mockMvc.perform(put("/applications/{id}/update-status?isApproved=true", 1L))
+        mockMvc.perform(put("/applications/{id}/update-status?isApproved=true", 1L)
+                .with(SecurityMockMvcRequestPostProcessors.httpBasic("user", "shelterPass1")))
                 .andExpect(status().isOk())
                 .andDo(document("update-application-status", pathParameters(
                         parameterWithName("id").description("Id of application to approve or reject")
