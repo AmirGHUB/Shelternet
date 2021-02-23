@@ -44,6 +44,7 @@ public class AnimalService {
         List<Animal> animalList = new ArrayList<>();
         for (Long id: animalIds) {
             Animal animalToUpdate = animalRepository.findById(id).get();
+//            TODO ALLOW OFFSITE ADOPTIONS??
             if(!animalToUpdate.getStatus().equals("AVAILABLE")) {
                 return false;
             }

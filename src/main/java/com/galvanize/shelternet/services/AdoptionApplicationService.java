@@ -23,7 +23,7 @@ public class AdoptionApplicationService {
 
     public AdoptionApplication submitAdoptionApplication(AdoptionApplication adoptionApplication) {
        Optional<Animal> animal = animalRepository.findById(adoptionApplication.getAnimalId());
-       if(!animal.isPresent() || animal.get().getStatus().equals("ADOPTION_PENDING")) {
+       if(!animal.isPresent() || !animal.get().getStatus().equals("AVAILABLE")) {
            return null;
        }
        animal.get().setStatus("ADOPTION_PENDING");
