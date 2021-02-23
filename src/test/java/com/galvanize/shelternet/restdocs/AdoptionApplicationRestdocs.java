@@ -61,11 +61,10 @@ public class AdoptionApplicationRestdocs {
 
         AdoptionApplication adoptionApplication = new AdoptionApplication("JOHN", "5131 W Thunderbird Rd.", "602-444-4444", animalSaved.getId());
         adoptionApplication.setId(1L);
+        adoptionApplication.setStatus("PENDING");
         when(adoptionApplicationService.submitAdoptionApplication(any())).thenReturn(adoptionApplication);
-        adoptionApplicationService.submitAdoptionApplication(adoptionApplication);
 
         AdoptionApplication request = new AdoptionApplication("JOHN", "5131 W Thunderbird Rd.", "602-444-4444", animalSaved.getId());
-        request.setStatus(null);
 
         mockMvc.perform(post("/applications")
                 .with(SecurityMockMvcRequestPostProcessors.httpBasic("user", "shelterPass1"))
@@ -92,7 +91,9 @@ public class AdoptionApplicationRestdocs {
     @Test
     public void getAllApplications() throws Exception {
         AdoptionApplication adoptionApplication1 = new AdoptionApplication("JOHN", "5131 W Thunderbird Rd.", "602-444-4444", 1L);
+        adoptionApplication1.setStatus("PENDING");
         AdoptionApplication adoptionApplication2 = new AdoptionApplication("Mark", "another address", "876-990-7661", 4L);
+        adoptionApplication2.setStatus("APPROVED");
         List<AdoptionApplication> applications = List.of(adoptionApplication1, adoptionApplication2);
         when(adoptionApplicationService.getAllApplications()).thenReturn(applications);
 

@@ -24,6 +24,5 @@ public class AdoptionApplication {
         this.address = address;
         this.phoneNumber = phoneNumber;
         this.animalId = animalId;
-        this.status = "PENDING";
     }
 }

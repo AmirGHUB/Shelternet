@@ -28,6 +28,7 @@ public class AdoptionApplicationService {
        }
        animal.get().setStatus("ADOPTION_PENDING");
        animalRepository.save(animal.get());
+       adoptionApplication.setStatus("PENDING");
        return adoptionApplicationRepository.save(adoptionApplication);
     }
 

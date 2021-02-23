@@ -37,6 +37,8 @@ public class AdoptionApplicationServiceTest {
         animal2.setId(2L);
         animal2.setStatus("ADOPTION_PENDING");
         AdoptionApplication adoptionApplication = new AdoptionApplication("JOHN", "5131 W Thunderbird Rd.", "602-444-4444", 1L);
+        AdoptionApplication expected = new AdoptionApplication("JOHN", "5131 W Thunderbird Rd.", "602-444-4444", 1L);
+        expected.setStatus("PENDING");
         when(adoptionApplicationRepository.save(adoptionApplication)).thenReturn(adoptionApplication);
         when(animalRepository.findById(1L)).thenReturn(Optional.of(animal1));
         when(animalRepository.save(animal2)).thenReturn(null);
@@ -46,7 +48,7 @@ public class AdoptionApplicationServiceTest {
         verifyNoMoreInteractions(adoptionApplicationRepository);
         verifyNoMoreInteractions(animalRepository);
 
-        assertEquals(adoptionApplication, result);
+        assertEquals(expected, result);
     }
 
 
