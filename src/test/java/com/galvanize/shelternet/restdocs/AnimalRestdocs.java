@@ -147,6 +147,8 @@ public class AnimalRestdocs {
 
         AnimalReturn animalReturn = new AnimalReturn(returnedAnimals);
 
+        when(animalService.returnAnimalsToShelter(any())).thenReturn(true);
+
         mockMvc.perform(post("/animals/return")
                         .with(SecurityMockMvcRequestPostProcessors.httpBasic("user", "shelterPass1"))
                         .contentType(MediaType.APPLICATION_JSON)
