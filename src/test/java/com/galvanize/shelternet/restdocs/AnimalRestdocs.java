@@ -62,7 +62,6 @@ public class AnimalRestdocs {
                         fieldWithPath("[*].birthDate").description("The BirthDate of the animal."),
                         fieldWithPath("[*].sex").description("The Sex of the animal."),
                         fieldWithPath("[*].color").description("The Color of the animal."),
-                        fieldWithPath("[*].onsite").description("The animal is in shelter."),
                         fieldWithPath("[*].notes").description("Notes on the Animal"),
                         fieldWithPath("[*].status").description("Adoption status of the Animal")
                 )));
@@ -105,10 +104,8 @@ public class AnimalRestdocs {
         animal2.setId(3L);
         animal1.setShelter(shelter);
         animal2.setShelter(shelter);
-        animal1.setOnsite(false);
-        animal2.setOnsite(false);
-        animal1.setStatus("NOT AVAILABLE");
-        animal2.setStatus("NOT AVAILABLE");
+        animal1.setStatus("OFFSITE");
+        animal2.setStatus("OFFSITE");
         shelter.addAnimal(animal1);
         shelter.addAnimal(animal2);
         animal1 = shelter.getAnimals().get(0);

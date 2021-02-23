@@ -120,7 +120,7 @@ public class AnimalControllerTest {
         Animal fetchedAnimal1 = animalRepository.getOne(animal1.getId());
 
         assertEquals("Dallas Animal Shelter", fetchedAnimal1.getShelter().getName());
-        assertEquals(true, fetchedAnimal1.getOnsite());
+        assertEquals("AVAILABLE", fetchedAnimal1.getStatus());
         assertEquals("Bob is super friendly", fetchedAnimal1.getNotes());
 
     }
@@ -132,10 +132,8 @@ public class AnimalControllerTest {
         Animal animal2 = new Animal("Cat", "Tabby", LocalDate.of(2010, 4, 1), "M", "white");
         animal1.setShelter(shelter);
         animal2.setShelter(shelter);
-        animal1.setOnsite(false);
-        animal2.setOnsite(false);
-        animal1.setStatus("NOT AVAILABLE");
-        animal2.setStatus("NOT AVAILABLE");
+        animal1.setStatus("OFFSITE");
+        animal2.setStatus("OFFSITE");
         shelter.addAnimal(animal1);
         shelter.addAnimal(animal2);
         shelter = shelterRepository.save(shelter);
@@ -155,9 +153,6 @@ public class AnimalControllerTest {
 
         animal1 = animalRepository.getOne(animal1.getId());
         animal2 = animalRepository.getOne(animal2.getId());
-
-        assertTrue(animal1.getOnsite());
-        assertTrue(animal2.getOnsite());
 
         assertEquals("AVAILABLE", animal1.getStatus());
         assertEquals("AVAILABLE", animal2.getStatus());

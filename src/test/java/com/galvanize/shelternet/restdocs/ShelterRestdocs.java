@@ -123,7 +123,6 @@ public class ShelterRestdocs {
                         fieldWithPath("animals.[*].birthDate").description("Birth Date of the Animal"),
                         fieldWithPath("animals.[*].sex").description("Sex of the Animal"),
                         fieldWithPath("animals.[*].color").description("Color of the Animal"),
-                        fieldWithPath("animals.[*].onsite").description("The Animal is in the shelter"),
                         fieldWithPath("animals.[*].notes").description("Notes on the Animal"),
                         fieldWithPath("animals.[*].status").description("Adoption status of the Animal")
                 )));
@@ -228,7 +227,6 @@ public class ShelterRestdocs {
                                 fieldWithPath("[*].birthDate").description("Birth Date of the Animal"),
                                 fieldWithPath("[*].sex").description("Sex of the Animal"),
                                 fieldWithPath("[*].color").description("Color of the Animal"),
-                                fieldWithPath("[*].onsite").description("The animal is in shelter."),
                                 fieldWithPath("[*].notes").description("Notes on the Animal."),
                                 fieldWithPath("[*].status").description("Status of adoption.")
                         )));

@@ -38,7 +38,6 @@ public class ShelternetService {
         Animal animal = AnimalMapper.mapToEntity(animalDto);
         shelter.addAnimal(animal);
         animal.setShelter(shelter);
-        animal.setOnsite(true);
         shelter = shelterRepository.save(shelter);
 
         return AnimalMapper.mapToDto(
@@ -94,7 +93,9 @@ public class ShelternetService {
     }
 
     private Integer getCurrentCapacity(Shelter shelter) {
-        long animalsOnSite = shelter.getAnimals().stream().filter(Animal::getOnsite).count();
+        long animalsOnSite = shelter.getAnimals().stream()
+                .filter(animal -> animal.getStatus().equals("AVAILABLE") || animal.getStatus().equals("ADOPTION_PENDING"))
+                .count();
         return shelter.getMaxCapacity() - (int) animalsOnSite;
     }
 }

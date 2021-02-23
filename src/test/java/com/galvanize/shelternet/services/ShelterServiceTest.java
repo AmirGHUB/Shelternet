@@ -81,9 +81,8 @@ public class ShelterServiceTest {
         Animal animal1 = new Animal("Dog", "Dalmention", LocalDate.of(2009, 4, 1), "M", "black");
         Animal animal2 = new Animal("Cat", "Dalmention", LocalDate.of(2009, 4, 1), "M", "black");
         Animal animal3 = new Animal("Cat", "Dalmention", LocalDate.of(2009, 4, 1), "M", "black");
-        animal1.setOnsite(false);
-        animal2.setOnsite(true);
-        animal3.setOnsite(true);
+        animal1.setStatus("OFFSITE");
+
         shelter.setId(1L);
 
         shelter.addAnimal(animal1);

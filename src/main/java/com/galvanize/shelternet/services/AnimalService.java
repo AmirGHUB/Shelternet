@@ -24,7 +24,7 @@ public class AnimalService {
         List<Animal> animalList = new ArrayList<>();
         for (Long i : ids.getAnimalIds()) {
             Animal animal = animalRepository.getOne(i);
-            animal.setOnsite(false);
+            animal.setStatus("OFFSITE");
             animalList.add(animal);
         }
         animalRepository.saveAll(animalList);
@@ -34,7 +34,7 @@ public class AnimalService {
     public void returnAnimalsToShelter(List<AnimalReturnDto> animals) {
         for (AnimalReturnDto returnDto : animals) {
             Animal animal = animalRepository.getOne(returnDto.getId());
-            animal.setOnsite(true);
+            animal.setStatus("AVAILABLE");
             animal.setNotes(returnDto.getNotes());
             animalRepository.save(animal);
         }
@@ -57,7 +57,6 @@ public class AnimalService {
     public void requestAnimalsBack(AnimalRequestIds animalRequestIds) {
         animalRequestIds.getAnimalIds().forEach(animal -> {
             Animal animalFounded = animalRepository.getOne(animal);
-            animalFounded.setOnsite(true);
             animalFounded.setStatus("AVAILABLE");
             animalRepository.save(animalFounded);
         });

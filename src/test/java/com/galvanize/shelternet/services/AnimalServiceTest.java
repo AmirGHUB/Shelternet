@@ -61,8 +61,8 @@ public class AnimalServiceTest {
 
         Animal animal1Updated = new Animal("Micro", "Dog", LocalDate.now(), "M", "Brown");
         Animal animal2Updated = new Animal("Sammy", "Dog", LocalDate.now(), "M", "Black");
-        animal1Updated.setOnsite(false);
-        animal2Updated.setOnsite(false);
+        animal1Updated.setStatus("OFFSITE");
+        animal2Updated.setStatus("OFFSITE");
         verify(animalRepository).saveAll(List.of(animal1Updated, animal2Updated));
 
     }
@@ -85,7 +85,7 @@ public class AnimalServiceTest {
         animalService.returnAnimalsToShelter(List.of(returnDto1));
 
         assertEquals("Dallas Animal Shelter", animal1.getShelter().getName());
-        assertEquals(true, animal1.getOnsite());
+        assertEquals("AVAILABLE", animal1.getStatus());
         assertEquals("best animal ever", animal1.getNotes());
     }
 
@@ -93,8 +93,7 @@ public class AnimalServiceTest {
     public void requestAnimalsBackFromPetStore() {
         Animal animal = new Animal("Dog", "Dalmention", LocalDate.of(2009, 4, 1), "M", "black");
         animal.setId(1L);
-        animal.setOnsite(false);
-        animal.setStatus("NOT AVAILABLE");
+        animal.setStatus("OFFSITE");
 
         when(animalRepository.getOne(any())).thenReturn(animal);
 
@@ -107,7 +106,6 @@ public class AnimalServiceTest {
         verify(animalRepository).save(animal);
 
         assertEquals("AVAILABLE", animal.getStatus());
-        assertTrue(animal.getOnsite());
     }
 
     @Test

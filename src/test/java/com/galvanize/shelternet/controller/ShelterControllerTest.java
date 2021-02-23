@@ -177,7 +177,7 @@ public class ShelterControllerTest {
         Animal retrievedAnimal = animalRepository.findAll().get(0);
 
         assertEquals("SHELTER1", retrievedAnimal.getShelter().getName());
-        assertTrue(retrievedAnimal.getOnsite());
+        assertEquals("AVAILABLE", retrievedAnimal.getStatus());
 
         mockMvc
                 .perform(get("/shelters/" + shelterResult.getId()))

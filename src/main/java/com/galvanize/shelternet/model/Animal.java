@@ -21,7 +21,6 @@ public class Animal {
     private LocalDate birthDate;
     private String sex;
     private String color;
-    private Boolean onsite;
     private String notes;
     @JsonIgnore
     @ManyToOne(cascade = CascadeType.ALL)
@@ -35,6 +34,5 @@ public class Animal {
         this.sex = sex;
         this.color = color;
         this.status="AVAILABLE";
-        this.onsite = true;
     }
 }
