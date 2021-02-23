@@ -1,6 +1,7 @@
 package com.galvanize.shelternet.services;
 
 import com.galvanize.shelternet.model.AdoptionApplication;
+import com.galvanize.shelternet.model.AdoptionApplicationDto;
 import com.galvanize.shelternet.model.Animal;
 import com.galvanize.shelternet.repository.AdoptionApplicationRepository;
 import com.galvanize.shelternet.repository.AnimalRepository;
@@ -21,16 +22,25 @@ public class AdoptionApplicationService {
         this.animalRepository = animalRepository;
     }
 
-    public AdoptionApplication submitAdoptionApplication(AdoptionApplication adoptionApplication) {
-       Optional<Animal> animal = animalRepository.findById(adoptionApplication.getAnimalId());
+    public AdoptionApplicationDto submitAdoptionApplication(AdoptionApplicationDto adoptionApplicationDto) {
+       Optional<Animal> animal = animalRepository.findById(adoptionApplicationDto.getAnimalId());
        if(!animal.isPresent() || animal.get().getStatus().equals("ADOPTION_PENDING")) {
            return null;
        }
        animal.get().setStatus("ADOPTION_PENDING");
        animalRepository.save(animal.get());
+       AdoptionApplication adoptionApplication = new AdoptionApplication(adoptionApplicationDto.getName(), adoptionApplicationDto.getAddress(),
+               adoptionApplicationDto.getPhoneNumber(), adoptionApplicationDto.getAnimalId());
        adoptionApplication.setStatus("PENDING");
-       return adoptionApplicationRepository.save(adoptionApplication);
+       return mapToApplicationDto(adoptionApplicationRepository.save(adoptionApplication));
+
     }
+
+    private AdoptionApplicationDto mapToApplicationDto(AdoptionApplication adoptionApplication) {
+        return new AdoptionApplicationDto(adoptionApplication.getId(), adoptionApplication.getName(), adoptionApplication.getAddress(),
+                adoptionApplication.getPhoneNumber(), adoptionApplication.getAnimalId(), adoptionApplication.getStatus());
+    }
+
 
     public List<AdoptionApplication> getAllApplications() {
         return adoptionApplicationRepository.findAll();

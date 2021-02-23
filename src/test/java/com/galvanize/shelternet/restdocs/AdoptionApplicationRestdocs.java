@@ -3,6 +3,7 @@ package com.galvanize.shelternet.restdocs;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.galvanize.shelternet.controller.AdoptionApplicationController;
 import com.galvanize.shelternet.model.AdoptionApplication;
+import com.galvanize.shelternet.model.AdoptionApplicationDto;
 import com.galvanize.shelternet.model.Animal;
 import com.galvanize.shelternet.repository.AnimalRepository;
 import com.galvanize.shelternet.services.AdoptionApplicationService;
@@ -59,10 +60,14 @@ public class AdoptionApplicationRestdocs {
         when(animalRepository.save(any())).thenReturn(animal);
         Animal animalSaved = animalRepository.save(animal);
 
+        AdoptionApplicationDto adoptionApplicationDto = new AdoptionApplicationDto(1L,"JOHN", "5131 W Thunderbird Rd.", "602-444-4444", animalSaved.getId(), "PENDING");
+
+        when(adoptionApplicationService.submitAdoptionApplication(any())).thenReturn(adoptionApplicationDto);
+        adoptionApplicationService.submitAdoptionApplication(adoptionApplicationDto);
         AdoptionApplication adoptionApplication = new AdoptionApplication("JOHN", "5131 W Thunderbird Rd.", "602-444-4444", animalSaved.getId());
         adoptionApplication.setId(1L);
         adoptionApplication.setStatus("PENDING");
-        when(adoptionApplicationService.submitAdoptionApplication(any())).thenReturn(adoptionApplication);
+        when(adoptionApplicationService.submitAdoptionApplication(any())).thenReturn(adoptionApplicationDto);
 
         AdoptionApplication request = new AdoptionApplication("JOHN", "5131 W Thunderbird Rd.", "602-444-4444", animalSaved.getId());
 

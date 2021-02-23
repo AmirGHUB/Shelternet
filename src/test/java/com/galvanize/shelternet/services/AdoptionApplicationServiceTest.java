@@ -1,6 +1,7 @@
 package com.galvanize.shelternet.services;
 
 import com.galvanize.shelternet.model.AdoptionApplication;
+import com.galvanize.shelternet.model.AdoptionApplicationDto;
 import com.galvanize.shelternet.model.Animal;
 import com.galvanize.shelternet.repository.AdoptionApplicationRepository;
 import com.galvanize.shelternet.repository.AnimalRepository;
@@ -36,28 +37,33 @@ public class AdoptionApplicationServiceTest {
         animal1.setId(1L);
         animal2.setId(2L);
         animal2.setStatus("ADOPTION_PENDING");
-        AdoptionApplication adoptionApplication = new AdoptionApplication("JOHN", "5131 W Thunderbird Rd.", "602-444-4444", 1L);
-        AdoptionApplication expected = new AdoptionApplication("JOHN", "5131 W Thunderbird Rd.", "602-444-4444", 1L);
-        expected.setStatus("PENDING");
-        when(adoptionApplicationRepository.save(adoptionApplication)).thenReturn(adoptionApplication);
+        AdoptionApplicationDto adoptionApplicationDto =
+                new AdoptionApplicationDto(1L,"JOHN", "5131 W Thunderbird Rd.", "602-444-4444", 1L, "PENDING");
+        AdoptionApplication adoptionApplication =
+                new AdoptionApplication("JOHN", "5131 W Thunderbird Rd.", "602-444-4444", 1L);
+        adoptionApplication.setId(1L);
+        when(adoptionApplicationRepository.save(any())).thenReturn(adoptionApplication);
+        adoptionApplication.setId(1L);
+        adoptionApplication.setStatus("PENDING");
+        when(adoptionApplicationRepository.save(any())).thenReturn(adoptionApplication);
         when(animalRepository.findById(1L)).thenReturn(Optional.of(animal1));
         when(animalRepository.save(animal2)).thenReturn(null);
-        AdoptionApplication result = adoptionApplicationService.submitAdoptionApplication(adoptionApplication);
+        AdoptionApplicationDto result = adoptionApplicationService.submitAdoptionApplication(adoptionApplicationDto);
 
-        verify(adoptionApplicationRepository, times(1)).save(adoptionApplication);
+        verify(adoptionApplicationRepository, times(1)).save(any());
         verifyNoMoreInteractions(adoptionApplicationRepository);
         verifyNoMoreInteractions(animalRepository);
 
-        assertEquals(expected, result);
+        assertEquals(adoptionApplicationDto, result);
     }
 
 
     @Test
     public void submitAdoptionApplication_returnsNullIfAnimalNotPresent() {
 
-        AdoptionApplication adoptionApplication = new AdoptionApplication("JOHN", "5131 W Thunderbird Rd.", "602-444-4444", 1L);
+        AdoptionApplicationDto adoptionApplicationDto = new AdoptionApplicationDto(1L,"JOHN", "5131 W Thunderbird Rd.", "602-444-4444", 1L,"PENDING");
         when(animalRepository.findById(1L)).thenReturn(Optional.ofNullable(null));
-        AdoptionApplication result = adoptionApplicationService.submitAdoptionApplication(adoptionApplication);
+        AdoptionApplicationDto result = adoptionApplicationService.submitAdoptionApplication(adoptionApplicationDto);
 
         verifyNoMoreInteractions(animalRepository);
 
@@ -69,9 +75,9 @@ public class AdoptionApplicationServiceTest {
         Animal animal1 = new Animal("Dog", "Dalmention", LocalDate.of(2009, 4, 1), "M", "black");
         animal1.setId(1L);
         animal1.setStatus("ADOPTION_PENDING");
-        AdoptionApplication adoptionApplication = new AdoptionApplication("JOHN", "5131 W Thunderbird Rd.", "602-444-4444", 1L);
+        AdoptionApplicationDto adoptionApplicationDto = new AdoptionApplicationDto(1L, "JOHN", "5131 W Thunderbird Rd.", "602-444-4444", 1L,"PENDING");
         when(animalRepository.findById(1L)).thenReturn(Optional.of(animal1));
-        AdoptionApplication result = adoptionApplicationService.submitAdoptionApplication(adoptionApplication);
+        AdoptionApplicationDto result = adoptionApplicationService.submitAdoptionApplication(adoptionApplicationDto);
 
         verifyNoMoreInteractions(animalRepository);
 
