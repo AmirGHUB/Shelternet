@@ -1,6 +1,7 @@
 package com.galvanize.shelternet.controller;
 
 import com.galvanize.shelternet.model.AdoptionApplication;
+import com.galvanize.shelternet.model.AdoptionApplicationDto;
 import com.galvanize.shelternet.services.AdoptionApplicationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,8 +20,8 @@ public class AdoptionApplicationController {
     }
 
     @PostMapping
-    public ResponseEntity<AdoptionApplication> submitApplication(@RequestBody AdoptionApplication adoptionApplication) {
-        AdoptionApplication updatedApplication= adoptionApplicationService.submitAdoptionApplication(adoptionApplication);
+    public ResponseEntity<AdoptionApplicationDto> submitApplication(@RequestBody AdoptionApplicationDto adoptionApplicationDto) {
+        AdoptionApplicationDto updatedApplication= adoptionApplicationService.submitAdoptionApplication(adoptionApplicationDto);
         return updatedApplication==null
                 ? new ResponseEntity<>(HttpStatus.BAD_REQUEST) : new ResponseEntity<>(updatedApplication,HttpStatus.CREATED);
     }

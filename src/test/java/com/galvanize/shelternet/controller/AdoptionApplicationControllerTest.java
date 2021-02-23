@@ -2,6 +2,7 @@ package com.galvanize.shelternet.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.galvanize.shelternet.model.AdoptionApplication;
+import com.galvanize.shelternet.model.AdoptionApplicationDto;
 import com.galvanize.shelternet.model.Animal;
 import com.galvanize.shelternet.repository.AdoptionApplicationRepository;
 import com.galvanize.shelternet.repository.AnimalRepository;
@@ -47,10 +48,11 @@ public class AdoptionApplicationControllerTest {
 
         Animal animalSaved = animalRepository.save(animal);
 
-        AdoptionApplication adoptionApplication = new AdoptionApplication("JOHN", "5131 W Thunderbird Rd.", "602-444-4444", animalSaved.getId());
+        AdoptionApplicationDto adoptionApplicationDto = new AdoptionApplicationDto(1L,"JOHN", "5131 W Thunderbird Rd.",
+                "602-444-4444", animalSaved.getId(),"PENDING");
 
         mockMvc.perform(post("/applications")
-                .content(objectMapper.writeValueAsString(adoptionApplication))
+                .content(objectMapper.writeValueAsString(adoptionApplicationDto))
                 .with(SecurityMockMvcRequestPostProcessors.httpBasic("user", "shelterPass1"))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
