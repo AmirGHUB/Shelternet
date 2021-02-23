@@ -1,11 +1,7 @@
 package com.galvanize.shelternet.model;
 
 import lombok.*;
-
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import java.util.List;
 
 @Value
 public class AdoptionApplicationDto {
@@ -14,7 +10,7 @@ public class AdoptionApplicationDto {
     String name;
     String address;
     String phoneNumber;
-    Long animalId;
+    List<Long> animalIds;
     String status;
 
 

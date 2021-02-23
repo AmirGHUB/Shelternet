@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -17,13 +18,14 @@ public class AdoptionApplication {
     private String name;
     private String address;
     private String phoneNumber;
-    private Long animalId;
+    @OneToMany(cascade = CascadeType.MERGE)
+    private List<Animal> animals;
     private String status;
 
-    public AdoptionApplication(String name, String address, String phoneNumber, Long animalId) {
+    public AdoptionApplication(String name, String address, String phoneNumber, List<Animal> animals) {
         this.name = name;
         this.address = address;
         this.phoneNumber = phoneNumber;
-        this.animalId = animalId;
+        this.animals = animals;
     }
 }

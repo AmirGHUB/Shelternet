@@ -7,6 +7,7 @@ import com.galvanize.shelternet.repository.AdoptionApplicationRepository;
 import com.galvanize.shelternet.repository.AnimalRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,22 +24,30 @@ public class AdoptionApplicationService {
     }
 
     public AdoptionApplicationDto submitAdoptionApplication(AdoptionApplicationDto adoptionApplicationDto) {
-       Optional<Animal> animal = animalRepository.findById(adoptionApplicationDto.getAnimalId());
-       if(!animal.isPresent() || !animal.get().getStatus().equals("AVAILABLE")) {
-           return null;
-       }
-       animal.get().setStatus("ADOPTION_PENDING");
-       animalRepository.save(animal.get());
+        List<Animal>  animals = new ArrayList<>();
+        for(Long id: adoptionApplicationDto.getAnimalIds()) {
+            Optional<Animal> animal = animalRepository.findById(id);
+            animals.add(animal.get());
+            if(!animal.isPresent() || !animal.get().getStatus().equals("AVAILABLE")) {
+                return null;
+            }
+            animal.get().setStatus("ADOPTION_PENDING");
+            animalRepository.save(animal.get());
+        }
        AdoptionApplication adoptionApplication = new AdoptionApplication(adoptionApplicationDto.getName(), adoptionApplicationDto.getAddress(),
-               adoptionApplicationDto.getPhoneNumber(), adoptionApplicationDto.getAnimalId());
+               adoptionApplicationDto.getPhoneNumber(), animals);
        adoptionApplication.setStatus("PENDING");
        return mapToApplicationDto(adoptionApplicationRepository.save(adoptionApplication));
 
     }
 
     private AdoptionApplicationDto mapToApplicationDto(AdoptionApplication adoptionApplication) {
+        List<Long> ids = new ArrayList<>();
+        for(Animal a: adoptionApplication.getAnimals()) {
+            ids.add(a.getId());
+        }
         return new AdoptionApplicationDto(adoptionApplication.getId(), adoptionApplication.getName(), adoptionApplication.getAddress(),
-                adoptionApplication.getPhoneNumber(), adoptionApplication.getAnimalId(), adoptionApplication.getStatus());
+                adoptionApplication.getPhoneNumber(), ids, adoptionApplication.getStatus());
     }
 
 
@@ -48,18 +57,19 @@ public class AdoptionApplicationService {
 
     public void updateStatus(Long applicationId, boolean isApproved) {
         AdoptionApplication adoptionApplication = adoptionApplicationRepository.findById(applicationId).get();
-        Animal animal = animalRepository.findById(adoptionApplication.getAnimalId()).get();
+        for(Animal a: adoptionApplication.getAnimals()) {
+            Animal animal = animalRepository.findById(a.getId()).get();
+            if(isApproved) {
+                adoptionApplication.setStatus("APPROVED");
+                animal.setStatus("ADOPTED");
+            } else {
+                adoptionApplication.setStatus("REJECTED");
+                animal.setStatus("AVAILABLE");
+            }
 
-        if(isApproved) {
-            adoptionApplication.setStatus("APPROVED");
-            animal.setStatus("ADOPTED");
-        } else {
-            adoptionApplication.setStatus("REJECTED");
-            animal.setStatus("AVAILABLE");
+            adoptionApplicationRepository.save(adoptionApplication);
+            animalRepository.save(animal);
         }
-
-        adoptionApplicationRepository.save(adoptionApplication);
-        animalRepository.save(animal);
     }
 
 

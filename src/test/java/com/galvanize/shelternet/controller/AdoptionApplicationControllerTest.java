@@ -19,6 +19,7 @@ import javax.transaction.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -44,12 +45,15 @@ public class AdoptionApplicationControllerTest {
 
     @Test
     public void submitAdoptionApplication() throws Exception {
-        Animal animal = new Animal("DOGGY", "DOG", LocalDate.of(2020, 4, 15), "M", "WHITE");
+        Animal animal1 = new Animal("DOGGY", "DOG", LocalDate.of(2020, 4, 15), "M", "WHITE");
+        Animal animal2 = new Animal("CATY", "CAT", LocalDate.of(2020, 4, 15), "F", "BLACK");
 
-        Animal animalSaved = animalRepository.save(animal);
+        List<Animal> animalSaved = animalRepository.saveAll(List.of(animal1,animal2));
+
+        List<Long> animalIds = animalSaved.stream().map(a -> a.getId()).collect(Collectors.toList());
 
         AdoptionApplicationDto adoptionApplicationDto = new AdoptionApplicationDto(1L,"JOHN", "5131 W Thunderbird Rd.",
-                "602-444-4444", animalSaved.getId(),"PENDING");
+                "602-444-4444", animalIds,"PENDING");
 
         mockMvc.perform(post("/applications")
                 .content(objectMapper.writeValueAsString(adoptionApplicationDto))
@@ -60,7 +64,7 @@ public class AdoptionApplicationControllerTest {
                 .andExpect(jsonPath("$.name").value("JOHN"))
                 .andExpect(jsonPath("$.address").value("5131 W Thunderbird Rd."))
                 .andExpect(jsonPath("$.phoneNumber").value("602-444-4444"))
-                .andExpect(jsonPath("$.animalId").value(animalSaved.getId()))
+                .andExpect(jsonPath("$.animalIds").value(animalIds))
                 .andExpect(jsonPath("$.status").value("PENDING"));
         AdoptionApplication application = adoptionApplicationRepository.findAll().get(0);
         assertEquals("PENDING",application.getStatus());
@@ -68,7 +72,9 @@ public class AdoptionApplicationControllerTest {
 
     @Test
     public void submitAdoptionApplication_WhenAnimalDoesntExists() throws Exception {
-        AdoptionApplication adoptionApplication = new AdoptionApplication("JOHN", "5131 W Thunderbird Rd.", "602-444-4444", 1L);
+        Animal animal1 = new Animal("DOGGY", "DOG", LocalDate.of(2020, 4, 15), "M", "WHITE");
+        Animal animal2 = new Animal("CATY", "CAT", LocalDate.of(2020, 4, 15), "F", "BLACK");
+        AdoptionApplication adoptionApplication = new AdoptionApplication("JOHN", "5131 W Thunderbird Rd.", "602-444-4444", List.of(animal1,animal2));
 
         mockMvc.perform(post("/applications")
                 .with(SecurityMockMvcRequestPostProcessors.httpBasic("user", "shelterPass1"))
@@ -79,9 +85,12 @@ public class AdoptionApplicationControllerTest {
 
     @Test
     public void getAllApplications() throws Exception {
-        AdoptionApplication adoptionApplication1 = adoptionApplicationRepository.save(new AdoptionApplication("JOHN", "5131 W Thunderbird Rd.", "602-444-4444", 1L));
-        AdoptionApplication adoptionApplication2 = adoptionApplicationRepository.save(new AdoptionApplication("Mark", "another address", "876-990-7661", 4L));
-        AdoptionApplication adoptionApplication3 = adoptionApplicationRepository.save(new AdoptionApplication("Jane", "yet another address", "145-640-9900", 5L));
+        Animal animal1 = new Animal("DOGGY", "DOG", LocalDate.of(2020, 4, 15), "M", "WHITE");
+        Animal animal2 = new Animal("CATY", "CAT", LocalDate.of(2020, 4, 15), "F", "BLACK");
+        Animal animal3 = new Animal("RABI", "RABBIT", LocalDate.of(2020, 4, 15), "M", "GREY");
+        AdoptionApplication adoptionApplication1 = adoptionApplicationRepository.save(new AdoptionApplication("JOHN", "5131 W Thunderbird Rd.", "602-444-4444", List.of(animal1)));
+        AdoptionApplication adoptionApplication2 = adoptionApplicationRepository.save(new AdoptionApplication("Mark", "another address", "876-990-7661", List.of(animal2)));
+        AdoptionApplication adoptionApplication3 = adoptionApplicationRepository.save(new AdoptionApplication("Jane", "yet another address", "145-640-9900", List.of(animal3)));
         List<AdoptionApplication> applications = List.of(adoptionApplication1, adoptionApplication2, adoptionApplication3);
         String expected = objectMapper.writeValueAsString(applications);
 
@@ -93,7 +102,7 @@ public class AdoptionApplicationControllerTest {
     @Test
     public void updateStatus_approvesApplication() throws Exception {
         Animal animal = animalRepository.save(new Animal("DOGGY", "DOG", LocalDate.of(2020, 4, 15), "M", "WHITE"));
-        AdoptionApplication adoptionApplication1 = adoptionApplicationRepository.save(new AdoptionApplication("JOHN", "5131 W Thunderbird Rd.", "602-444-4444", animal.getId()));
+        AdoptionApplication adoptionApplication1 = adoptionApplicationRepository.save(new AdoptionApplication("JOHN", "5131 W Thunderbird Rd.", "602-444-4444", List.of(animal)));
 
         mockMvc.perform(put("/applications/{id}/update-status?isApproved=true", adoptionApplication1.getId())
                 .with(SecurityMockMvcRequestPostProcessors.httpBasic("user", "shelterPass1")))
@@ -106,7 +115,7 @@ public class AdoptionApplicationControllerTest {
     @Test
     public void updateStatus_rejectsApplication() throws Exception {
         Animal animal = animalRepository.save(new Animal("DOGGY", "DOG", LocalDate.of(2020, 4, 15), "M", "WHITE"));
-        AdoptionApplication adoptionApplication1 = adoptionApplicationRepository.save(new AdoptionApplication("JOHN", "5131 W Thunderbird Rd.", "602-444-4444", animal.getId()));
+        AdoptionApplication adoptionApplication1 = adoptionApplicationRepository.save(new AdoptionApplication("JOHN", "5131 W Thunderbird Rd.", "602-444-4444", List.of(animal)));
 
         mockMvc.perform(put("/applications/{id}/update-status?isApproved=false", adoptionApplication1.getId())
                 .with(SecurityMockMvcRequestPostProcessors.httpBasic("user", "shelterPass1")))

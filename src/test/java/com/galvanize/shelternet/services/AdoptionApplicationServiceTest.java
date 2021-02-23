@@ -38,9 +38,9 @@ public class AdoptionApplicationServiceTest {
         animal2.setId(2L);
         animal2.setStatus("ADOPTION_PENDING");
         AdoptionApplicationDto adoptionApplicationDto =
-                new AdoptionApplicationDto(1L,"JOHN", "5131 W Thunderbird Rd.", "602-444-4444", 1L, "PENDING");
+                new AdoptionApplicationDto(1L,"JOHN", "5131 W Thunderbird Rd.", "602-444-4444", List.of(1L,2L), "PENDING");
         AdoptionApplication adoptionApplication =
-                new AdoptionApplication("JOHN", "5131 W Thunderbird Rd.", "602-444-4444", 1L);
+                new AdoptionApplication("JOHN", "5131 W Thunderbird Rd.", "602-444-4444", List.of(animal1,animal2));
         adoptionApplication.setId(1L);
         when(adoptionApplicationRepository.save(any())).thenReturn(adoptionApplication);
         adoptionApplication.setId(1L);
@@ -60,8 +60,8 @@ public class AdoptionApplicationServiceTest {
 
     @Test
     public void submitAdoptionApplication_returnsNullIfAnimalNotPresent() {
-
-        AdoptionApplicationDto adoptionApplicationDto = new AdoptionApplicationDto(1L,"JOHN", "5131 W Thunderbird Rd.", "602-444-4444", 1L,"PENDING");
+        Animal animal = new Animal("Dog", "Dalmention", LocalDate.of(2009, 4, 1), "M", "black");
+        AdoptionApplicationDto adoptionApplicationDto = new AdoptionApplicationDto(1L,"JOHN", "5131 W Thunderbird Rd.", "602-444-4444", List.of(1L),"PENDING");
         when(animalRepository.findById(1L)).thenReturn(Optional.ofNullable(null));
         AdoptionApplicationDto result = adoptionApplicationService.submitAdoptionApplication(adoptionApplicationDto);
 
@@ -75,7 +75,7 @@ public class AdoptionApplicationServiceTest {
         Animal animal1 = new Animal("Dog", "Dalmention", LocalDate.of(2009, 4, 1), "M", "black");
         animal1.setId(1L);
         animal1.setStatus("ADOPTION_PENDING");
-        AdoptionApplicationDto adoptionApplicationDto = new AdoptionApplicationDto(1L, "JOHN", "5131 W Thunderbird Rd.", "602-444-4444", 1L,"PENDING");
+        AdoptionApplicationDto adoptionApplicationDto = new AdoptionApplicationDto(1L, "JOHN", "5131 W Thunderbird Rd.", "602-444-4444", List.of(1L),"PENDING");
         when(animalRepository.findById(1L)).thenReturn(Optional.of(animal1));
         AdoptionApplicationDto result = adoptionApplicationService.submitAdoptionApplication(adoptionApplicationDto);
 
@@ -86,9 +86,12 @@ public class AdoptionApplicationServiceTest {
 
     @Test
     public void getAllApplications_callsFindAllOnRepository() {
-        AdoptionApplication adoptionApplication1 = new AdoptionApplication("JOHN", "5131 W Thunderbird Rd.", "602-444-4444", 1L);
-        AdoptionApplication adoptionApplication2 = new AdoptionApplication("Mark", "another address", "876-990-7661", 4L);
-        AdoptionApplication adoptionApplication3 = new AdoptionApplication("Jane", "yet another address", "145-640-9900", 5L);
+        Animal animal1 = new Animal("Dog", "Dalmention", LocalDate.of(2009, 4, 1), "M", "black");
+        Animal animal2 = new Animal("Cat", "Spy", LocalDate.of(2009, 4, 1), "F", "black");
+        Animal animal3 = new Animal("Dog", "Dalmention", LocalDate.of(2009, 4, 1), "F", "White");
+        AdoptionApplication adoptionApplication1 = new AdoptionApplication("JOHN", "5131 W Thunderbird Rd.", "602-444-4444", List.of(animal1));
+        AdoptionApplication adoptionApplication2 = new AdoptionApplication("Mark", "another address", "876-990-7661", List.of(animal2));
+        AdoptionApplication adoptionApplication3 = new AdoptionApplication("Jane", "yet another address", "145-640-9900", List.of(animal3));
         List<AdoptionApplication> applications = List.of(adoptionApplication1, adoptionApplication2, adoptionApplication3);
 
         when(adoptionApplicationRepository.findAll()).thenReturn(applications);
@@ -109,9 +112,9 @@ public class AdoptionApplicationServiceTest {
         animal2.setId(1L);
         animal2.setStatus("ADOPTED");
 
-        AdoptionApplication adoptionApplication1 = new AdoptionApplication("JOHN", "5131 W Thunderbird Rd.", "602-444-4444", 1L);
+        AdoptionApplication adoptionApplication1 = new AdoptionApplication("JOHN", "5131 W Thunderbird Rd.", "602-444-4444", List.of(animal1,animal2));
         adoptionApplication1.setId(1L);
-        AdoptionApplication adoptionApplication2 = new AdoptionApplication("JOHN", "5131 W Thunderbird Rd.", "602-444-4444", 1L);
+        AdoptionApplication adoptionApplication2 = new AdoptionApplication("JOHN", "5131 W Thunderbird Rd.", "602-444-4444", List.of(animal1,animal2));
         adoptionApplication2.setId(1L);
         adoptionApplication2.setStatus("APPROVED");
 
@@ -135,9 +138,9 @@ public class AdoptionApplicationServiceTest {
         animal2.setId(1L);
         animal2.setStatus("AVAILABLE");
 
-        AdoptionApplication adoptionApplication1 = new AdoptionApplication("JOHN", "5131 W Thunderbird Rd.", "602-444-4444", 1L);
+        AdoptionApplication adoptionApplication1 = new AdoptionApplication("JOHN", "5131 W Thunderbird Rd.", "602-444-4444", List.of(animal1,animal2));
         adoptionApplication1.setId(1L);
-        AdoptionApplication adoptionApplication2 = new AdoptionApplication("JOHN", "5131 W Thunderbird Rd.", "602-444-4444", 1L);
+        AdoptionApplication adoptionApplication2 = new AdoptionApplication("JOHN", "5131 W Thunderbird Rd.", "602-444-4444", List.of(animal1,animal2));
         adoptionApplication2.setId(1L);
         adoptionApplication2.setStatus("REJECTED");
 

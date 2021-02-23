@@ -60,16 +60,16 @@ public class AdoptionApplicationRestdocs {
         when(animalRepository.save(any())).thenReturn(animal);
         Animal animalSaved = animalRepository.save(animal);
 
-        AdoptionApplicationDto adoptionApplicationDto = new AdoptionApplicationDto(1L,"JOHN", "5131 W Thunderbird Rd.", "602-444-4444", animalSaved.getId(), "PENDING");
+        AdoptionApplicationDto adoptionApplicationDto = new AdoptionApplicationDto(1L,"JOHN", "5131 W Thunderbird Rd.", "602-444-4444", List.of(1L), "PENDING");
 
         when(adoptionApplicationService.submitAdoptionApplication(any())).thenReturn(adoptionApplicationDto);
         adoptionApplicationService.submitAdoptionApplication(adoptionApplicationDto);
-        AdoptionApplication adoptionApplication = new AdoptionApplication("JOHN", "5131 W Thunderbird Rd.", "602-444-4444", animalSaved.getId());
+        AdoptionApplication adoptionApplication = new AdoptionApplication("JOHN", "5131 W Thunderbird Rd.", "602-444-4444", List.of(animal));
         adoptionApplication.setId(1L);
         adoptionApplication.setStatus("PENDING");
         when(adoptionApplicationService.submitAdoptionApplication(any())).thenReturn(adoptionApplicationDto);
 
-        AdoptionApplication request = new AdoptionApplication("JOHN", "5131 W Thunderbird Rd.", "602-444-4444", animalSaved.getId());
+        AdoptionApplication request = new AdoptionApplication("JOHN", "5131 W Thunderbird Rd.", "602-444-4444", List.of(animal));
 
         mockMvc.perform(post("/applications")
                 .with(SecurityMockMvcRequestPostProcessors.httpBasic("user", "shelterPass1"))
@@ -81,7 +81,7 @@ public class AdoptionApplicationRestdocs {
                         fieldWithPath("name").description("Name of the customer"),
                         fieldWithPath("address").description("Address of the customer"),
                         fieldWithPath("phoneNumber").description("Phone number of the customer"),
-                        fieldWithPath("animalId").description("Id of the animal to be adopted"),
+                        fieldWithPath("animalIds").description("Ids of the animal to be adopted"),
                         fieldWithPath("status").description("Status of the application")
                         ),
                         requestFields(
@@ -95,9 +95,11 @@ public class AdoptionApplicationRestdocs {
 
     @Test
     public void getAllApplications() throws Exception {
-        AdoptionApplication adoptionApplication1 = new AdoptionApplication("JOHN", "5131 W Thunderbird Rd.", "602-444-4444", 1L);
+        Animal animal1 = new Animal("DOGGY", "DOG", LocalDate.of(2020, 4, 15), "M", "WHITE");
+        Animal animal2 = new Animal("CATY", "CAT", LocalDate.of(2020, 4, 15), "F", "BLACK");
+        AdoptionApplication adoptionApplication1 = new AdoptionApplication("JOHN", "5131 W Thunderbird Rd.", "602-444-4444", List.of(animal1));
         adoptionApplication1.setStatus("PENDING");
-        AdoptionApplication adoptionApplication2 = new AdoptionApplication("Mark", "another address", "876-990-7661", 4L);
+        AdoptionApplication adoptionApplication2 = new AdoptionApplication("Mark", "another address", "876-990-7661", List.of(animal2));
         adoptionApplication2.setStatus("APPROVED");
         List<AdoptionApplication> applications = List.of(adoptionApplication1, adoptionApplication2);
         when(adoptionApplicationService.getAllApplications()).thenReturn(applications);
@@ -109,7 +111,7 @@ public class AdoptionApplicationRestdocs {
                         fieldWithPath("[*].name").description("The Name of the applicant."),
                         fieldWithPath("[*].address").description("The address of the applicant."),
                         fieldWithPath("[*].phoneNumber").description("The phone number of the applicant."),
-                        fieldWithPath("[*].animalId").description("The Id of the animal to be adopted."),
+                        fieldWithPath("[*].animalIds").description("The Ids of the animal to be adopted."),
                         fieldWithPath("[*].status").description("The status of the application.")
                 )));
     }
