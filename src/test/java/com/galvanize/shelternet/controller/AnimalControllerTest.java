@@ -18,7 +18,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -170,7 +169,6 @@ public class AnimalControllerTest {
         animal1 = shelter.getAnimals().get(0);
         animal2 = shelter.getAnimals().get(1);
 
-
         AnimalRequestIds animalRequestIds = new AnimalRequestIds(List.of(
                 animal1.getId(), animal2.getId())
         );
@@ -186,6 +184,8 @@ public class AnimalControllerTest {
 
         assertEquals("AVAILABLE", animal1.getStatus());
         assertEquals("AVAILABLE", animal2.getStatus());
+        assertEquals("NOTE", animal1.getNotes());
+        assertEquals("NOTE", animal2.getNotes());
     }
 
     @Test

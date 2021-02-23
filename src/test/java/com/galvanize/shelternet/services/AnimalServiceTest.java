@@ -1,10 +1,7 @@
 package com.galvanize.shelternet.services;
 
-import com.galvanize.shelternet.model.Animal;
-import com.galvanize.shelternet.model.AnimalDto;
-import com.galvanize.shelternet.model.AnimalReturnDto;
-import com.galvanize.shelternet.model.Shelter;
-import com.galvanize.shelternet.model.AnimalRequestIds;
+import com.galvanize.shelternet.client.PetStoreClient;
+import com.galvanize.shelternet.model.*;
 import com.galvanize.shelternet.repository.AnimalRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,6 +21,9 @@ import static org.mockito.Mockito.*;
 public class AnimalServiceTest {
     @Mock
     AnimalRepository animalRepository;
+
+    @Mock
+    PetStoreClient petStoreClient;
 
     @InjectMocks
     AnimalService animalService;
@@ -121,6 +121,7 @@ public class AnimalServiceTest {
         animal.setStatus("OFFSITE");
 
         when(animalRepository.getOne(any())).thenReturn(animal);
+        when(petStoreClient.returnRequest(any())).thenReturn(List.of(new AnimalReturnFromPetStoreDto(1L, "NOTE")));
 
         AnimalRequestIds animalRequestIds = new AnimalRequestIds();
         animalRequestIds.setAnimalIds(List.of(1L));
@@ -131,6 +132,7 @@ public class AnimalServiceTest {
         verify(animalRepository).save(animal);
 
         assertEquals("AVAILABLE", animal.getStatus());
+        assertEquals("NOTE", animal.getNotes());
     }
 
     @Test
