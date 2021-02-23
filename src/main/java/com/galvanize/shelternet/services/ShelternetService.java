@@ -62,7 +62,7 @@ public class ShelternetService {
     }
 
     private ShelterDto mapToDto(Shelter shelter) {
-        return new ShelterDto(shelter.getId(), shelter.getName(), getCurrentCapacity(shelter), shelter.getAnimals());
+        return new ShelterDto(shelter.getId(), shelter.getName(), getCurrentCapacity(shelter), shelter.getMaxCapacity(),shelter.getAnimals());
     }
 
     public boolean transferAnimal(AnimalTransfer animalTransfer) {
