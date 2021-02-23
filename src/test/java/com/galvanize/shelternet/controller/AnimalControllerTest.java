@@ -126,6 +126,36 @@ public class AnimalControllerTest {
     }
 
     @Test
+    public void returnAnimalsFromPetStore_returns400() throws Exception {
+        Shelter shelter = new Shelter("Dallas Animal Shelter", 20);
+        Animal animal1 = new Animal("Dog", "Dalmention", LocalDate.of(2009, 04, 1), "M", "black");
+        Animal animal2 = new Animal("Cat", "Tabby", LocalDate.of(2010, 04, 1), "M", "white");
+        animal1.setShelter(shelter);
+        animal2.setShelter(shelter);
+        shelter.addAnimal(animal1);
+        shelter.addAnimal(animal2);
+        animal1 = animalRepository.save(animal1);
+        animal2 = animalRepository.save(animal2);
+
+        List<AnimalReturnDto> returnedAnimals = List.of(new AnimalReturnDto(animal1.getId(), "Bob is super friendly"),
+                new AnimalReturnDto(animal2.getId(), "Seems to have fleas"));
+
+        AnimalReturn animalReturn = new AnimalReturn(returnedAnimals);
+
+        mockMvc
+                .perform(post("/animals/return")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .with(SecurityMockMvcRequestPostProcessors.httpBasic("user", "shelterPass1"))
+                        .content(objectMapper.writeValueAsString(animalReturn)))
+                .andExpect(status().isBadRequest());
+
+        Animal fetchedAnimal1 = animalRepository.getOne(animal1.getId());
+
+        assertEquals("Dallas Animal Shelter", fetchedAnimal1.getShelter().getName());
+        assertEquals("AVAILABLE", fetchedAnimal1.getStatus());
+    }
+
+    @Test
     public void requestAnimalsBackFromPetStore() throws Exception {
         Shelter shelter = new Shelter("Dallas Animal Shelter", 20);
         Animal animal1 = new Animal("Dog", "Dalmention", LocalDate.of(2009, 4, 1), "M", "black");
@@ -161,8 +191,11 @@ public class AnimalControllerTest {
     @Test
     public void adoptAnimals() throws Exception {
         Animal animal1 = animalRepository.save(new Animal("Dog", "Dalmention", LocalDate.of(2009, 4, 1), "M", "black"));
+        animal1.setStatus("OFFSITE");
         Animal animal2 = animalRepository.save(new Animal("Cat", "AfricanCat", LocalDate.of(2021, 2, 1), "M", "black"));
+        animal2.setStatus("OFFSITE");
         Animal animal3 = animalRepository.save(new Animal("Tiger", "BengalTiger", LocalDate.of(2015, 2, 1), "M", "White"));
+        animal3.setStatus("OFFSITE");
         String ids = objectMapper.writeValueAsString(new AnimalRequestIds(List.of(animal1.getId(), animal2.getId(), animal3.getId())));
         mockMvc.perform(post("/animals/adopted")
                 .contentType(MediaType.APPLICATION_JSON)

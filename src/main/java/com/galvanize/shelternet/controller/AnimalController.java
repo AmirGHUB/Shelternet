@@ -28,8 +28,9 @@ public class AnimalController {
     }
 
     @PostMapping("/return")
-    public void returnAnimalsToShelter(@RequestBody AnimalReturn animalReturn){
-        animalService.returnAnimalsToShelter(animalReturn.getAnimals());
+    public ResponseEntity<Void> returnAnimalsToShelter(@RequestBody AnimalReturn animalReturn){
+        return animalService.returnAnimalsToShelter(animalReturn.getAnimals())
+                ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     @PostMapping("/adopted")

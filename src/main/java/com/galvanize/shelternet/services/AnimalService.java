@@ -31,21 +31,26 @@ public class AnimalService {
         return animalList.stream().map(AnimalMapper::mapToDto).collect(Collectors.toList());
     }
 
-    public void returnAnimalsToShelter(List<AnimalReturnDto> animals) {
+    public boolean returnAnimalsToShelter(List<AnimalReturnDto> animals) {
+        List<Animal> animalList = new ArrayList<>();
         for (AnimalReturnDto returnDto : animals) {
             Animal animal = animalRepository.getOne(returnDto.getId());
+            if(!isAnimalOffsite(animal)) {
+                return false;
+            }
             animal.setStatus("AVAILABLE");
             animal.setNotes(returnDto.getNotes());
-            animalRepository.save(animal);
+            animalList.add(animal);
         }
+        animalRepository.saveAll(animalList);
+        return true;
     }
 
     public boolean adoptAnimals(List<Long> animalIds) {
         List<Animal> animalList = new ArrayList<>();
         for (Long id: animalIds) {
             Animal animalToUpdate = animalRepository.findById(id).get();
-//            TODO ALLOW OFFSITE ADOPTIONS??
-            if(!animalToUpdate.getStatus().equals("AVAILABLE")) {
+            if(!isAnimalOffsite(animalToUpdate)) {
                 return false;
             }
             animalToUpdate.setStatus("ADOPTED");
@@ -53,6 +58,10 @@ public class AnimalService {
         }
         animalRepository.saveAll(animalList);
         return true;
+    }
+
+    private boolean isAnimalOffsite(Animal animal) {
+        return animal.getStatus().equals("OFFSITE");
     }
 
     public void requestAnimalsBack(AnimalRequestIds animalRequestIds) {

@@ -76,6 +76,26 @@ include::{snippets}/return-animals-from-petstore/request-fields.adoc[]
 .response
 include::{snippets}/return-animals-from-petstore/http-response.adoc[]
 
+=== Request Animals by IDs
+.request
+include::{snippets}/request-animals-by-ids/http-request.adoc[]
+
+.request-fields
+include::{snippets}/request-animals-by-ids/request-fields.adoc[]
+
+.response
+include::{snippets}/request-animals-by-ids/http-response.adoc[]
+
+.response-fields
+include::{snippets}/request-animals-by-ids/response-fields.adoc[]
+
+=== Return Animals back to shelter
+.request
+include::{snippets}/return-animals-back-to-shelter/http-request.adoc[]
+
+.request-fields
+include::{snippets}/return-animals-back-to-shelter/request-fields.adoc[]
+
 == Shelter Endpoints
 
 === Register Shelter
@@ -178,25 +198,3 @@ include::{snippets}/transfer-animal/request-fields.adoc[]
 include::{snippets}/transfer-animal/http-response.adoc[]
 
 
-
-=== Request Animals by IDs
-.request
-include::{snippets}/request-animals-by-ids/http-request.adoc[]
-
-.request-fields
-include::{snippets}/request-animals-by-ids/request-fields.adoc[]
-
-.response
-include::{snippets}/request-animals-by-ids/http-response.adoc[]
-
-.response-fields
-include::{snippets}/request-animals-by-ids/response-fields.adoc[]
-
-
-
-=== Return Animals back to shelter
-.request
-include::{snippets}/return-animals-back-to-shelter/http-request.adoc[]
-
-.request-fields
-include::{snippets}/return-animals-back-to-shelter/request-fields.adoc[]

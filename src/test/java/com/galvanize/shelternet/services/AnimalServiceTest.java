@@ -74,19 +74,44 @@ public class AnimalServiceTest {
         Animal animal1 = new Animal("Dog", "Dalmention", LocalDate.of(2009, 4, 1), "M", "black");
         animal1.setId(2L);
         animal1.setShelter(shelter);
+        animal1.setStatus("OFFSITE");
         shelter.addAnimal(animal1);
 
 
         AnimalReturnDto returnDto1 = new AnimalReturnDto(2L, "best animal ever");
 
         when(animalRepository.getOne(returnDto1.getId())).thenReturn(animal1);
-        when(animalRepository.save(any())).thenReturn(animal1);
+        when(animalRepository.saveAll(any())).thenReturn(null);
 
-        animalService.returnAnimalsToShelter(List.of(returnDto1));
+        boolean result = animalService.returnAnimalsToShelter(List.of(returnDto1));
 
         assertEquals("Dallas Animal Shelter", animal1.getShelter().getName());
         assertEquals("AVAILABLE", animal1.getStatus());
         assertEquals("best animal ever", animal1.getNotes());
+        assertTrue(result);
+    }
+
+
+    @Test
+    public void returnAnimalsToShelter_returnsFalseIfAnimalIsNotOffsite() {
+        Shelter shelter = new Shelter("Dallas Animal Shelter", 20);
+        shelter.setId(1L);
+        Animal animal1 = new Animal("Dog", "Dalmention", LocalDate.of(2009, 4, 1), "M", "black");
+        animal1.setId(2L);
+        animal1.setShelter(shelter);
+        animal1.setStatus("AVAILABLE");
+        shelter.addAnimal(animal1);
+
+
+        AnimalReturnDto returnDto1 = new AnimalReturnDto(2L, "best animal ever");
+
+        when(animalRepository.getOne(returnDto1.getId())).thenReturn(animal1);
+
+        boolean result = animalService.returnAnimalsToShelter(List.of(returnDto1));
+
+        assertEquals("Dallas Animal Shelter", animal1.getShelter().getName());
+        assertNull(animal1.getNotes());
+        assertFalse(result);
     }
 
     @Test
@@ -112,10 +137,10 @@ public class AnimalServiceTest {
     public void adoptAnimals() {
         Animal animal1 = new Animal("Dog", "Dalmention", LocalDate.of(2009, 04, 1), "M", "black");
         animal1.setId(2L);
-        animal1.setStatus("AVAILABLE");
+        animal1.setStatus("OFFSITE");
         Animal animal2 = new Animal("Dog", "Dalmention", LocalDate.of(2009, 04, 1), "M", "black");
         animal2.setId(3L);
-        animal2.setStatus("AVAILABLE");
+        animal2.setStatus("OFFSITE");
 
         Animal animal1Updated = new Animal("Dog", "Dalmention", LocalDate.of(2009, 04, 1), "M", "black");
         animal1Updated.setId(2L);
@@ -138,7 +163,7 @@ public class AnimalServiceTest {
     public void adoptAnimals_DoesNotCallSaveIfAnimalIsUnAvailable() {
         Animal animal1 = new Animal("Dog", "Dalmention", LocalDate.of(2009, 04, 1), "M", "black");
         animal1.setId(2L);
-        animal1.setStatus("AVAILABLE");
+        animal1.setStatus("OFFSITE");
         Animal animal2 = new Animal("Dog", "Dalmention", LocalDate.of(2009, 04, 1), "M", "black");
         animal2.setId(3L);
         animal2.setStatus("ADOPTION_PENDING");
@@ -148,8 +173,7 @@ public class AnimalServiceTest {
 
         boolean result = animalService.adoptAnimals(List.of(2L, 3L));
         assertFalse(result);
-        verifyNoMoreInteractions(animalRepository);
-
+        verify(animalRepository, never()).saveAll(any());
     }
 
 }
