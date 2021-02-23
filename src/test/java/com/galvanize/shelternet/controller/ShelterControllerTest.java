@@ -58,7 +58,7 @@ public class ShelterControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.name").value("SHELTER6"))
-                .andExpect(jsonPath("$.capacity").value(5));
+                .andExpect(jsonPath("$.maxCapacity").value(5));
     }
 
     @Test
@@ -85,7 +85,7 @@ public class ShelterControllerTest {
                     .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isCreated())
                     .andExpect(jsonPath("$.name").value("SHELTER1"))
-                    .andExpect(jsonPath("$.capacity").value(10));
+                    .andExpect(jsonPath("$.maxCapacity").value(10));
 
             assertThrows(NestedServletException.class,
                     () -> mockMvc.perform(post("/shelters")
@@ -121,9 +121,9 @@ public class ShelterControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.*", hasSize(2)))
                 .andExpect(jsonPath("[0].name").value("SHELTER1"))
-                .andExpect(jsonPath("[0].capacity").value(10))
+                .andExpect(jsonPath("[0].maxCapacity").value(10))
                 .andExpect(jsonPath("[1].name").value("SHELTER2"))
-                .andExpect(jsonPath("[1].capacity").value(20));
+                .andExpect(jsonPath("[1].maxCapacity").value(20));
 
     }
 
@@ -141,7 +141,7 @@ public class ShelterControllerTest {
                 .perform(get("/shelters" + "/" + shelter.getId()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("SHELTER1"))
-                .andExpect(jsonPath("$.capacity").value(8));
+                .andExpect(jsonPath("$.remainingCapacity").value(8));
 
     }
 
@@ -182,7 +182,7 @@ public class ShelterControllerTest {
         mockMvc
                 .perform(get("/shelters/" + shelterResult.getId()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.capacity").value(9));
+                .andExpect(jsonPath("$.remainingCapacity").value(9));
     }
 
     @Test
@@ -201,7 +201,7 @@ public class ShelterControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(existingShelter.getId()))
                 .andExpect(jsonPath("$.name").value("Updated Shelter"))
-                .andExpect(jsonPath("$.capacity").value(9))
+                .andExpect(jsonPath("$.remainingCapacity").value(9))
                 .andExpect(jsonPath("$.animals.[0].name").value("Dog"));
     }
 

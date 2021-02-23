@@ -81,7 +81,7 @@ public class AnimalControllerTest {
         mockMvc
                 .perform(get("/shelters" + "/" + shelter.getId()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.capacity").value(49));
+                .andExpect(jsonPath("$.remainingCapacity").value(49));
     }
 
     @Test

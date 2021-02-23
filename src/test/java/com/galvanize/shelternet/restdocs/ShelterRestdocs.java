@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
@@ -49,10 +50,9 @@ public class ShelterRestdocs {
 
     @Test
     public void registerShelterRestDocTest() throws Exception {
-        RegisterShelterDto registerShelterDto = new RegisterShelterDto("SHELTER1", 10);
 
-        ShelterDto expected = new ShelterDto(1L, registerShelterDto.getName(), registerShelterDto.getMaxCapacity(), new ArrayList<>());
-        when(shelternetService.registerShelter(registerShelterDto)).thenReturn(expected);
+        ShelterDto expected = new ShelterDto(1L, "SHELTER1", 10,10, new ArrayList<>());
+        when(shelternetService.registerShelter(any(RegisterShelterDto.class))).thenReturn(expected);
 
         mockMvc.perform(post("/shelters")
                 .with(SecurityMockMvcRequestPostProcessors.httpBasic("user", "shelterPass1"))
@@ -63,25 +63,22 @@ public class ShelterRestdocs {
                         responseFields(
                                 fieldWithPath("id").description("Id of the shelter"),
                                 fieldWithPath("name").description("Name of the shelter"),
-                                fieldWithPath("capacity").description("Capacity of the shelter"),
+                                fieldWithPath("remainingCapacity").description("The remaining capacity of the shelter."),
+                                fieldWithPath("maxCapacity").description("The max capacity of the shelter."),
                                 fieldWithPath("animals").description("Animals in the shelter")),
                         requestFields(
                                 fieldWithPath("id").ignored(),
                                 fieldWithPath("name").description("Name of the shelter"),
-                                fieldWithPath("maxCapacity").description("Capacity of the shelter"),
+                                fieldWithPath("maxCapacity").description("Max Capacity of the shelter"),
                                 fieldWithPath("animals").ignored())));
     }
 
 
     @Test
     public void getAllShelters() throws Exception {
-        Shelter shelter = new Shelter("SHELTER1", 10);
-        Shelter shelter2 = new Shelter("SHELTER2", 20);
-        shelter.setId(1L);
-        shelter2.setId(2L);
 
-        ShelterDto expected1 = new ShelterDto(shelter.getId(), shelter.getName(), shelter.getMaxCapacity(), shelter.getAnimals());
-        ShelterDto expected2 = new ShelterDto(shelter2.getId(), shelter2.getName(), shelter2.getMaxCapacity(), shelter2.getAnimals());
+        ShelterDto expected1 = new ShelterDto(1L, "SHELTER1", 10,10, new ArrayList<>());
+        ShelterDto expected2 = new ShelterDto(2L, "SHELTER2", 10,20, new ArrayList<>());
         when(shelternetService.getAllShelters()).thenReturn(List.of(expected1, expected2));
 
         mockMvc
@@ -90,7 +87,8 @@ public class ShelterRestdocs {
                 .andDo(document("GetAllShelters", responseFields(
                         fieldWithPath("[*].id").description("The ID of the shelter."),
                         fieldWithPath("[*].name").description("The name of the shelter."),
-                        fieldWithPath("[*].capacity").description("The capacity of the shelter."),
+                        fieldWithPath("[*].remainingCapacity").description("The remaining capacity of the shelter."),
+                        fieldWithPath("[*].maxCapacity").description("The max capacity of the shelter."),
                         fieldWithPath("[*].animals").ignored()
                 )));
     }
@@ -105,7 +103,7 @@ public class ShelterRestdocs {
         animal.setId(1L);
         shelter.addAnimal(animal);
 
-        ShelterDto expected = new ShelterDto(shelter.getId(), shelter.getName(), shelter.getMaxCapacity(), shelter.getAnimals());
+        ShelterDto expected = new ShelterDto(1L, "SHELTER1", 9,10, new ArrayList<>());
 
         when(shelternetService.getShelterDetails(shelter.getId())).thenReturn(expected);
 
@@ -115,16 +113,9 @@ public class ShelterRestdocs {
                 .andDo(document("GetShelterDetailsById", responseFields(
                         fieldWithPath("id").description("The ID of the shelter."),
                         fieldWithPath("name").description("The name of the shelter."),
-                        fieldWithPath("capacity").description("The capacity of the shelter."),
-                        fieldWithPath("animals").description("Animals in the Shelter"),
-                        fieldWithPath("animals.[*].id").description("Id of the Animal"),
-                        fieldWithPath("animals.[*].name").description("Name of the Animal"),
-                        fieldWithPath("animals.[*].species").description("Species of the Animal"),
-                        fieldWithPath("animals.[*].birthDate").description("Birth Date of the Animal"),
-                        fieldWithPath("animals.[*].sex").description("Sex of the Animal"),
-                        fieldWithPath("animals.[*].color").description("Color of the Animal"),
-                        fieldWithPath("animals.[*].notes").description("Notes on the Animal"),
-                        fieldWithPath("animals.[*].status").description("Adoption status of the Animal")
+                        fieldWithPath("remainingCapacity").description("The remaining capacity of the shelter."),
+                        fieldWithPath("maxCapacity").description("The max capacity of the shelter."),
+                        fieldWithPath("animals").description("Animals in the Shelter")
                 )));
     }
 
@@ -133,7 +124,7 @@ public class ShelterRestdocs {
         Shelter shelter = new Shelter("SHELTER1", 10);
         shelter.setId(1L);
 
-        ShelterDto expected = new ShelterDto(shelter.getId(), shelter.getName(), shelter.getMaxCapacity(), shelter.getAnimals());
+        ShelterDto expected = new ShelterDto(1L, "SHELTER1", 10,10, new ArrayList<>());
         when(shelternetService.updateShelter(1L, shelter)).thenReturn(expected);
 
         mockMvc.perform(put("/shelters/{id}", 1L)
@@ -146,13 +137,14 @@ public class ShelterRestdocs {
                         ),
                         responseFields(fieldWithPath("id").description("Id of the shelter"),
                                 fieldWithPath("name").description("Name of the shelter"),
-                                fieldWithPath("capacity").description("Capacity of the shelter"),
+                                fieldWithPath("remainingCapacity").description("The remaining capacity of the shelter."),
+                                fieldWithPath("maxCapacity").description("The max capacity of the shelter."),
                                 fieldWithPath("animals").ignored()
                         ),
                         requestFields(
                                 fieldWithPath("id").ignored(),
                                 fieldWithPath("name").description("Name of the shelter"),
-                                fieldWithPath("maxCapacity").description("Capacity of the shelter"),
+                                fieldWithPath("maxCapacity").description("The max capacity of the shelter."),
                                 fieldWithPath("animals").ignored()
                         )));
     }

@@ -10,6 +10,8 @@ import java.util.List;
 public class ShelterDto {
     private Long id;
     private String name;
-    private Integer capacity;
+    private Integer remainingCapacity;
+    private Integer maxCapacity;
     private List<Animal> animals;
+
 }
