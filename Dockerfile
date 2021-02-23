@@ -13,5 +13,5 @@ FROM openjdk:11.0-jre-slim
 WORKDIR /app
   # Copy .jar file (aka, builder)
 COPY --from=builder build/libs/*.jar app.jar
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-Xmx300m",  "-Xss512k", "-jar", "app.jar"]
 EXPOSE 8080
