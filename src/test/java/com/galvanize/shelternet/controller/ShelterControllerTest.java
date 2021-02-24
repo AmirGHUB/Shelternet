@@ -1,4 +1,5 @@
 package com.galvanize.shelternet.controller;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.galvanize.shelternet.model.Animal;
 import com.galvanize.shelternet.model.AnimalTransfer;
@@ -78,7 +79,6 @@ public class ShelterControllerTest {
 
     @Test
     @Transactional(value = Transactional.TxType.NEVER)
-
     public void registerShelter_withDuplicateName() {
         try {
             Shelter shelter = new Shelter("SHELTER1", 10);
@@ -140,7 +140,6 @@ public class ShelterControllerTest {
                 .andExpect(jsonPath("$.remainingCapacity").value(8));
 
     }
-
 
     @Test
     public void acceptSurrenderedAnimals() throws Exception {
@@ -270,6 +269,5 @@ public class ShelterControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string(expectedString));
     }
-
 }
 

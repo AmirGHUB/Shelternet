@@ -25,16 +25,16 @@ public class AdoptionApplicationService {
     }
 
     public AdoptionApplicationDto submitAdoptionApplication(AdoptionApplicationDto adoptionApplicationDto) {
-       Optional<Animal> animal = animalRepository.findById(adoptionApplicationDto.getAnimalId());
-       if(!animal.isPresent() || !animal.get().getStatus().equals(AVAILABLE)) {
-           return null;
-       }
-       animal.get().setStatus(ADOPTION_PENDING);
-       animalRepository.save(animal.get());
-       AdoptionApplication adoptionApplication = new AdoptionApplication(adoptionApplicationDto.getName(), adoptionApplicationDto.getAddress(),
-               adoptionApplicationDto.getPhoneNumber(), adoptionApplicationDto.getAnimalId());
-       adoptionApplication.setStatus(PENDING);
-       return mapToApplicationDto(adoptionApplicationRepository.save(adoptionApplication));
+        Optional<Animal> animal = animalRepository.findById(adoptionApplicationDto.getAnimalId());
+        if (animal.isEmpty() || !animal.get().getStatus().equals(AVAILABLE)) {
+            return null;
+        }
+        animal.get().setStatus(ADOPTION_PENDING);
+        animalRepository.save(animal.get());
+        AdoptionApplication adoptionApplication = new AdoptionApplication(adoptionApplicationDto.getName(), adoptionApplicationDto.getAddress(),
+                adoptionApplicationDto.getPhoneNumber(), adoptionApplicationDto.getAnimalId());
+        adoptionApplication.setStatus(PENDING);
+        return mapToApplicationDto(adoptionApplicationRepository.save(adoptionApplication));
 
     }
 
@@ -52,7 +52,7 @@ public class AdoptionApplicationService {
         AdoptionApplication adoptionApplication = adoptionApplicationRepository.findById(applicationId).get();
         Animal animal = animalRepository.findById(adoptionApplication.getAnimalId()).get();
 
-        if(isApproved) {
+        if (isApproved) {
             adoptionApplication.setStatus(APPROVED);
             animal.setStatus(ADOPTED);
         } else {
@@ -63,6 +63,4 @@ public class AdoptionApplicationService {
         adoptionApplicationRepository.save(adoptionApplication);
         animalRepository.save(animal);
     }
-
-
 }

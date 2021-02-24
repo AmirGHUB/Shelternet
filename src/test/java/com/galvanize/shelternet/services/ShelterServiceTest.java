@@ -35,14 +35,13 @@ public class ShelterServiceTest {
 
         ShelterDto actual = shelternetService.registerShelter(registerShelterDto);
 
-        ShelterDto expected = new ShelterDto(1L, "SHELTER1", 10,10, new ArrayList<>());
+        ShelterDto expected = new ShelterDto(1L, "SHELTER1", 10, 10, new ArrayList<>());
 
         assertEquals(expected, actual);
     }
 
     @Test
     public void getAllShelters() {
-
         Shelter shelter = new Shelter("SHELTER1", 10);
         shelter.setId(1L);
         Shelter shelter2 = new Shelter("SHELTER2", 20);
@@ -73,7 +72,7 @@ public class ShelterServiceTest {
         when(shelterRepository.getOne(shelter.getId())).thenReturn(shelter);
 
         ShelterDto actual = shelternetService.getShelterDetails(shelter.getId());
-        ShelterDto expected = new ShelterDto(1L, "SHELTER1", 9,10, List.of(animal));
+        ShelterDto expected = new ShelterDto(1L, "SHELTER1", 9, 10, List.of(animal));
 
         assertEquals(expected, actual);
 
@@ -116,8 +115,6 @@ public class ShelterServiceTest {
 
         verify(shelterRepository, times(1)).getOne(shelter.getId());
         verify(shelterRepository, times(1)).save(shelter);
-
-
     }
 
     @Test
@@ -132,7 +129,7 @@ public class ShelterServiceTest {
 
         ShelterDto actual = shelternetService.updateShelter(1L, shelterToUpdate);
 
-        ShelterDto expected = new ShelterDto(1L, "SHELTER1", 10,10, new ArrayList<>());
+        ShelterDto expected = new ShelterDto(1L, "SHELTER1", 10, 10, new ArrayList<>());
 
         assertEquals(expected, actual);
         verify(shelterRepository, times(1)).getOne(1L);

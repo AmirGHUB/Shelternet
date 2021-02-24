@@ -30,7 +30,7 @@ public class AnimalController {
     }
 
     @PostMapping("/return")
-    public ResponseEntity<Void> returnAnimalsToShelter(@RequestBody AnimalReturn animalReturn){
+    public ResponseEntity<Void> returnAnimalsToShelter(@RequestBody AnimalReturn animalReturn) {
         return animalService.returnAnimalsToShelter(animalReturn.getAnimals())
                 ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
@@ -42,8 +42,8 @@ public class AnimalController {
     }
 
     @PostMapping("/return-request")
-    public ResponseEntity<Void> requestAnimalsBack(@RequestBody AnimalRequestIds animalRequestIds){
-         return animalService.requestAnimalsBack(animalRequestIds)
-                 ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    public ResponseEntity<Void> requestAnimalsBack(@RequestBody AnimalRequestIds animalRequestIds) {
+        return animalService.requestAnimalsBack(animalRequestIds)
+                ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 }

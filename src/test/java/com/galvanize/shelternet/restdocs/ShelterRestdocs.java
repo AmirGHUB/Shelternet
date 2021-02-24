@@ -48,8 +48,7 @@ public class ShelterRestdocs {
 
     @Test
     public void registerShelterRestDocTest() throws Exception {
-
-        ShelterDto expected = new ShelterDto(1L, "SHELTER1", 10,10, new ArrayList<>());
+        ShelterDto expected = new ShelterDto(1L, "SHELTER1", 10, 10, new ArrayList<>());
         when(shelternetService.registerShelter(any(RegisterShelterDto.class))).thenReturn(expected);
 
         mockMvc.perform(post("/shelters")
@@ -71,7 +70,6 @@ public class ShelterRestdocs {
                                 fieldWithPath("animals").ignored())));
     }
 
-
     @Test
     public void getAllShelters() throws Exception {
         ShelterTrimmedDto shelterTrimmedDto1 = new ShelterTrimmedDto(1L, "SHELTER1", 10, 10);
@@ -91,7 +89,6 @@ public class ShelterRestdocs {
 
     @Test
     public void getShelterDetails() throws Exception {
-
         Shelter shelter = new Shelter("SHELTER1", 10);
 
         shelter.setId(1L);
@@ -99,7 +96,7 @@ public class ShelterRestdocs {
         animal.setId(1L);
         shelter.addAnimal(animal);
 
-        ShelterDto expected = new ShelterDto(1L, "SHELTER1", 9,10, new ArrayList<>());
+        ShelterDto expected = new ShelterDto(1L, "SHELTER1", 9, 10, new ArrayList<>());
 
         when(shelternetService.getShelterDetails(shelter.getId())).thenReturn(expected);
 
@@ -120,7 +117,7 @@ public class ShelterRestdocs {
         Shelter shelter = new Shelter("SHELTER1", 10);
         shelter.setId(1L);
 
-        ShelterDto expected = new ShelterDto(1L, "SHELTER1", 10,10, new ArrayList<>());
+        ShelterDto expected = new ShelterDto(1L, "SHELTER1", 10, 10, new ArrayList<>());
         when(shelternetService.updateShelter(1L, shelter)).thenReturn(expected);
 
         mockMvc.perform(put("/shelters/{id}", 1L)
@@ -147,7 +144,6 @@ public class ShelterRestdocs {
 
     @Test
     public void deleteShelterRestDocTest() throws Exception {
-
         mockMvc.perform(delete("/shelters/{id}", 1L)
                 .with(SecurityMockMvcRequestPostProcessors.httpBasic("user", "shelterPass1")))
                 .andExpect(status().isOk())
@@ -159,13 +155,13 @@ public class ShelterRestdocs {
 
     @Test
     public void acceptSurrenderedAnimals() throws Exception {
-        AnimalDto animal = new AnimalDto(1L,"Dog", "Dalmention", LocalDate.of(2009, 4, 1), "M", "black",null);
+        AnimalDto animal = new AnimalDto(1L, "Dog", "Dalmention", LocalDate.of(2009, 4, 1), "M", "black", null);
         when(shelternetService.surrenderAnimal(1L, animal)).thenReturn(animal);
 
         mockMvc.perform(post("/shelters/1/animal/")
                 .with(SecurityMockMvcRequestPostProcessors.httpBasic("user", "shelterPass1"))
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(new AnimalDto(null,"Dog", "Dalmention", LocalDate.of(2009, 4, 1), "M", "black",null))))
+                .content(objectMapper.writeValueAsString(new AnimalDto(null, "Dog", "Dalmention", LocalDate.of(2009, 4, 1), "M", "black", null))))
                 .andExpect(status().isOk())
                 .andDo(document("SurrenderAnimal",
                         responseFields(

@@ -62,14 +62,6 @@ public class ShelternetService {
         shelterRepository.deleteById(id);
     }
 
-    private ShelterDto mapToDto(Shelter shelter) {
-        return new ShelterDto(shelter.getId(), shelter.getName(), getCurrentCapacity(shelter), shelter.getMaxCapacity(),shelter.getAnimals());
-    }
-
-    private ShelterTrimmedDto mapToTrimmedDto(Shelter shelter) {
-        return new ShelterTrimmedDto(shelter.getId(), shelter.getName(), getCurrentCapacity(shelter), shelter.getMaxCapacity());
-    }
-
     public boolean transferAnimal(AnimalTransfer animalTransfer) {
         Shelter shelterToTransferFrom = shelterRepository.findById(animalTransfer.getShelterIdFrom()).get();
         Animal animalToTransfer = getAnimalFromShelter(shelterToTransferFrom, animalTransfer.getAnimalId()).get();
@@ -103,6 +95,14 @@ public class ShelternetService {
                 .filter(animal -> animal.getStatus().equals(AVAILABLE) || animal.getStatus().equals(ADOPTION_PENDING))
                 .count();
         return shelter.getMaxCapacity() - (int) animalsOnSite;
+    }
+
+    private ShelterDto mapToDto(Shelter shelter) {
+        return new ShelterDto(shelter.getId(), shelter.getName(), getCurrentCapacity(shelter), shelter.getMaxCapacity(), shelter.getAnimals());
+    }
+
+    private ShelterTrimmedDto mapToTrimmedDto(Shelter shelter) {
+        return new ShelterTrimmedDto(shelter.getId(), shelter.getName(), getCurrentCapacity(shelter), shelter.getMaxCapacity());
     }
 }
 

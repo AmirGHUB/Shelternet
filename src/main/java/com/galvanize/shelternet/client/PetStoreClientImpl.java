@@ -33,6 +33,6 @@ public class PetStoreClientImpl implements PetStoreClient {
         HttpEntity<List<String>> request = new HttpEntity<>(animalIds);
         ParameterizedTypeReference<List<AnimalReturnFromPetStoreDto>> responseType = new ParameterizedTypeReference<>() {
         };
-        return restTemplate.exchange(petStoreUrl+"/animals/return-request", HttpMethod.DELETE, request, responseType).getBody();
+        return restTemplate.exchange(petStoreUrl + "/animals/return-request", HttpMethod.DELETE, request, responseType).getBody();
     }
 }

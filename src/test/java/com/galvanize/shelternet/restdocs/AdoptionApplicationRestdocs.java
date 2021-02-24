@@ -58,7 +58,7 @@ public class AdoptionApplicationRestdocs {
         when(animalRepository.save(any())).thenReturn(animal);
         Animal animalSaved = animalRepository.save(animal);
 
-        AdoptionApplicationDto adoptionApplicationDto = new AdoptionApplicationDto(1L,"JOHN", "5131 W Thunderbird Rd.", "602-444-4444", animalSaved.getId(), "PENDING");
+        AdoptionApplicationDto adoptionApplicationDto = new AdoptionApplicationDto(1L, "JOHN", "5131 W Thunderbird Rd.", "602-444-4444", animalSaved.getId(), "PENDING");
 
         when(adoptionApplicationService.submitAdoptionApplication(any())).thenReturn(adoptionApplicationDto);
         adoptionApplicationService.submitAdoptionApplication(adoptionApplicationDto);

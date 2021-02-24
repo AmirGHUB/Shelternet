@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -38,7 +39,7 @@ public class AdoptionApplicationServiceTest {
         animal2.setId(2L);
         animal2.setStatus("ADOPTION_PENDING");
         AdoptionApplicationDto adoptionApplicationDto =
-                new AdoptionApplicationDto(1L,"JOHN", "5131 W Thunderbird Rd.", "602-444-4444", 1L, "PENDING");
+                new AdoptionApplicationDto(1L, "JOHN", "5131 W Thunderbird Rd.", "602-444-4444", 1L, "PENDING");
         AdoptionApplication adoptionApplication =
                 new AdoptionApplication("JOHN", "5131 W Thunderbird Rd.", "602-444-4444", 1L);
         adoptionApplication.setId(1L);
@@ -60,14 +61,13 @@ public class AdoptionApplicationServiceTest {
 
     @Test
     public void submitAdoptionApplication_returnsNullIfAnimalNotPresent() {
-
-        AdoptionApplicationDto adoptionApplicationDto = new AdoptionApplicationDto(1L,"JOHN", "5131 W Thunderbird Rd.", "602-444-4444", 1L,"PENDING");
+        AdoptionApplicationDto adoptionApplicationDto = new AdoptionApplicationDto(1L, "JOHN", "5131 W Thunderbird Rd.", "602-444-4444", 1L, "PENDING");
         when(animalRepository.findById(1L)).thenReturn(Optional.ofNullable(null));
         AdoptionApplicationDto result = adoptionApplicationService.submitAdoptionApplication(adoptionApplicationDto);
 
         verifyNoMoreInteractions(animalRepository);
 
-        assertEquals(null, result);
+        assertNull(result);
     }
 
     @Test
@@ -75,13 +75,13 @@ public class AdoptionApplicationServiceTest {
         Animal animal1 = new Animal("Dog", "Dalmention", LocalDate.of(2009, 4, 1), "M", "black");
         animal1.setId(1L);
         animal1.setStatus("ADOPTION_PENDING");
-        AdoptionApplicationDto adoptionApplicationDto = new AdoptionApplicationDto(1L, "JOHN", "5131 W Thunderbird Rd.", "602-444-4444", 1L,"PENDING");
+        AdoptionApplicationDto adoptionApplicationDto = new AdoptionApplicationDto(1L, "JOHN", "5131 W Thunderbird Rd.", "602-444-4444", 1L, "PENDING");
         when(animalRepository.findById(1L)).thenReturn(Optional.of(animal1));
         AdoptionApplicationDto result = adoptionApplicationService.submitAdoptionApplication(adoptionApplicationDto);
 
         verifyNoMoreInteractions(animalRepository);
 
-        assertEquals(null, result);
+        assertNull(result);
     }
 
     @Test
@@ -151,5 +151,4 @@ public class AdoptionApplicationServiceTest {
         verifyNoMoreInteractions(adoptionApplicationRepository);
         verifyNoMoreInteractions(animalRepository);
     }
-
 }

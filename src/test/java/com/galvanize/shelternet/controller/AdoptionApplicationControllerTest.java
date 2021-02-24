@@ -52,8 +52,8 @@ public class AdoptionApplicationControllerTest {
 
         Animal animalSaved = animalRepository.save(animal);
 
-        AdoptionApplicationDto adoptionApplicationDto = new AdoptionApplicationDto(1L,"JOHN", "5131 W Thunderbird Rd.",
-                "602-444-4444", animalSaved.getId(),"PENDING");
+        AdoptionApplicationDto adoptionApplicationDto = new AdoptionApplicationDto(1L, "JOHN", "5131 W Thunderbird Rd.",
+                "602-444-4444", animalSaved.getId(), "PENDING");
 
         mockMvc.perform(post("/applications")
                 .content(objectMapper.writeValueAsString(adoptionApplicationDto))
@@ -67,7 +67,7 @@ public class AdoptionApplicationControllerTest {
                 .andExpect(jsonPath("$.animalId").value(animalSaved.getId()))
                 .andExpect(jsonPath("$.status").value("PENDING"));
         AdoptionApplication application = adoptionApplicationRepository.findAll().get(0);
-        assertEquals("PENDING",application.getStatus());
+        assertEquals("PENDING", application.getStatus());
     }
 
     @Test

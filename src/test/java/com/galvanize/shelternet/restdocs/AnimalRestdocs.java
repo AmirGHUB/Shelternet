@@ -64,7 +64,6 @@ public class AnimalRestdocs {
                         fieldWithPath("[*].notes").description("Notes on the Animal"),
                         fieldWithPath("[*].status").description("Adoption status of the Animal")
                 )));
-
     }
 
     @Test
@@ -108,6 +107,7 @@ public class AnimalRestdocs {
                         requestFields(
                                 fieldWithPath("animalIds").description("Requested animal ids."))));
     }
+
     @Test
     public void adoptAnimals() throws Exception {
         AnimalRequestIds requestIds = new AnimalRequestIds(List.of(1L, 2L, 3L));
@@ -133,15 +133,14 @@ public class AnimalRestdocs {
         when(animalService.returnAnimalsToShelter(any())).thenReturn(true);
 
         mockMvc.perform(post("/animals/return")
-                        .with(SecurityMockMvcRequestPostProcessors.httpBasic("user", "shelterPass1"))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(animalReturn)))
+                .with(SecurityMockMvcRequestPostProcessors.httpBasic("user", "shelterPass1"))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(animalReturn)))
                 .andExpect(status().isOk())
                 .andDo(document("return-animals-from-petstore", requestFields(
                         fieldWithPath("animals[*].id").description("The id of the animal to return"),
                         fieldWithPath("animals[*].notes").description("notes on the animal")
                 )));
     }
-
 }
 

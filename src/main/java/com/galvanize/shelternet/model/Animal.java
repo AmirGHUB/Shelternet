@@ -33,6 +33,6 @@ public class Animal {
         this.birthDate = birthDate;
         this.sex = sex;
         this.color = color;
-        this.status="AVAILABLE";
+        this.status = "AVAILABLE";
     }
 }

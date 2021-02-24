@@ -24,7 +24,7 @@ public class ShelterController {
 
     @PostMapping
     public ResponseEntity<ShelterDto> registerShelter(@RequestBody RegisterShelterDto registerShelterDto) {
-        if(registerShelterDto.getName().equals("") || registerShelterDto.getMaxCapacity()<=0) {
+        if (registerShelterDto.getName().equals("") || registerShelterDto.getMaxCapacity() <= 0) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(shelternetService.registerShelter(registerShelterDto), HttpStatus.CREATED);
