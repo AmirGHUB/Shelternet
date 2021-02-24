@@ -5,6 +5,7 @@ import com.galvanize.shelternet.model.AnimalTransfer;
 import com.galvanize.shelternet.model.Shelter;
 import com.galvanize.shelternet.repository.AnimalRepository;
 import com.galvanize.shelternet.repository.ShelterRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -28,7 +29,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
-@Transactional
 public class ShelterControllerTest {
 
     @Autowired
@@ -43,7 +43,11 @@ public class ShelterControllerTest {
     @Autowired
     private AnimalRepository animalRepository;
 
-
+    @BeforeEach
+    public void setUp() {
+        this.shelterRepository.deleteAll();
+        this.animalRepository.deleteAll();
+    }
 
     @Test
     public void registerShelterTest() throws Exception {
@@ -62,7 +66,7 @@ public class ShelterControllerTest {
     }
 
     @Test
-    public void registerShelterTest_withoutNameAndCapacity() throws Exception {
+    public void registerShelterTest_withoutNameAndCapacity() {
         Shelter shelter = new Shelter(null, 0);
 
         assertThrows(NestedServletException.class,
@@ -75,7 +79,7 @@ public class ShelterControllerTest {
     @Test
     @Transactional(value = Transactional.TxType.NEVER)
 
-    public void registerShelter_withDuplicateName() throws Exception {
+    public void registerShelter_withDuplicateName() {
         try {
             Shelter shelter = new Shelter("SHELTER1", 10);
 
@@ -188,7 +192,7 @@ public class ShelterControllerTest {
     @Test
     public void updateShelter() throws Exception {
         Shelter existingShelter = new Shelter("Original Shelter", 20);
-        Animal animal = new Animal("Dog", "Dalmention", LocalDate.of(2009, 04, 1), "M", "black");
+        Animal animal = new Animal("Dog", "Dalmention", LocalDate.of(2009, 4, 1), "M", "black");
         existingShelter.addAnimal(animal);
         existingShelter = shelterRepository.save(existingShelter);
         Shelter shelterToUpdate = new Shelter("Updated Shelter", 10);
@@ -217,7 +221,7 @@ public class ShelterControllerTest {
     @Test
     public void transferAnimal_succesfullyTransfersAnimal() throws Exception {
         Shelter shelter1 = new Shelter("Shelter A", 20);
-        Animal animal = new Animal("Dog", "Dalmention", LocalDate.of(2009, 04, 1), "M", "black");
+        Animal animal = new Animal("Dog", "Dalmention", LocalDate.of(2009, 4, 1), "M", "black");
         shelter1.addAnimal(animal);
         shelter1 = shelterRepository.save(shelter1);
         Shelter shelter2 = shelterRepository.save(new Shelter("Shelter B", 20));
@@ -231,18 +235,18 @@ public class ShelterControllerTest {
                 .content(jsonString))
                 .andExpect(status().isOk());
 
-        assertEquals(0, shelterRepository.getOne(shelter1.getId()).getAnimals().size());
-        assertEquals(1, shelterRepository.getOne(shelter2.getId()).getAnimals().size());
+        assertEquals(0, shelterRepository.findById(shelter1.getId()).orElseThrow().getAnimals().size());
+        assertEquals(1, shelterRepository.findById(shelter2.getId()).orElseThrow().getAnimals().size());
     }
 
     @Test
     public void transferAnimal_returnsBadRequest() throws Exception {
         Shelter shelter1 = new Shelter("Shelter A", 20);
-        Animal animal1 = new Animal("Dog", "Dalmention", LocalDate.of(2009, 04, 1), "M", "black");
+        Animal animal1 = new Animal("Dog", "Dalmention", LocalDate.of(2009, 4, 1), "M", "black");
         shelter1.addAnimal(animal1);
         shelter1 = shelterRepository.save(shelter1);
         Shelter shelter2 = new Shelter("Shelter B", 1);
-        Animal animal2 = new Animal("Dog", "Dalmention", LocalDate.of(2009, 04, 1), "M", "black");
+        Animal animal2 = new Animal("Dog", "Dalmention", LocalDate.of(2009, 4, 1), "M", "black");
         shelter2.addAnimal(animal2);
         shelter2 = shelterRepository.save(shelter2);
 
@@ -255,8 +259,8 @@ public class ShelterControllerTest {
                 .content(jsonString))
                 .andExpect(status().isBadRequest());
 
-        assertEquals(1, shelterRepository.getOne(shelter1.getId()).getAnimals().size());
-        assertEquals(1, shelterRepository.getOne(shelter2.getId()).getAnimals().size());
+        assertEquals(1, shelterRepository.findById(shelter1.getId()).orElseThrow().getAnimals().size());
+        assertEquals(1, shelterRepository.findById(shelter2.getId()).orElseThrow().getAnimals().size());
     }
 
     @Test

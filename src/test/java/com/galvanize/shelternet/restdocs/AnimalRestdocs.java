@@ -19,7 +19,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.time.LocalDate;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -96,25 +95,9 @@ public class AnimalRestdocs {
 
     @Test
     public void requestAnimalsBackFromPetStore() throws Exception {
-        Shelter shelter = new Shelter("Dallas Animal Shelter", 20);
-        shelter.setId(1L);
-        Animal animal1 = new Animal("Dog", "Dalmention", LocalDate.of(2009, 4, 1), "M", "black");
-        Animal animal2 = new Animal("Cat", "Tabby", LocalDate.of(2010, 4, 1), "M", "white");
-        animal1.setId(2L);
-        animal2.setId(3L);
-        animal1.setShelter(shelter);
-        animal2.setShelter(shelter);
-        animal1.setStatus("OFFSITE");
-        animal2.setStatus("OFFSITE");
-        shelter.addAnimal(animal1);
-        shelter.addAnimal(animal2);
-        animal1 = shelter.getAnimals().get(0);
-        animal2 = shelter.getAnimals().get(1);
+        AnimalRequestIds animalRequestIds = new AnimalRequestIds(List.of(1L, 2L));
 
-
-        AnimalRequestIds animalRequestIds = new AnimalRequestIds(List.of(animal1.getId(), animal2.getId()));
-
-        animalService.requestAnimalsBack(animalRequestIds);
+        when(animalService.requestAnimalsBack(animalRequestIds)).thenReturn(true);
 
         mockMvc.perform(post("/animals/return-request")
                 .with(SecurityMockMvcRequestPostProcessors.httpBasic("user", "shelterPass1"))

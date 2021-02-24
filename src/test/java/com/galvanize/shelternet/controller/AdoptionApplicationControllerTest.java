@@ -6,6 +6,7 @@ import com.galvanize.shelternet.model.AdoptionApplicationDto;
 import com.galvanize.shelternet.model.Animal;
 import com.galvanize.shelternet.repository.AdoptionApplicationRepository;
 import com.galvanize.shelternet.repository.AnimalRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -14,8 +15,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-
-import javax.transaction.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -27,7 +26,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
-@Transactional
 public class AdoptionApplicationControllerTest {
 
     @Autowired
@@ -41,6 +39,12 @@ public class AdoptionApplicationControllerTest {
 
     @Autowired
     private AdoptionApplicationRepository adoptionApplicationRepository;
+
+    @BeforeEach
+    public void setUp() {
+        this.adoptionApplicationRepository.deleteAll();
+        this.animalRepository.deleteAll();
+    }
 
     @Test
     public void submitAdoptionApplication() throws Exception {
@@ -99,8 +103,8 @@ public class AdoptionApplicationControllerTest {
                 .with(SecurityMockMvcRequestPostProcessors.httpBasic("user", "shelterPass1")))
                 .andExpect(status().isOk());
 
-        assertEquals("ADOPTED", animalRepository.findById(animal.getId()).get().getStatus());
-        assertEquals("APPROVED", adoptionApplicationRepository.findById(adoptionApplication1.getId()).get().getStatus());
+        assertEquals("ADOPTED", animalRepository.findById(animal.getId()).orElseThrow().getStatus());
+        assertEquals("APPROVED", adoptionApplicationRepository.findById(adoptionApplication1.getId()).orElseThrow().getStatus());
     }
 
     @Test
@@ -112,7 +116,7 @@ public class AdoptionApplicationControllerTest {
                 .with(SecurityMockMvcRequestPostProcessors.httpBasic("user", "shelterPass1")))
                 .andExpect(status().isOk());
 
-        assertEquals("AVAILABLE", animalRepository.findById(animal.getId()).get().getStatus());
-        assertEquals("REJECTED", adoptionApplicationRepository.findById(adoptionApplication1.getId()).get().getStatus());
+        assertEquals("AVAILABLE", animalRepository.findById(animal.getId()).orElseThrow().getStatus());
+        assertEquals("REJECTED", adoptionApplicationRepository.findById(adoptionApplication1.getId()).orElseThrow().getStatus());
     }
 }

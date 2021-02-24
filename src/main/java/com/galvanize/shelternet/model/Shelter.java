@@ -19,7 +19,7 @@ public class Shelter {
     private String name;
     @Column(nullable = false)
     private Integer maxCapacity;
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Animal> animals;
 
     public Shelter(String name, Integer maxCapacity) {

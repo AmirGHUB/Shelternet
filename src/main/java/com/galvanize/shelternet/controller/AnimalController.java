@@ -40,7 +40,8 @@ public class AnimalController {
     }
 
     @PostMapping("/return-request")
-    public void requestAnimalsBack(@RequestBody AnimalRequestIds animalRequestIds){
-         animalService.requestAnimalsBack(animalRequestIds);
+    public ResponseEntity<Void> requestAnimalsBack(@RequestBody AnimalRequestIds animalRequestIds){
+         return animalService.requestAnimalsBack(animalRequestIds)
+                 ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 }

@@ -39,7 +39,7 @@ public class AnimalService {
         List<Animal> animalList = new ArrayList<>();
         for (AnimalReturnDto returnDto : animals) {
             Animal animal = animalRepository.getOne(returnDto.getId());
-            if (!isAnimalOffsite(animal)) {
+            if (isAnimalOnSite(animal)) {
                 return false;
             }
             animal.setStatus("AVAILABLE");
@@ -53,8 +53,8 @@ public class AnimalService {
     public boolean adoptAnimals(List<Long> animalIds) {
         List<Animal> animalList = new ArrayList<>();
         for (Long id : animalIds) {
-            Animal animalToUpdate = animalRepository.findById(id).get();
-            if (!isAnimalOffsite(animalToUpdate)) {
+            Animal animalToUpdate = animalRepository.findById(id).orElseThrow();
+            if (isAnimalOnSite(animalToUpdate)) {
                 return false;
             }
             animalToUpdate.setStatus("ADOPTED");
@@ -64,18 +64,25 @@ public class AnimalService {
         return true;
     }
 
-    private boolean isAnimalOffsite(Animal animal) {
-        return animal.getStatus().equals("OFFSITE");
-    }
+    public boolean requestAnimalsBack(AnimalRequestIds animalRequestIds) {
+        List<Animal> animalList = new ArrayList<>();
 
-    public void requestAnimalsBack(AnimalRequestIds animalRequestIds) {
         List<AnimalReturnFromPetStoreDto> animalReturnFromPetStoreDtoList = petStoreClient.returnRequest(animalRequestIds);
 
-        animalReturnFromPetStoreDtoList.forEach(animal -> {
-            Animal animalFounded = animalRepository.getOne(animal.getId());
+        for (AnimalReturnFromPetStoreDto dto : animalReturnFromPetStoreDtoList) {
+            Animal animalFounded = animalRepository.getOne(dto.getId());
+            if (isAnimalOnSite(animalFounded)) {
+                return false;
+            }
             animalFounded.setStatus("AVAILABLE");
-            animalFounded.setNotes(animal.getNote());
-            animalRepository.save(animalFounded);
-        });
+            animalFounded.setNotes(dto.getNote());
+            animalList.add(animalFounded);
+        }
+        animalRepository.saveAll(animalList);
+        return true;
+    }
+
+    private boolean isAnimalOnSite(Animal animal) {
+        return !animal.getStatus().equals("OFFSITE");
     }
 }
