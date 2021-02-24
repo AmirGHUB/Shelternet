@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.galvanize.shelternet.util.Constants.*;
+
 @Service
 public class AnimalService {
 
@@ -28,10 +30,10 @@ public class AnimalService {
         List<Animal> animalList = new ArrayList<>();
         for (Long i : ids.getAnimalIds()) {
             Animal animal = animalRepository.getOne(i);
-            if(!animal.getStatus().equals("AVAILABLE")) {
+            if(!animal.getStatus().equals(AVAILABLE)) {
                 return null;
             }
-            animal.setStatus("OFFSITE");
+            animal.setStatus(OFFSITE);
             animalList.add(animal);
         }
         animalRepository.saveAll(animalList);
@@ -45,7 +47,7 @@ public class AnimalService {
             if (isAnimalOnSite(animal)) {
                 return false;
             }
-            animal.setStatus("AVAILABLE");
+            animal.setStatus(AVAILABLE);
             animal.setNotes(returnDto.getNotes());
             animalList.add(animal);
         }
@@ -60,7 +62,7 @@ public class AnimalService {
             if (isAnimalOnSite(animalToUpdate)) {
                 return false;
             }
-            animalToUpdate.setStatus("ADOPTED");
+            animalToUpdate.setStatus(ADOPTED);
             animalList.add(animalToUpdate);
         }
         animalRepository.saveAll(animalList);
@@ -77,7 +79,7 @@ public class AnimalService {
             if (isAnimalOnSite(animalFounded)) {
                 return false;
             }
-            animalFounded.setStatus("AVAILABLE");
+            animalFounded.setStatus(AVAILABLE);
             animalFounded.setNotes(dto.getNote());
             animalList.add(animalFounded);
         }
@@ -86,6 +88,6 @@ public class AnimalService {
     }
 
     private boolean isAnimalOnSite(Animal animal) {
-        return !animal.getStatus().equals("OFFSITE");
+        return !animal.getStatus().equals(OFFSITE);
     }
 }

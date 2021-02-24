@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static com.galvanize.shelternet.util.Constants.*;
+
 @Service
 public class ShelternetService {
 
@@ -86,7 +88,7 @@ public class ShelternetService {
     public List<Animal> getAnimalsByShelterId(Long shelterId) {
         return shelterRepository.getOne(shelterId).getAnimals()
                 .stream()
-                .filter(animal -> !animal.getStatus().equals("ADOPTED"))
+                .filter(animal -> !animal.getStatus().equals(ADOPTED))
                 .collect(Collectors.toList());
     }
 
@@ -98,7 +100,7 @@ public class ShelternetService {
 
     private Integer getCurrentCapacity(Shelter shelter) {
         long animalsOnSite = shelter.getAnimals().stream()
-                .filter(animal -> animal.getStatus().equals("AVAILABLE") || animal.getStatus().equals("ADOPTION_PENDING"))
+                .filter(animal -> animal.getStatus().equals(AVAILABLE) || animal.getStatus().equals(ADOPTION_PENDING))
                 .count();
         return shelter.getMaxCapacity() - (int) animalsOnSite;
     }
