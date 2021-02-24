@@ -30,5 +30,4 @@ public class PetStoreClientImpl implements PetStoreClient {
         };
         return restTemplate.exchange(petStoreUrl, HttpMethod.DELETE, request, responseType).getBody();
     }
-
 }
