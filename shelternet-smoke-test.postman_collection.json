@@ -1,0 +1,585 @@
+{
+	"info": {
+		"_postman_id": "cb4f3836-0775-4f36-9816-2dddce0fbce3",
+		"name": "shelternet-smoke-test",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "authenticated-requests",
+			"item": [
+				{
+					"name": "Create a Shelter",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"pm.test(\"create a shelter test\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.name).to.eql(\"automated-test-shelter\");",
+									"    pm.expect(jsonData.maxCapacity).to.eql(200);",
+									"    postman.setEnvironmentVariable(\"shelterId\", jsonData.id);",
+									"});",
+									"pm.test(\"Content-Type is present\", function () {",
+									"    pm.response.to.have.header(\"Content-Type\");",
+									"});",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "{{password}}",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "user",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"automated-test-shelter\",\n    \"maxCapacity\": 200\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/shelters",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"shelters"
+							]
+						},
+						"description": "This API allows us to create a shelter."
+					},
+					"response": []
+				},
+				{
+					"name": "Surrender an animal",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.test(\"surrender animal test\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.name).to.eql(\"Bolt\");",
+									"    pm.expect(jsonData.species).to.eql(\"Dog\");",
+									"    pm.expect(jsonData.birthDate).to.eql(\"2010-01-01\");",
+									"    pm.expect(jsonData.sex).to.eql(\"M\");",
+									"    pm.expect(jsonData.color).to.eql(\"white\");",
+									"    postman.setEnvironmentVariable(\"animalId\", jsonData.id);",
+									"});",
+									"pm.test(\"Content-Type is present\", function () {",
+									"    pm.response.to.have.header(\"Content-Type\");",
+									"});",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "{{password}}",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "user",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \n                \"name\": \"Bolt\",\n                \"species\": \"Dog\",\n                \"birthDate\": \"2010-01-01\",\n                \"sex\": \"M\",\n                \"color\": \"white\"\n                \n }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/shelters/{{shelterId}}/animal",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"shelters",
+								"{{shelterId}}",
+								"animal"
+							]
+						},
+						"description": "API for surrender an animal"
+					},
+					"response": []
+				},
+				{
+					"name": "Submit Adoption Application",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.test(\"surrender animal test\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.name).to.eql(\"JOHN\");\r",
+									"    pm.expect(jsonData.address).to.eql(\"5131 W Thunderbird Rd.\");\r",
+									"    pm.expect(jsonData.phoneNumber).to.eql(\"602-444-4444\");\r",
+									"    pm.expect(jsonData.status).to.eql(\"PENDING\");\r",
+									"    postman.setEnvironmentVariable(\"applicationId\", jsonData.id);\r",
+									"});\r",
+									"pm.test(\"Content-Type is present\", function () {\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"});\r",
+									"    pm.response.to.have.status(201);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "{{password}}",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "user",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"JOHN\",\r\n  \"address\": \"5131 W Thunderbird Rd.\",\r\n  \"phoneNumber\": \"602-444-4444\",\r\n  \"animalId\": {{animalId}}\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/applications",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"applications"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Approve Adoption Application",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "{{password}}",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "user",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/applications/{{applicationId}}/update-status?isApproved=true",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"applications",
+								"{{applicationId}}",
+								"update-status"
+							],
+							"query": [
+								{
+									"key": "isApproved",
+									"value": "true"
+								}
+							]
+						},
+						"description": "Mark Adoption Application as Approved, and Animal as Adopted"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Animal To Send To Petstore",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.test(\"surrender animal test\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.name).to.eql(\"Bolt\");",
+									"    pm.expect(jsonData.species).to.eql(\"Dog\");",
+									"    pm.expect(jsonData.birthDate).to.eql(\"2010-01-01\");",
+									"    pm.expect(jsonData.sex).to.eql(\"M\");",
+									"    pm.expect(jsonData.color).to.eql(\"white\");",
+									"    postman.setEnvironmentVariable(\"animalId\", jsonData.id);",
+									"});",
+									"pm.test(\"Content-Type is present\", function () {",
+									"    pm.response.to.have.header(\"Content-Type\");",
+									"});",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "{{password}}",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "user",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \n                \"name\": \"Bolt\",\n                \"species\": \"Dog\",\n                \"birthDate\": \"2010-01-01\",\n                \"sex\": \"M\",\n                \"color\": \"white\"\n                \n }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/shelters/{{shelterId}}/animal",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"shelters",
+								"{{shelterId}}",
+								"animal"
+							]
+						},
+						"description": "API for surrender an animal"
+					},
+					"response": []
+				},
+				{
+					"name": "Send Animal To Petstore",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "{{password}}",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "user",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"animalIds\": [\r\n        {{animalId}}\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/animals/request",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"animals",
+								"request"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Adopt Animal",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "{{password}}",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "user",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"animalIds\": [{{animalId}}]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/animals/adopted",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"animals",
+								"adopted"
+							]
+						},
+						"description": "API for adopting animal"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Shelter",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "{{password}}",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "user",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/shelters/{{shelterId}}/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"shelters",
+								"{{shelterId}}",
+								""
+							]
+						},
+						"description": "Removes Shelter From Databse"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "unauthenticated-requests",
+			"item": [
+				{
+					"name": "Get all shelters",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/shelters",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"shelters"
+							]
+						},
+						"description": "API for get all shelters"
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "shelterId",
+			"value": ""
+		}
+	]
+}
