@@ -13,6 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -86,6 +87,40 @@ public class AnimalControllerTest {
                 .perform(get("/shelters" + "/" + shelter.getId()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.remainingCapacity").value(49));
+    }
+
+    @Test
+    public void animalRequest_returns400() throws Exception {
+        Animal animal1 = new Animal("Dog", "Dalmention", LocalDate.of(2009, 4, 1), "M", "black");
+        Animal animal2 = new Animal("Cat", "Tabby", LocalDate.of(2010, 4, 1), "M", "white");
+        animal2.setStatus("ADOPTED");
+        Animal animal3 = new Animal("Dog", "CockerSpaniel", LocalDate.of(2006, 4, 1), "F", "red");
+
+        Shelter shelter = new Shelter("SHELTER1", 50);
+        shelter.addAnimal(animal1);
+        shelter.addAnimal(animal2);
+        shelter.addAnimal(animal3);
+
+        shelter = shelterRepository.save(shelter);
+
+        AnimalRequestIds animalRequestIds = new AnimalRequestIds(List.of(animal1.getId(), animal2.getId()));
+
+        MvcResult result = mockMvc.perform(post("/animals/request/")
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(SecurityMockMvcRequestPostProcessors.httpBasic("user", "shelterPass1"))
+                .content(objectMapper.writeValueAsString(animalRequestIds)))
+                .andExpect(status().isBadRequest())
+                .andReturn();
+
+        assertEquals("", result.getResponse().getContentAsString());
+
+        mockMvc.perform(get("/shelters" + "/" + shelter.getId()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.remainingCapacity").value(48));
+
+        assertEquals("AVAILABLE", animalRepository.findById(animal1.getId()).get().getStatus());
+        assertEquals("ADOPTED", animalRepository.findById(animal2.getId()).get().getStatus());
+        assertEquals("AVAILABLE", animalRepository.findById(animal3.getId()).get().getStatus());
     }
 
     @Test

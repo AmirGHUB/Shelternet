@@ -66,6 +66,26 @@ public class AnimalServiceTest {
     }
 
     @Test
+    public void request_returnsNullIfAnimalIsNotAvailable() {
+        Animal animal1 = new Animal("Micro", "Dog", LocalDate.now(), "M", "Brown");
+        animal1.setId(1L);
+        Animal animal2 = new Animal("Sammy", "Dog", LocalDate.now(), "M", "Black");
+        animal2.setId(2L);
+        animal2.setStatus("ADOPTION_PENDING");
+
+        when(animalRepository.getOne(1L)).thenReturn(animal1);
+        when(animalRepository.getOne(2L)).thenReturn(animal2);
+
+        AnimalRequestIds animalRequestIds = new AnimalRequestIds(List.of(animal1.getId(), animal2.getId()));
+
+        List<AnimalDto> actual = animalService.request(animalRequestIds);
+
+        assertNull(actual);
+
+        verify(animalRepository, never()).saveAll(any());
+    }
+
+    @Test
     public void returnAnimalsToShelter() {
         Shelter shelter = new Shelter("Dallas Animal Shelter", 20);
         shelter.setId(1L);

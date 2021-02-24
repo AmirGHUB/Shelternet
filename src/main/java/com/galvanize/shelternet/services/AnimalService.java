@@ -28,6 +28,9 @@ public class AnimalService {
         List<Animal> animalList = new ArrayList<>();
         for (Long i : ids.getAnimalIds()) {
             Animal animal = animalRepository.getOne(i);
+            if(!animal.getStatus().equals("AVAILABLE")) {
+                return null;
+            }
             animal.setStatus("OFFSITE");
             animalList.add(animal);
         }

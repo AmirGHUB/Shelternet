@@ -23,8 +23,10 @@ public class AnimalController {
     }
 
     @PostMapping("/request")
-    public List<AnimalDto> request(@RequestBody AnimalRequestIds animalIds) {
-        return animalService.request(animalIds);
+    public ResponseEntity<List<AnimalDto>> request(@RequestBody AnimalRequestIds animalIds) {
+        List<AnimalDto> animals = animalService.request(animalIds);
+        return animals == null
+                ? new ResponseEntity<>(HttpStatus.BAD_REQUEST) : new ResponseEntity<>(animals, HttpStatus.OK);
     }
 
     @PostMapping("/return")
