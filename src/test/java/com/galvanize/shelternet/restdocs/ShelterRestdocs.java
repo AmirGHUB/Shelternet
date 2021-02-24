@@ -76,10 +76,9 @@ public class ShelterRestdocs {
 
     @Test
     public void getAllShelters() throws Exception {
-
-        ShelterDto expected1 = new ShelterDto(1L, "SHELTER1", 10,10, new ArrayList<>());
-        ShelterDto expected2 = new ShelterDto(2L, "SHELTER2", 10,20, new ArrayList<>());
-        when(shelternetService.getAllShelters()).thenReturn(List.of(expected1, expected2));
+        ShelterTrimmedDto shelterTrimmedDto1 = new ShelterTrimmedDto(1L, "SHELTER1", 10, 10);
+        ShelterTrimmedDto shelterTrimmedDto2 = new ShelterTrimmedDto(2L, "SHELTER2", 20, 20);
+        when(shelternetService.getAllShelters()).thenReturn(List.of(shelterTrimmedDto1, shelterTrimmedDto2));
 
         mockMvc
                 .perform(get("/shelters"))
@@ -88,8 +87,7 @@ public class ShelterRestdocs {
                         fieldWithPath("[*].id").description("The ID of the shelter."),
                         fieldWithPath("[*].name").description("The name of the shelter."),
                         fieldWithPath("[*].remainingCapacity").description("The remaining capacity of the shelter."),
-                        fieldWithPath("[*].maxCapacity").description("The max capacity of the shelter."),
-                        fieldWithPath("[*].animals").ignored()
+                        fieldWithPath("[*].maxCapacity").description("The max capacity of the shelter.")
                 )));
     }
 

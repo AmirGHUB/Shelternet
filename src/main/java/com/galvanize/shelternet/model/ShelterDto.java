@@ -13,5 +13,4 @@ public class ShelterDto {
     private Integer remainingCapacity;
     private Integer maxCapacity;
     private List<Animal> animals;
-
 }

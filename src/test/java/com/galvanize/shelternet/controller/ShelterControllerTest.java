@@ -105,29 +105,21 @@ public class ShelterControllerTest {
 
     @Test
     public void getAllShelters() throws Exception {
-        Shelter shelter = new Shelter("SHELTER1", 10);
-        Shelter shelter2 = new Shelter("SHELTER2", 20);
-
-        mockMvc.perform(post("/shelters")
-                .with(SecurityMockMvcRequestPostProcessors.httpBasic("user", "shelterPass1"))
-                .content(objectMapper.writeValueAsString(shelter))
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated());
-
-        mockMvc.perform(post("/shelters")
-                .with(SecurityMockMvcRequestPostProcessors.httpBasic("user", "shelterPass1"))
-                .content(objectMapper.writeValueAsString(shelter2))
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated());
+        Shelter shelter = shelterRepository.save(new Shelter("SHELTER1", 10));
+        Shelter shelter2 = shelterRepository.save(new Shelter("SHELTER2", 20));
 
         mockMvc
                 .perform(get("/shelters"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.*", hasSize(2)))
+                .andExpect(jsonPath("[0].id").value(shelter.getId()))
                 .andExpect(jsonPath("[0].name").value("SHELTER1"))
                 .andExpect(jsonPath("[0].maxCapacity").value(10))
+                .andExpect(jsonPath("[0].remainingCapacity").value(10))
+                .andExpect(jsonPath("[1].id").value(shelter2.getId()))
                 .andExpect(jsonPath("[1].name").value("SHELTER2"))
-                .andExpect(jsonPath("[1].maxCapacity").value(20));
+                .andExpect(jsonPath("[1].maxCapacity").value(20))
+                .andExpect(jsonPath("[0].remainingCapacity").value(10));
 
     }
 

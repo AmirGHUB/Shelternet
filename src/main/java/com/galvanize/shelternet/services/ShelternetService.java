@@ -22,10 +22,10 @@ public class ShelternetService {
         return mapToDto(shelterRepository.save(shelter));
     }
 
-    public List<ShelterDto> getAllShelters() {
+    public List<ShelterTrimmedDto> getAllShelters() {
         return shelterRepository.findAll()
                 .stream()
-                .map(this::mapToDto)
+                .map(this::mapToTrimmedDto)
                 .collect(Collectors.toList());
     }
 
@@ -62,6 +62,10 @@ public class ShelternetService {
 
     private ShelterDto mapToDto(Shelter shelter) {
         return new ShelterDto(shelter.getId(), shelter.getName(), getCurrentCapacity(shelter), shelter.getMaxCapacity(),shelter.getAnimals());
+    }
+
+    private ShelterTrimmedDto mapToTrimmedDto(Shelter shelter) {
+        return new ShelterTrimmedDto(shelter.getId(), shelter.getName(), getCurrentCapacity(shelter), shelter.getMaxCapacity());
     }
 
     public boolean transferAnimal(AnimalTransfer animalTransfer) {

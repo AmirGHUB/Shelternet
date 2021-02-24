@@ -44,17 +44,23 @@ public class ShelterServiceTest {
     public void getAllShelters() {
 
         Shelter shelter = new Shelter("SHELTER1", 10);
+        shelter.setId(1L);
         Shelter shelter2 = new Shelter("SHELTER2", 20);
+        shelter2.setId(2L);
+
+        ShelterTrimmedDto shelterTrimmedDto1 = new ShelterTrimmedDto(1L, "SHELTER1", 10, 10);
+        ShelterTrimmedDto shelterTrimmedDto2 = new ShelterTrimmedDto(2L, "SHELTER2", 20, 20);
+        List<ShelterTrimmedDto> expected = List.of(shelterTrimmedDto1, shelterTrimmedDto2);
 
         List<Shelter> shelters = List.of(shelter, shelter2);
 
         when(shelterRepository.findAll()).thenReturn(shelters);
 
-        List<ShelterDto> actualList = shelternetService.getAllShelters();
+        List<ShelterTrimmedDto> actualList = shelternetService.getAllShelters();
 
-        assertEquals(shelters.size(), actualList.size());
+        assertEquals(expected, actualList);
 
-        verify(shelterRepository, times(1)).findAll();
+        verifyNoMoreInteractions(shelterRepository);
     }
 
     @Test

@@ -31,7 +31,7 @@ public class ShelterController {
     }
 
     @GetMapping
-    public List<ShelterDto> getAllShelters() {
+    public List<ShelterTrimmedDto> getAllShelters() {
         return shelternetService.getAllShelters();
     }
 
