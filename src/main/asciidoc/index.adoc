@@ -16,7 +16,7 @@ include::{snippets}/adoption-application/http-response.adoc[]
 .response-fields
 include::{snippets}/adoption-application/response-fields.adoc[]
 
-=== Get All Applications
+=== Get All Adoption Applications
 
 .request
 include::{snippets}/get-all-applications/http-request.adoc[]
@@ -27,7 +27,7 @@ include::{snippets}/get-all-applications/http-response.adoc[]
 .response-fields
 include::{snippets}/get-all-applications/response-fields.adoc[]
 
-=== Approve Or Reject Application
+=== Approve Or Reject Adoption Application
 
 .request
 include::{snippets}/update-application-status/http-request.adoc[]
@@ -54,7 +54,7 @@ include::{snippets}/get-all-animals/http-response.adoc[]
 .response-fields
 include::{snippets}/get-all-animals/response-fields.adoc[]
 
-=== Adopt Animals
+=== Pet Store Request To Adopt Animals
 
 .request
 include::{snippets}/adopt-animals/http-request.adoc[]
@@ -76,7 +76,7 @@ include::{snippets}/return-animals-from-petstore/request-fields.adoc[]
 .response
 include::{snippets}/return-animals-from-petstore/http-response.adoc[]
 
-=== Request Animals by IDs
+=== Pet Store Request Animals by IDs
 .request
 include::{snippets}/request-animals-by-ids/http-request.adoc[]
 
@@ -89,7 +89,7 @@ include::{snippets}/request-animals-by-ids/http-response.adoc[]
 .response-fields
 include::{snippets}/request-animals-by-ids/response-fields.adoc[]
 
-=== Return Animals back to shelter
+=== Request animals to be send back to Shelter
 .request
 include::{snippets}/return-animals-back-to-shelter/http-request.adoc[]
 
