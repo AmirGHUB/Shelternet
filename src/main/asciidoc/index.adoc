@@ -1,6 +1,21 @@
 = Shelternet API
+:toc:
 
 == Adoption Application Endpoints
+
+=== Approve Or Reject Adoption Application
+
+.request
+include::{snippets}/update-application-status/http-request.adoc[]
+
+.response
+include::{snippets}/update-application-status/http-response.adoc[]
+
+.path-parameters
+include::{snippets}/update-application-status/path-parameters.adoc[]
+
+.request-parameters
+include::{snippets}/update-application-status/request-parameters.adoc[]
 
 === Create Adoption Application
 
@@ -27,20 +42,6 @@ include::{snippets}/get-all-applications/http-response.adoc[]
 .response-fields
 include::{snippets}/get-all-applications/response-fields.adoc[]
 
-=== Approve Or Reject Adoption Application
-
-.request
-include::{snippets}/update-application-status/http-request.adoc[]
-
-.response
-include::{snippets}/update-application-status/http-response.adoc[]
-
-.path-parameters
-include::{snippets}/update-application-status/path-parameters.adoc[]
-
-.request-parameters
-include::{snippets}/update-application-status/request-parameters.adoc[]
-
 == Animal Endpoints
 
 === Get All Animals
@@ -53,6 +54,20 @@ include::{snippets}/get-all-animals/http-response.adoc[]
 
 .response-fields
 include::{snippets}/get-all-animals/response-fields.adoc[]
+
+=== Pet Store Request Animals by IDs
+
+.request
+include::{snippets}/request-animals-by-ids/http-request.adoc[]
+
+.request-fields
+include::{snippets}/request-animals-by-ids/request-fields.adoc[]
+
+.response
+include::{snippets}/request-animals-by-ids/http-response.adoc[]
+
+.response-fields
+include::{snippets}/request-animals-by-ids/response-fields.adoc[]
 
 === Pet Store Request To Adopt Animals
 
@@ -76,19 +91,6 @@ include::{snippets}/return-animals-from-petstore/request-fields.adoc[]
 .response
 include::{snippets}/return-animals-from-petstore/http-response.adoc[]
 
-=== Pet Store Request Animals by IDs
-.request
-include::{snippets}/request-animals-by-ids/http-request.adoc[]
-
-.request-fields
-include::{snippets}/request-animals-by-ids/request-fields.adoc[]
-
-.response
-include::{snippets}/request-animals-by-ids/http-response.adoc[]
-
-.response-fields
-include::{snippets}/request-animals-by-ids/response-fields.adoc[]
-
 === Request animals to be send back to Shelter
 .request
 include::{snippets}/return-animals-back-to-shelter/http-request.adoc[]
@@ -97,6 +99,50 @@ include::{snippets}/return-animals-back-to-shelter/http-request.adoc[]
 include::{snippets}/return-animals-back-to-shelter/request-fields.adoc[]
 
 == Shelter Endpoints
+
+=== Delete Shelter
+
+.request
+include::{snippets}/delete-shelter/http-request.adoc[]
+
+.path-parameters
+include::{snippets}/delete-shelter/path-parameters.adoc[]
+
+.response
+include::{snippets}/delete-shelter/http-response.adoc[]
+
+=== Get All Shelters
+
+.request
+include::{snippets}/GetAllShelters/http-request.adoc[]
+
+.response
+include::{snippets}/GetAllShelters/http-response.adoc[]
+
+.response-fields
+include::{snippets}/GetAllShelters/response-fields.adoc[]
+
+=== Get Animals by Shelter ID
+
+.request
+include::{snippets}/get-animals-by-shelter-id/http-request.adoc[]
+
+.response
+include::{snippets}/get-animals-by-shelter-id/http-response.adoc[]
+
+.response-fields
+include::{snippets}/get-animals-by-shelter-id/response-fields.adoc[]
+
+=== Get Shelter Details By Id
+
+.request
+include::{snippets}/GetShelterDetailsById/http-request.adoc[]
+
+.response
+include::{snippets}/GetShelterDetailsById/http-response.adoc[]
+
+.response-fields
+include::{snippets}/GetShelterDetailsById/response-fields.adoc[]
 
 === Register Shelter
 
@@ -112,27 +158,30 @@ include::{snippets}/register-shelter/http-response.adoc[]
 .response-fields
 include::{snippets}/register-shelter/response-fields.adoc[]
 
-=== Get All Shelters
+=== Surrender Animal
 
 .request
-include::{snippets}/GetAllShelters/http-request.adoc[]
+include::{snippets}/SurrenderAnimal/http-request.adoc[]
+
+.request-fields
+include::{snippets}/SurrenderAnimal/request-fields.adoc[]
 
 .response
-include::{snippets}/GetAllShelters/http-response.adoc[]
+include::{snippets}/SurrenderAnimal/http-response.adoc[]
 
 .response-fields
-include::{snippets}/GetAllShelters/response-fields.adoc[]
+include::{snippets}/SurrenderAnimal/response-fields.adoc[]
 
-=== Get Shelter Details By Id
+=== Transfer Animal To Different Shelter
 
 .request
-include::{snippets}/GetShelterDetailsById/http-request.adoc[]
+include::{snippets}/transfer-animal/http-request.adoc[]
+
+.request-fields
+include::{snippets}/transfer-animal/request-fields.adoc[]
 
 .response
-include::{snippets}/GetShelterDetailsById/http-response.adoc[]
-
-.response-fields
-include::{snippets}/GetShelterDetailsById/response-fields.adoc[]
+include::{snippets}/transfer-animal/http-response.adoc[]
 
 === Update Shelter
 
@@ -150,51 +199,5 @@ include::{snippets}/update-shelter/http-response.adoc[]
 
 .response-fields
 include::{snippets}/update-shelter/response-fields.adoc[]
-
-=== Delete Shelter
-.request
-include::{snippets}/delete-shelter/http-request.adoc[]
-
-.path-parameters
-include::{snippets}/delete-shelter/path-parameters.adoc[]
-
-.response
-include::{snippets}/delete-shelter/http-response.adoc[]
-
-=== Surrender Animal
-
-.request
-include::{snippets}/SurrenderAnimal/http-request.adoc[]
-
-.request-fields
-include::{snippets}/SurrenderAnimal/request-fields.adoc[]
-
-.response
-include::{snippets}/SurrenderAnimal/http-response.adoc[]
-
-.response-fields
-include::{snippets}/SurrenderAnimal/response-fields.adoc[]
-
-=== Get Animals by Shelter ID
-
-.request
-include::{snippets}/get-animals-by-shelter-id/http-request.adoc[]
-
-.response
-include::{snippets}/get-animals-by-shelter-id/http-response.adoc[]
-
-.response-fields
-include::{snippets}/get-animals-by-shelter-id/response-fields.adoc[]
-
-=== Transfer Animal To Different Shelter
-
-.request
-include::{snippets}/transfer-animal/http-request.adoc[]
-
-.request-fields
-include::{snippets}/transfer-animal/request-fields.adoc[]
-
-.response
-include::{snippets}/transfer-animal/http-response.adoc[]
 
 
